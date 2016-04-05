@@ -1,27 +1,30 @@
 package com.mangopay.teamcity.runscope;
 
 import jetbrains.buildServer.RunBuildException;
-import jetbrains.buildServer.agent.BuildFinishedStatus;
-import jetbrains.buildServer.agent.runner.BuildServiceAdapter;
-import jetbrains.buildServer.agent.runner.ProgramCommandLine;
+import jetbrains.buildServer.agent.*;
 import org.jetbrains.annotations.NotNull;
 
-public class RunscopeBuildRunner extends BuildServiceAdapter {
-
+public class RunscopeBuildRunner implements AgentBuildRunner, AgentBuildRunnerInfo {
     @NotNull
     @Override
-    public ProgramCommandLine makeProgramCommandLine() throws RunBuildException {
-        return null;
-    }
-
-    @Override
-    public void beforeProcessStarted() throws RunBuildException {
-        getLogger().progressMessage("Running runscope");
+    public BuildProcess createBuildProcess(@NotNull AgentRunningBuild agentRunningBuild, @NotNull BuildRunnerContext buildRunnerContext) throws RunBuildException {
+        return new RunscopeBuildProcess(buildRunnerContext);
     }
 
     @NotNull
     @Override
-    public BuildFinishedStatus getRunResult(int exitCode) {
-        return super.getRunResult(exitCode);
+    public AgentBuildRunnerInfo getRunnerInfo() {
+        return this;
+    }
+
+    @NotNull
+    @Override
+    public String getType() {
+        return RunscopeConstants.RUNNER_TYPE;
+    }
+
+    @Override
+    public boolean canRun(@NotNull BuildAgentConfiguration buildAgentConfiguration) {
+        return true;
     }
 }
