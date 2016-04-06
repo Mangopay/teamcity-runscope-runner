@@ -4,6 +4,7 @@ public class Step {
     private String id;
     private String note;
     private String stepType;
+    private String result;
 
     public String getId() {
         return id;
@@ -27,5 +28,13 @@ public class Step {
 
     public void setStepType(String stepType) {
         this.stepType = stepType;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 }
