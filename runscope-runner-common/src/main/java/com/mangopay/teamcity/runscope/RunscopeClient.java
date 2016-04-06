@@ -42,6 +42,16 @@ public class RunscopeClient {
                 .getData();
     }
 
+    public List<Step> getTestSteps(String bucketKey, String testId) {
+        WebTarget target = builderFactory.getTarget("buckets/{bucketKey}/tests/{testId}/steps")
+                .resolveTemplate("bucketKey", bucketKey)
+                .resolveTemplate("testId", testId);
+
+        return builderFactory.getBuilder(target)
+                .get(TestStepsResponse.class)
+                .getData();
+    }
+
     public TestResult getRunResult(Run run) {
         WebTarget target = builderFactory.getTarget("buckets/{bucketKey}/tests/{testId}/results/{runId}")
                 .resolveTemplate("bucketKey", run.getBucketKey())

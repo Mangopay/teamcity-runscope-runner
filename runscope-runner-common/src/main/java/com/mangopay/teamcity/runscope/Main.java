@@ -10,7 +10,7 @@ class Main {
         String bucket = args[1];
 
         callFakeApis();
-        System.exit(callRunscope(token, "u2bs2926ut38"));
+        System.exit(callRunscope(token, token));
     }
 
     private static void callFakeApis() {
