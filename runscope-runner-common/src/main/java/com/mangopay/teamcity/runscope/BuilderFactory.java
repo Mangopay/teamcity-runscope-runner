@@ -26,11 +26,7 @@ class BuilderFactory {
         this.token = token;
     }
 
-    public WebTarget getTarget(String path) {
-        return getTarget(BASE_URL, path);
-    }
-
-    public WebTarget getTarget(String baseUrl, String path) {
+    public WebTarget getAbsoluteTarget(String path) {
 
         ClientConfig config = new ClientConfig();
         config.connectorProvider(new ApacheConnectorProvider());
@@ -38,9 +34,16 @@ class BuilderFactory {
         config.property(ClientProperties.PROXY_URI, "http://127.0.0.1:8888");
 
         Client client = ClientBuilder.newClient(config);
-        WebTarget baseTarget = client.target(baseUrl);
+        return client.target(path);
+    }
 
-        return baseTarget.path(path);
+    public WebTarget getTarget(String path) {
+        return getTarget(BASE_URL, path);
+    }
+
+    public WebTarget getTarget(String baseUrl, String path) {
+        return getAbsoluteTarget(baseUrl)
+                .path(path);
     }
 
     public Invocation.Builder getBuilder(WebTarget target) {

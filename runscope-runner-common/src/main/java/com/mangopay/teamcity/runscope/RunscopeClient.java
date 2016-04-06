@@ -31,6 +31,39 @@ public class RunscopeClient {
                 .get(BucketTestsResponse.class)
                 .getData();
     }
+
+    public Test getTest(String bucketKey, String testId) {
+        WebTarget target = builderFactory.getTarget("buckets/{bucketKey}/tests/{testId}")
+                .resolveTemplate("bucketKey", bucketKey)
+                .resolveTemplate("testId", testId);
+
+        return builderFactory.getBuilder(target)
+                .get(TestResponse.class)
+                .getData();
+    }
+
+    public TestResult getRunResult(Run run) {
+        WebTarget target = builderFactory.getTarget("buckets/{bucketKey}/tests/{testId}/results/{runId}")
+                .resolveTemplate("bucketKey", run.getBucketKey())
+                .resolveTemplate("testId", run.getTestId())
+                .resolveTemplate("runId", run.getTestRunId());
+
+        return builderFactory.getBuilder(target)
+                .get(ResultResponse.class)
+                .getData();
+    }
+
+    public Trigger trigger(Test test) {
+        return trigger(test.getTriggerUrl());
+    }
+
+    public Trigger trigger(String triggerUrl) {
+        WebTarget target = builderFactory.getAbsoluteTarget(triggerUrl);
+
+        return builderFactory.getBuilder(target)
+                .get(TriggerResponse.class)
+                .getData();
+    }
 }
 
 
