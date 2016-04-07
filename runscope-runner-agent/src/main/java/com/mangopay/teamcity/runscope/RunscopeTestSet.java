@@ -3,6 +3,7 @@ package com.mangopay.teamcity.runscope;
 import com.mangopay.teamcity.runscope.model.*;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.BuildProgressLogger;
+import jetbrains.buildServer.agent.FlowLogger;
 
 import java.util.List;
 import java.util.Vector;
@@ -21,21 +22,25 @@ public class RunscopeTestSet {
         this.testId = testId;
         this.environment = environment;
 
-        this.logger = logger;
+        this.logger = logger.getFlowLogger(this.bucketId);
     }
 
-    public void run() throws RunBuildException {
+    public void run() throws RunBuildException, InterruptedException {
         Bucket bucket = getBucket();
         List<Test> tests = getTests();
 
+        this.logger.logSuiteStarted(bucket.getName());
         for(Test test : tests) {
-            Trigger trigger = trigger(test);
+            Trigger trigger = trigger(test, this.logger);
+
             for(Run run : trigger.getRuns()) {
-                RunscopeRunWatcher watcher = new RunscopeRunWatcher(client, run, this.logger);
+                FlowLogger runLogger = this.logger.getFlowLogger(run.getTestRunId());
+                RunscopeRunWatcher watcher = new RunscopeRunWatcher(client, run, runLogger);
                 TestResult result = watcher.watch();
-                logResult(test, result);
+                logResult(test, result, this.logger);
             }
         }
+        this.logger.logSuiteFinished(bucket.getName());
     }
 
     private Bucket getBucket() throws RunBuildException {
@@ -62,22 +67,27 @@ public class RunscopeTestSet {
         return tests;
     }
 
-    private Trigger trigger(Test test) {
+    private Trigger trigger(Test test, BuildProgressLogger logger) {
         Trigger trigger = client.trigger(test);
-        logger.logTestStarted(test.getName());
+        logger.logSuiteStarted(test.getName());
+        //logger.logTestStarted(test.getName());
 
         return trigger;
     }
 
-    private void logResult(Test test, TestResult result) {
+    private void logResult(Test test, TestResult result, BuildProgressLogger logger) {
+        logger.logSuiteFinished(test.getName());
+        /*
         String status = result.getResult();
-        if("failed".equals(status)) {
-            logger.logTestFailed(test.getName(), "test has failed", "no details");
+        String testName = test.getName();
+
+        if("fail".equals(status)) {
+            logger.logTestFailed(testName, "Failed", "No details available for now");
         }
         else if("canceled".equals(status)) {
-            logger.logTestFailed(test.getName(), "test has been canceled", "no details");
+            logger.logTestFailed(testName, "Canceled", "Canceled on Runscope side");
         }
 
-        logger.logTestFinished(test.getName());
+        logger.logTestFinished(testName);*/
     }
 }

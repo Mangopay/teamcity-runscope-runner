@@ -1,10 +1,13 @@
 package com.mangopay.teamcity.runscope.model;
 
+import javax.xml.bind.annotation.XmlElement;
+
 public class Step {
     private String id;
     private String note;
     private String stepType;
-    private String result;
+    private String testName;
+    private int duration;
 
     public String getId() {
         return id;
@@ -26,15 +29,25 @@ public class Step {
         return stepType;
     }
 
+    @XmlElement(name="step_type")
     public void setStepType(String stepType) {
         this.stepType = stepType;
     }
 
-    public String getResult() {
-        return result;
+    public int getDuration() {
+        return duration;
     }
 
-    public void setResult(String result) {
-        this.result = result;
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public String getTestName() {
+        return testName;
+    }
+
+    @XmlElement(name="test_name")
+    public void setTestName(String testName) {
+        this.testName = testName;
     }
 }

@@ -2,6 +2,7 @@ package com.mangopay.teamcity.runscope.model;
 
 import javax.xml.bind.annotation.XmlElement;
 import java.util.Date;
+import java.util.List;
 
 public class TestResult {
     private int assertionsDefined;
@@ -9,6 +10,7 @@ public class TestResult {
     private int assertionsPassed;
     private String result;
     private Date finishedAt;
+    private List<Request> requests;
 
     public int getAssertionsDefined() {
         return assertionsDefined;
@@ -52,5 +54,13 @@ public class TestResult {
     @XmlElement(name="finished_at")
     public void setFinishedAt(Date finishedAt) {
         this.finishedAt = finishedAt;
+    }
+
+    public List<Request> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(List<Request> requests) {
+        this.requests = requests;
     }
 }

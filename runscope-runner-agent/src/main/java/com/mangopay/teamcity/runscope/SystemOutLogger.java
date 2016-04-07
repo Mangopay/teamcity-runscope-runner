@@ -1,23 +1,36 @@
 package com.mangopay.teamcity.runscope;
 
 import jetbrains.buildServer.BuildProblemData;
-import jetbrains.buildServer.agent.BuildProgressLogger;
 import jetbrains.buildServer.agent.FlowLogger;
 import jetbrains.buildServer.messages.BuildMessage1;
 
 import java.util.Date;
 
-public class SystemOutLogger implements BuildProgressLogger {
+public class SystemOutLogger implements FlowLogger {
+
+    private String flow;
+
+    public SystemOutLogger() {
+
+    }
+
+    public SystemOutLogger(String flow) {
+        if(flow != null && !flow.isEmpty()) {
+            this.flow = '[' + flow + ']';
+        }
+    }
 
     private void log(String cateory, Object... args) {
         StringBuilder sb = new StringBuilder();
+        if(flow != null && !flow.isEmpty()) sb.append(flow);
+
         sb.append(cateory);
         for(Object arg : args) {
             sb.append("\n\t");
             sb.append(arg);
         }
 
-        System.out.print(sb.toString());
+        System.out.println(sb.toString());
     }
 
     public void activityStarted(String s, String s1) {
@@ -152,7 +165,7 @@ public class SystemOutLogger implements BuildProgressLogger {
 
     @Override
     public FlowLogger getFlowLogger(String s) {
-        return null;
+        return new SystemOutLogger(s);
     }
 
     @Override
@@ -191,5 +204,15 @@ public class SystemOutLogger implements BuildProgressLogger {
 
     public void progressMessage(String s) {
         log("progressMessage", s);
+    }
+
+    @Override
+    public void startFlow() {
+        log("startFlow");
+    }
+
+    @Override
+    public void disposeFlow() {
+        log("disposeFlow");
     }
 }
