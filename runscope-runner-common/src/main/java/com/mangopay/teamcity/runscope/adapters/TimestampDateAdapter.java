@@ -1,4 +1,4 @@
-package com.mangopay.teamcity.runscope;
+package com.mangopay.teamcity.runscope.adapters;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.Date;

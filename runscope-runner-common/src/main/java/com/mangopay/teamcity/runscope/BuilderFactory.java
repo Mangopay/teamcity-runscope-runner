@@ -31,7 +31,7 @@ class BuilderFactory {
         ClientConfig config = new ClientConfig();
         config.connectorProvider(new ApacheConnectorProvider());
         config.register(createMoxyJsonResolver());
-        //config.property(ClientProperties.PROXY_URI, "http://127.0.0.1:8888");
+        config.property(ClientProperties.PROXY_URI, "http://127.0.0.1:8888");
 
         Client client = ClientBuilder.newClient(config);
         return client.target(path);

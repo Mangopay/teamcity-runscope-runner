@@ -1,13 +1,11 @@
 package com.mangopay.teamcity.runscope.model;
 
-import javax.xml.bind.annotation.XmlElement;
-
 public class Request {
     private int assertionsDefined;
     private int assertionsFailed;
     private int assertionsPassed;
 
-    private String result;
+    private RequestStatus result;
 
     private int scriptsDefined;
     private int scriptsFailed;
@@ -46,11 +44,11 @@ public class Request {
         this.assertionsPassed = assertionsPassed;
     }
 */
-    public String getResult() {
+    public RequestStatus getResult() {
         return result;
     }
 
-    public void setResult(String result) {
+    public void setResult(RequestStatus result) {
         this.result = result;
     }
 /*

@@ -47,13 +47,13 @@ class Main {
             }
             catch(Exception e) {}
              result = client.getRunResult(run);
-        } while(result.getResult() == "working");
+        } while(result.getResult() == TestStatus.WORKING);
 
-        if(result.getResult() == "fail") {
+        if(result.getResult() == TestStatus.FAILED) {
             System.out.printf("test failed", trigger.getRunsStarted(), trigger.getRunsTotal());
             return 2;
         }
-        if(result.getResult() == "pass") {
+        if(result.getResult() == TestStatus.PASSED) {
             System.out.printf("test succeeded", trigger.getRunsStarted(), trigger.getRunsTotal());
             return 0;
         }

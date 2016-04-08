@@ -8,7 +8,7 @@ public class TestResult {
     private int assertionsDefined;
     private int assertionsFailed;
     private int assertionsPassed;
-    private String result;
+    private TestStatus result;
     private Date finishedAt;
     private List<Request> requests;
 
@@ -39,11 +39,11 @@ public class TestResult {
         this.assertionsPassed = assertionsPassed;
     }
 
-    public String getResult() {
+    public TestStatus getResult() {
         return result;
     }
 
-    public void setResult(String result) {
+    public void setResult(TestStatus result) {
         this.result = result;
     }
 

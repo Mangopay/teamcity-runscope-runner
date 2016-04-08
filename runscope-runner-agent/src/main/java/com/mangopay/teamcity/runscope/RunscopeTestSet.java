@@ -37,7 +37,7 @@ public class RunscopeTestSet {
                 FlowLogger runLogger = this.logger.getFlowLogger(run.getTestRunId());
                 RunscopeRunWatcher watcher = new RunscopeRunWatcher(client, run, runLogger);
                 TestResult result = watcher.watch();
-                logResult(test, result, this.logger);
+                logTestFinished(test, this.logger);
             }
         }
         this.logger.logSuiteFinished(bucket.getName());
@@ -70,24 +70,11 @@ public class RunscopeTestSet {
     private Trigger trigger(Test test, BuildProgressLogger logger) {
         Trigger trigger = client.trigger(test);
         logger.logSuiteStarted(test.getName());
-        //logger.logTestStarted(test.getName());
 
         return trigger;
     }
 
-    private void logResult(Test test, TestResult result, BuildProgressLogger logger) {
+    private void logTestFinished(Test test, BuildProgressLogger logger) {
         logger.logSuiteFinished(test.getName());
-        /*
-        String status = result.getResult();
-        String testName = test.getName();
-
-        if("fail".equals(status)) {
-            logger.logTestFailed(testName, "Failed", "No details available for now");
-        }
-        else if("canceled".equals(status)) {
-            logger.logTestFailed(testName, "Canceled", "Canceled on Runscope side");
-        }
-
-        logger.logTestFinished(testName);*/
     }
 }

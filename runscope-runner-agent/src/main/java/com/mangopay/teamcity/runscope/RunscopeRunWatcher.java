@@ -12,7 +12,7 @@ public class RunscopeRunWatcher {
     private List<Step> steps;
 
     private BuildProgressLogger logger;
-    private String[] stepsStatus;
+    private RequestStatus[] stepsStatus;
 
     public RunscopeRunWatcher(RunscopeClient client, Run run, BuildProgressLogger logger) {
         this.client = client;
@@ -20,7 +20,7 @@ public class RunscopeRunWatcher {
         this.logger = logger;
 
         steps = client.getTestSteps(this.run.getBucketKey(), this.run.getTestId());
-        stepsStatus = new String[steps.size() + 1];
+        stepsStatus = new RequestStatus[steps.size() + 1];
     }
 
     public TestResult watch() throws InterruptedException, CancellationException {
@@ -31,10 +31,10 @@ public class RunscopeRunWatcher {
             Thread.sleep(1000);
             result = client.getRunResult(this.run);
             logProgress(result);
-            done = isDone(result);
+            done = result.getResult().isDone();
         }
 
-        if(isCanceled(result)) throw new CancellationException("Test has been canceled on Runscope side");
+        if(result.getResult() == TestStatus.CANCELED) throw new CancellationException("Test has been canceled on Runscope side");
         return result;
     }
 
@@ -43,49 +43,33 @@ public class RunscopeRunWatcher {
 
         for(int i = 0; i < requests.size(); i++) {
             Request request = requests.get(i);
-            String status = request.getResult();
+            RequestStatus status = request.getResult();
 
             if(status == null) continue;
             else if(status.equals(this.stepsStatus[i])) continue;
 
-            if (this.stepsStatus[i] == null) logStepStarted(i);
-            if(isDone(status)) logStepFinished(i, request);
+            if(status.isDone()) {
+                logStepFinished(i, request);
+                logStepStarted(i + 1);
+            }
 
             this.stepsStatus[i] = status;
         }
     }
-
-    private Boolean isDone(TestResult result) {
-        String status = result.getResult();
-        return ("pass".equals(status) || "fail".equals(status) || isCanceled(result));
-    }
-
-    private Boolean isCanceled(TestResult result) {
-        String status = result.getResult();
-        return "canceled".equals(status);
-    }
-
-    private Boolean isDone(String result) {
-        return ("pass".equals(result) || "fail".equals(result) || isCanceled(result));
-    }
-
-    private Boolean isCanceled(String result) {
-        return "canceled".equals(result);
-    }
-
     private void logStepStarted(int stepIndex) {
+        if(stepIndex > this.steps.size()) return;
         this.logger.logTestStarted(getStepTestName(stepIndex));
     }
 
     private void logStepFinished(int stepIndex, Request request) {
-        String result = request.getResult();
+        RequestStatus result = request.getResult();
         String testName = getStepTestName(stepIndex);
 
-        if("fail".equals(result)) {
-            this.logger.logTestFailed(testName, "Failed", "No details available for now");
+        if(result == RequestStatus.FAILED) {
+            this.logger.logTestFailed(testName, "Failed", this.run.getUrl());
         }
-        else if("canceled".equals(result)) {
-            this.logger.logTestFailed(testName, "Canceled", "Canceled on Runscope side");
+        else if(result == RequestStatus.CANCELED) {
+            this.logger.logTestFailed(testName, "Canceled", this.run.getUrl());
         }
 
         this.logger.logTestFinished(testName);
