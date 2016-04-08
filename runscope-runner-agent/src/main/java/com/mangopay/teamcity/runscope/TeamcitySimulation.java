@@ -1,6 +1,8 @@
 package com.mangopay.teamcity.runscope;
 
 
+import com.mangopay.teamcity.runscope.client.RunscopeClient;
+
 public class TeamcitySimulation {
 
     //simulate workflow that teamcity should implement on a test run

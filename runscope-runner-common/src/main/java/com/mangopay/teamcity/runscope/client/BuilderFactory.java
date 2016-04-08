@@ -1,4 +1,4 @@
-package com.mangopay.teamcity.runscope;
+package com.mangopay.teamcity.runscope.client;
 
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;

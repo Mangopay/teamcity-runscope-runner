@@ -1,8 +1,8 @@
-package com.mangopay.teamcity.runscope;
+package com.mangopay.teamcity.runscope.client;
 
 import com.mangopay.teamcity.runscope.model.TestResult;
 
-public class ResultResponse extends Response {
+class ResultResponse extends Response {
     private TestResult data;
 
     public TestResult getData() {

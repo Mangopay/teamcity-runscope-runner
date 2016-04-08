@@ -1,17 +1,17 @@
 package com.mangopay.teamcity.runscope.model;
 
 public class Bucket {
-    private Boolean def;
+    private boolean def;
     private String key;
     private String name;
     private Team team;
-    private Boolean ssl;
+    private boolean ssl;
 
-    public Boolean getDefault() {
+    public boolean getDefault() {
         return def;
     }
 
-    public void setDefault(Boolean def) {
+    public void setDefault(boolean def) {
         this.def = def;
     }
 
@@ -39,11 +39,11 @@ public class Bucket {
         this.team = team;
     }
 
-    public Boolean getSsl() {
+    public boolean getSsl() {
         return ssl;
     }
 
-    public void setSsl(Boolean ssl) {
+    public void setSsl(boolean ssl) {
         this.ssl = ssl;
     }
 }

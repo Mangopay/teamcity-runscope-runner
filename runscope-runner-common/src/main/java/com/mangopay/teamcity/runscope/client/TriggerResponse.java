@@ -1,4 +1,4 @@
-package com.mangopay.teamcity.runscope;
+package com.mangopay.teamcity.runscope.client;
 
 import com.mangopay.teamcity.runscope.model.Trigger;
 

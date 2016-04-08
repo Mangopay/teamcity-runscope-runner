@@ -1,9 +1,7 @@
-package com.mangopay.teamcity.runscope;
+package com.mangopay.teamcity.runscope.client;
 
-import com.mangopay.teamcity.runscope.model.Bucket;
-import com.mangopay.teamcity.runscope.model.FakeClass;
-import com.mangopay.teamcity.runscope.model.FakeClassResponse;
-import com.mangopay.teamcity.runscope.model.Test;
+import com.mangopay.teamcity.runscope.fake.FakeClass;
+import com.mangopay.teamcity.runscope.fake.FakeClassResponse;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;

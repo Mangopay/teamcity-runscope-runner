@@ -5,6 +5,7 @@ public enum TestStatus {
     FAILED("fail"),
     PASSED("pass"),
     WORKING("working"),
+    QUEUED("queued"),
     UNKNOWN("unknown");
 
     private final String status;

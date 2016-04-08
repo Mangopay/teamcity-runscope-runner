@@ -1,10 +1,10 @@
-package com.mangopay.teamcity.runscope;
+package com.mangopay.teamcity.runscope.client;
 
 import com.mangopay.teamcity.runscope.model.Step;
 
 import java.util.List;
 
-public class TestStepsResponse extends Response {
+class TestStepsResponse extends Response {
     private List<Step> data;
 
     public List<Step> getData() {

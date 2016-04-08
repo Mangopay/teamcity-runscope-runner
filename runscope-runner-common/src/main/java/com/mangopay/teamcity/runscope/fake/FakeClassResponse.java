@@ -1,7 +1,4 @@
-package com.mangopay.teamcity.runscope.model;
-
-import java.util.List;
-import java.util.Vector;
+package com.mangopay.teamcity.runscope.fake;
 
 public class FakeClassResponse {
     private FakeClass data;

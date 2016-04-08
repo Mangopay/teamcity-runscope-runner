@@ -1,4 +1,4 @@
-package com.mangopay.teamcity.runscope.model;
+package com.mangopay.teamcity.runscope.fake;
 
 import javax.xml.bind.annotation.XmlElement;
 

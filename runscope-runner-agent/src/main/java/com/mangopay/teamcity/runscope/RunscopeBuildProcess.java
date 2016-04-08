@@ -15,7 +15,7 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
     private String test;
     private String environment;
 
-    RunscopeBuildProcess(@NotNull BuildRunnerContext context) {
+    RunscopeBuildProcess(@NotNull final BuildRunnerContext context) {
         super(context);
 
         Map<String, String> parameters = context.getRunnerParameters();
@@ -27,7 +27,7 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
 
     @Override
     public BuildFinishedStatus call() throws Exception {
-        RunscopeTestSet runscopeTestSet = new RunscopeTestSet(token, bucket, test, environment, this.logger);
+        RunscopeTestSet runscopeTestSet = new RunscopeTestSet(token, bucket, test, environment, logger);
         runscopeTestSet.run();
 
         return BuildFinishedStatus.FINISHED_SUCCESS;

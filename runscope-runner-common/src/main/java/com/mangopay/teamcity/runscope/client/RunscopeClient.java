@@ -1,8 +1,7 @@
-package com.mangopay.teamcity.runscope;
+package com.mangopay.teamcity.runscope.client;
 import com.mangopay.teamcity.runscope.model.*;
 
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
 import java.util.List;
 
 

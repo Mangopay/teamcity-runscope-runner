@@ -1,5 +1,6 @@
 package com.mangopay.teamcity.runscope;
 
+import com.mangopay.teamcity.runscope.client.RunscopeClient;
 import com.mangopay.teamcity.runscope.model.*;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.BuildProgressLogger;
@@ -9,13 +10,13 @@ import java.util.List;
 import java.util.Vector;
 
 public class RunscopeTestSet {
-    private String bucketId;
-    private String testId;
-    private String environment;
-    private RunscopeClient client;
-    private BuildProgressLogger logger;
+    private final String bucketId;
+    private final String testId;
+    private final String environment;
+    private final RunscopeClient client;
+    private final BuildProgressLogger logger;
 
-    public RunscopeTestSet(String token, String bucketId, String testId, String environment, BuildProgressLogger logger) {
+    public RunscopeTestSet(final String token, final String bucketId, final String testId, final String environment, final BuildProgressLogger logger) {
         this.client = new RunscopeClient(token);
 
         this.bucketId = bucketId;
@@ -29,15 +30,15 @@ public class RunscopeTestSet {
         Bucket bucket = getBucket();
         List<Test> tests = getTests();
 
-        this.logger.logSuiteStarted(bucket.getName());
+        logger.logSuiteStarted(bucket.getName());
         for(Test test : tests) {
-            Trigger trigger = trigger(test, this.logger);
+            Trigger trigger = trigger(test);
 
             for(Run run : trigger.getRuns()) {
-                FlowLogger runLogger = this.logger.getFlowLogger(run.getTestRunId());
+                FlowLogger runLogger = logger.getFlowLogger(run.getTestRunId());
                 RunscopeRunWatcher watcher = new RunscopeRunWatcher(client, run, runLogger);
-                TestResult result = watcher.watch();
-                logTestFinished(test, this.logger);
+                watcher.watch();
+                logTestFinished(test);
             }
         }
         this.logger.logSuiteFinished(bucket.getName());
@@ -67,14 +68,14 @@ public class RunscopeTestSet {
         return tests;
     }
 
-    private Trigger trigger(Test test, BuildProgressLogger logger) {
+    private Trigger trigger(final Test test) {
         Trigger trigger = client.trigger(test);
         logger.logSuiteStarted(test.getName());
 
         return trigger;
     }
 
-    private void logTestFinished(Test test, BuildProgressLogger logger) {
+    private void logTestFinished(final Test test) {
         logger.logSuiteFinished(test.getName());
     }
 }
