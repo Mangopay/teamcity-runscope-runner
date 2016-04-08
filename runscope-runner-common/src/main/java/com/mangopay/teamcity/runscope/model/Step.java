@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlElement;
 public class Step {
     private String id;
     private String note;
-    private String stepType;
+    private StepType stepType;
     private String testName;
     private int duration;
 
@@ -25,12 +25,12 @@ public class Step {
         this.note = note;
     }
 
-    public String getStepType() {
+    public StepType getStepType() {
         return stepType;
     }
 
     @XmlElement(name="step_type")
-    public void setStepType(String stepType) {
+    public void setStepType(StepType stepType) {
         this.stepType = stepType;
     }
 

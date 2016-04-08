@@ -1,49 +1,57 @@
 package com.mangopay.teamcity.runscope.model;
 
+import javax.xml.bind.annotation.XmlElement;
+import java.util.List;
+import java.util.Vector;
+
 public class Request {
-    private int assertionsDefined;
-    private int assertionsFailed;
-    private int assertionsPassed;
+    private Integer assertionsDefined;
+    private Integer assertionsFailed;
+    private Integer assertionsPassed;
 
     private RequestStatus result;
 
-    private int scriptsDefined;
-    private int scriptsFailed;
-    private int scriptsPassed;
+    private Integer scriptsDefined;
+    private Integer scriptsFailed;
+    private Integer scriptsPassed;
 
     private String url;
 
-    private int variablesDefined;
-    private int variablesFailed;
-    private int variablesPassed;
+    private Integer variablesDefined;
+    private Integer variablesFailed;
+    private Integer variablesPassed;
 
-    /*public int getAssertionsDefined() {
+    private List<RequestAssertion> assertions;
+    private List<RequestVariable> variables;
+    private List<RequestScript> scripts;
+
+    public Integer getAssertionsDefined() {
         return assertionsDefined;
     }
 
     @XmlElement(name="assertions_defined")
-    public void setAssertionsDefined(int assertionsDefined) {
+    public void setAssertionsDefined(Integer assertionsDefined) {
         this.assertionsDefined = assertionsDefined;
     }
 
-    public int getAssertionsFailed() {
+    public Integer getAssertionsFailed() {
         return assertionsFailed;
     }
 
     @XmlElement(name="assertions_failed")
-    public void setAssertionsFailed(int assertionsFailed) {
+    public void setAssertionsFailed(Integer assertionsFailed) {
         this.assertionsFailed = assertionsFailed;
     }
 
-    public int getAssertionsPassed() {
+    public Integer getAssertionsPassed() {
         return assertionsPassed;
     }
 
     @XmlElement(name="assertions_passed")
-    public void setAssertionsPassed(int assertionsPassed) {
+    public void setAssertionsPassed(Integer assertionsPassed) {
         this.assertionsPassed = assertionsPassed;
     }
-*/
+
     public RequestStatus getResult() {
         return result;
     }
@@ -51,31 +59,31 @@ public class Request {
     public void setResult(RequestStatus result) {
         this.result = result;
     }
-/*
-    public int getScriptsDefined() {
+
+    public Integer getScriptsDefined() {
         return scriptsDefined;
     }
 
     @XmlElement(name="scripts_defined")
-    public void setScriptsDefined(int scriptsDefined) {
+    public void setScriptsDefined(Integer scriptsDefined) {
         this.scriptsDefined = scriptsDefined;
     }
 
-    public int getScriptsFailed() {
+    public Integer getScriptsFailed() {
         return scriptsFailed;
     }
 
     @XmlElement(name="scripts_failed")
-    public void setScriptsFailed(int scriptsFailed) {
+    public void setScriptsFailed(Integer scriptsFailed) {
         this.scriptsFailed = scriptsFailed;
     }
 
-    public int getScriptsPassed() {
+    public Integer getScriptsPassed() {
         return scriptsPassed;
     }
 
     @XmlElement(name="scripts_passed")
-    public void setScriptsPassed(int scriptsPassed) {
+    public void setScriptsPassed(Integer scriptsPassed) {
         this.scriptsPassed = scriptsPassed;
     }
 
@@ -87,30 +95,55 @@ public class Request {
         this.url = url;
     }
 
-    public int getVariablesDefined() {
+    public Integer getVariablesDefined() {
         return variablesDefined;
     }
 
     @XmlElement(name="variables_defined")
-    public void setVariablesDefined(int variablesDefined) {
+    public void setVariablesDefined(Integer variablesDefined) {
         this.variablesDefined = variablesDefined;
     }
 
-    public int getVariablesFailed() {
+    public Integer getVariablesFailed() {
         return variablesFailed;
     }
 
     @XmlElement(name="variables_failed")
-    public void setVariablesFailed(int variablesFailed) {
+    public void setVariablesFailed(Integer variablesFailed) {
         this.variablesFailed = variablesFailed;
     }
 
-    public int getVariablesPassed() {
+    public Integer getVariablesPassed() {
         return variablesPassed;
     }
 
     @XmlElement(name="variables_passed")
-    public void setVariablesPassed(int variablesPassed) {
+    public void setVariablesPassed(Integer variablesPassed) {
         this.variablesPassed = variablesPassed;
-    }*/
+    }
+
+
+    public List<RequestAssertion> getAssertions() {
+        return assertions;
+    }
+
+    public void setAssertions(List<RequestAssertion> assertions) {
+        this.assertions = assertions;
+    }
+
+    public List<RequestVariable> getVariables() {
+        return variables;
+    }
+
+    public void setVariables(List<RequestVariable> variables) {
+        this.variables = variables;
+    }
+
+    public List<RequestScript> getScripts() {
+        return scripts;
+    }
+
+    public void setScripts(List<RequestScript> scripts) {
+        this.scripts = scripts;
+    }
 }

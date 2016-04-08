@@ -15,16 +15,24 @@ public class RunscopeRunWatcher {
     private final BuildProgressLogger logger;
     private final RequestStatus[] stepsStatus;
 
+    private final RequestFormatter formatter;
+
     public RunscopeRunWatcher(final RunscopeClient client, final Run run, final BuildProgressLogger logger) {
         this.client = client;
         this.run = run;
         this.logger = logger;
 
+        Step initialStep = new Step();
+        initialStep.setNote("Initial script");
         steps = client.getTestSteps(this.run.getBucketKey(), this.run.getTestId());
-        stepsStatus = new RequestStatus[steps.size() + 1];
+        steps.add(0, initialStep);
+        stepsStatus = new RequestStatus[steps.size()];
+
+        formatter = new RequestFormatter(run);
     }
 
     public TestResult watch() throws InterruptedException, CancellationException {
+        logStepStarted(0);
         Boolean done = false;
         TestResult result = null;
 
@@ -58,20 +66,24 @@ public class RunscopeRunWatcher {
         }
     }
     private void logStepStarted(final int stepIndex) {
-        if(stepIndex > steps.size()) return;
+        if(stepIndex > steps.size() - 1) return;
         logger.logTestStarted(getStepTestName(stepIndex));
     }
 
     private void logStepFinished(final int stepIndex, final Request request) {
         RequestStatus result = request.getResult();
+        Step step = steps.get(stepIndex);
+
         String testName = getStepTestName(stepIndex);
+        String output = formatter.getOutput(step, request);
 
         if(result == RequestStatus.FAILED) {
-            logger.logTestFailed(testName, "Failed", run.getUrl());
+            logger.logTestFailed(testName, "Failed", output);
         }
         else if(result == RequestStatus.CANCELED) {
-            logger.logTestFailed(testName, "Canceled", run.getUrl());
+            logger.logTestFailed(testName, "Canceled", output);
         }
+        else logger.message(output);
 
         logger.logTestFinished(testName);
     }
@@ -83,23 +95,7 @@ public class RunscopeRunWatcher {
             sb.append(" - ");
         }
 
-        if(stepIndex == 0) sb.append("Initial script");
-        else {
-            Step step = steps.get(stepIndex -1);
-            if("pause".equals(step.getStepType())) {
-                sb.append("Pause ");
-                sb.append(step.getDuration());
-                sb.append(" second(s)");
-            }
-            else if("ghost-inspector".equals(step.getStepType())) {
-                sb.append("[Ghost Inspector] ");
-                sb.append(step.getTestName());
-            }
-            else {
-                sb.append(step.getNote());
-            }
-        }
-
-        return sb.toString();
+        Step step = steps.get(stepIndex);
+        return sb.append(formatter.getName(step)).toString();
     }
 }

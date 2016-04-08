@@ -5,9 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 public class TestResult {
-    private int assertionsDefined;
-    private int assertionsFailed;
-    private int assertionsPassed;
+    private Integer assertionsDefined;
+    private Integer assertionsFailed;
+    private Integer assertionsPassed;
     private TestStatus result;
     private Date finishedAt;
     private List<Request> requests;
@@ -17,25 +17,25 @@ public class TestResult {
     }
 
     @XmlElement(name="assertions_defined")
-    public void setAssertionsDefined(int assertionsDefined) {
+    public void setAssertionsDefined(Integer assertionsDefined) {
         this.assertionsDefined = assertionsDefined;
     }
 
-    public int getAssertionsFailed() {
+    public Integer getAssertionsFailed() {
         return assertionsFailed;
     }
 
     @XmlElement(name="assertions_failed")
-    public void setAssertionsFailed(int assertionsFailed) {
+    public void setAssertionsFailed(Integer assertionsFailed) {
         this.assertionsFailed = assertionsFailed;
     }
 
-    public int getAssertionsPassed() {
+    public Integer getAssertionsPassed() {
         return assertionsPassed;
     }
 
     @XmlElement(name="assertions_passed")
-    public void setAssertionsPassed(int assertionsPassed) {
+    public void setAssertionsPassed(Integer assertionsPassed) {
         this.assertionsPassed = assertionsPassed;
     }
 

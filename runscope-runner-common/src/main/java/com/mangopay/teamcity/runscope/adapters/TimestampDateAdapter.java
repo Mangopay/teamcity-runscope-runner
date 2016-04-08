@@ -5,14 +5,13 @@ import java.util.Date;
 
 public class TimestampDateAdapter extends XmlAdapter<Double, Date> {
     @Override
-    public Date unmarshal(Double v) throws Exception {
+    public Date unmarshal(final Double v) throws Exception {
         if(v == null) return null;
-        v = v * 1000;
-        return new Date(v.longValue());
+        return new Date(v.longValue() * 1000);
     }
 
     @Override
-    public Double marshal(Date v) throws Exception {
+    public Double marshal(final Date v) throws Exception {
         if(v == null) return null;
         return new Double(v.getTime() / 1000.0);
     }

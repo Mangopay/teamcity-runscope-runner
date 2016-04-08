@@ -1,7 +1,5 @@
 package com.mangopay.teamcity.runscope.adapters;
 
-import com.mangopay.teamcity.runscope.model.TestStatus;
-
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.*;
 
@@ -21,14 +19,14 @@ public abstract class EnumAdapter<T extends Enum<T>> extends XmlAdapter<String, 
 
     }
     @Override
-    public Enum<T> unmarshal(String v) throws Exception {
+    public Enum<T> unmarshal(final String v) throws Exception {
         if(values.containsKey(v)) return values.get(v);
 
         return defaultValue;
     }
 
     @Override
-    public String marshal(Enum<T> v) throws Exception {
+    public String marshal(final Enum<T> v) throws Exception {
         return v.toString();
     }
 }
