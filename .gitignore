@@ -20,6 +20,6 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 
-build*/
-target*/
-.idea*/
+build/
+target/
+.idea/
