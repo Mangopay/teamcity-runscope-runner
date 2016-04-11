@@ -31,7 +31,6 @@ public class Request {
         return assertionsDefined;
     }
 
-    @XmlElement(name="assertions_defined")
 	@JsonProperty("assertions_defined")
     public void setAssertionsDefined(Integer assertionsDefined) {
         this.assertionsDefined = assertionsDefined;
@@ -41,7 +40,6 @@ public class Request {
         return assertionsFailed;
     }
 
-    @XmlElement(name="assertions_failed")
 	@JsonProperty("assertions_failed")
     public void setAssertionsFailed(Integer assertionsFailed) {
         this.assertionsFailed = assertionsFailed;
@@ -51,7 +49,6 @@ public class Request {
         return assertionsPassed;
     }
 
-    @XmlElement(name="assertions_passed")
 	@JsonProperty("assertions_passed")
     public void setAssertionsPassed(Integer assertionsPassed) {
         this.assertionsPassed = assertionsPassed;
@@ -69,7 +66,6 @@ public class Request {
         return scriptsDefined;
     }
 
-    @XmlElement(name="scripts_defined")
 	@JsonProperty("scripts_defined")
     public void setScriptsDefined(Integer scriptsDefined) {
         this.scriptsDefined = scriptsDefined;
@@ -79,7 +75,6 @@ public class Request {
         return scriptsFailed;
     }
 
-    @XmlElement(name="scripts_failed")
 	@JsonProperty("scripts_failed")
     public void setScriptsFailed(Integer scriptsFailed) {
         this.scriptsFailed = scriptsFailed;
@@ -89,7 +84,6 @@ public class Request {
         return scriptsPassed;
     }
 
-    @XmlElement(name="scripts_passed")
 	@JsonProperty("scripts_passed")
     public void setScriptsPassed(Integer scriptsPassed) {
         this.scriptsPassed = scriptsPassed;
@@ -107,7 +101,6 @@ public class Request {
         return variablesDefined;
     }
 
-    @XmlElement(name="variables_defined")
 	@JsonProperty("variables_defined")
     public void setVariablesDefined(Integer variablesDefined) {
         this.variablesDefined = variablesDefined;
@@ -117,7 +110,6 @@ public class Request {
         return variablesFailed;
     }
 
-    @XmlElement(name="variables_failed")
 	@JsonProperty("variables_failed")
     public void setVariablesFailed(Integer variablesFailed) {
         this.variablesFailed = variablesFailed;
@@ -127,7 +119,6 @@ public class Request {
         return variablesPassed;
     }
 
-    @XmlElement(name="variables_passed")
 	@JsonProperty("variables_passed")
     public void setVariablesPassed(Integer variablesPassed) {
         this.variablesPassed = variablesPassed;

@@ -18,7 +18,6 @@ public class TestResult {
         return assertionsDefined;
     }
 
-    @XmlElement(name="assertions_defined")
 	@JsonProperty("assertions_defined")
     public void setAssertionsDefined(Integer assertionsDefined) {
         this.assertionsDefined = assertionsDefined;
@@ -28,7 +27,6 @@ public class TestResult {
         return assertionsFailed;
     }
 
-    @XmlElement(name="assertions_failed")
 	@JsonProperty("assertions_failed")
     public void setAssertionsFailed(Integer assertionsFailed) {
         this.assertionsFailed = assertionsFailed;
@@ -38,7 +36,6 @@ public class TestResult {
         return assertionsPassed;
     }
 
-    @XmlElement(name="assertions_passed")
 	@JsonProperty("assertions_passed")
     public void setAssertionsPassed(Integer assertionsPassed) {
         this.assertionsPassed = assertionsPassed;
@@ -56,7 +53,6 @@ public class TestResult {
         return finishedAt;
     }
 
-    @XmlElement(name="finished_at")
 	@JsonProperty("finished_at")
     public void setFinishedAt(Date finishedAt) {
         this.finishedAt = finishedAt;

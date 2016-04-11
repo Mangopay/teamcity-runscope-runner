@@ -33,7 +33,6 @@ public class Step {
         return stepType;
     }
 
-    @XmlElement(name="step_type")
 	@JsonProperty("step_type")
     public void setStepType(StepType stepType) {
         this.stepType = stepType;
@@ -51,7 +50,6 @@ public class Step {
         return testName;
     }
 
-    @XmlElement(name="test_name")
 	@JsonProperty("test_name")
     public void setTestName(String testName) {
         this.testName = testName;

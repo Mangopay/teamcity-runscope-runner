@@ -58,7 +58,6 @@ public class Test {
         return triggerUrl;
     }
 
-    @XmlElement(name="trigger_url")
 	@JsonProperty("trigger_url")
     public void setTriggerUrl(String triggerUrl) {
         this.triggerUrl = triggerUrl;

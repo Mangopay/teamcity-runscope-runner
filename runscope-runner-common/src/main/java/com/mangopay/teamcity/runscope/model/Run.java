@@ -20,7 +20,6 @@ public class Run {
         return bucketKey;
     }
 
-    @XmlElement(name="bucket_key")
 	@JsonProperty("bucket_key")
     public void setBucketKey(String bucketKey) {
         this.bucketKey = bucketKey;
@@ -30,7 +29,6 @@ public class Run {
         return environmentId;
     }
 
-    @XmlElement(name="environment_id")
 	@JsonProperty("environment_id")
     public void setEnvironmentId(String environmentId) {
         this.environmentId = environmentId;
@@ -40,7 +38,6 @@ public class Run {
         return environmentName;
     }
 
-    @XmlElement(name="environment_name")
 	@JsonProperty("environment_name")
     public void setEnvironmentName(String environmentName) {
         this.environmentName = environmentName;
@@ -58,7 +55,6 @@ public class Run {
         return testId;
     }
 
-    @XmlElement(name="test_id")
 	@JsonProperty("test_id")
     public void setTestId(String testId) {
         this.testId = testId;
@@ -68,7 +64,6 @@ public class Run {
         return testName;
     }
 
-    @XmlElement(name="test_name")
 	@JsonProperty("test_name")
     public void setTestName(String testName) {
         this.testName = testName;
@@ -78,7 +73,6 @@ public class Run {
         return testRunId;
     }
 
-    @XmlElement(name="test_run_id")
 	@JsonProperty("test_run_id")
     public void setTestRunId(String testRunId) {
         this.testRunId = testRunId;
@@ -88,7 +82,6 @@ public class Run {
         return testRunUrl;
     }
 
-    @XmlElement(name="test_run_url")
 	@JsonProperty("test_run_url")
     public void setTestRunUrl(String testRunUrl) {
         this.testRunUrl = testRunUrl;
@@ -98,7 +91,6 @@ public class Run {
         return testUrl;
     }
 
-    @XmlElement(name="test_url")
 	@JsonProperty("test_url")
     public void setTestUrl(String testUrl) {
         this.testUrl = testUrl;

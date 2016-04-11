@@ -33,7 +33,6 @@ public class RequestAssertion {
         return actualValue;
     }
 
-    @XmlElement(name="actual_value")
 	@JsonProperty("actual_value")
     public void setActualValue(String actualValue) {
         this.actualValue = actualValue;
@@ -43,7 +42,6 @@ public class RequestAssertion {
         return targetValue;
     }
 
-    @XmlElement(name="target_value")
 	@JsonProperty("target_value")
     public void setTargetValue(String targetValue) {
         this.targetValue = targetValue;
