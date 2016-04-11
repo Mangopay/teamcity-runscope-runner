@@ -32,7 +32,7 @@ public class RunscopeTestSet {
 
         logger.logSuiteStarted(bucket.getName());
         for(Test test : tests) {
-            Trigger trigger = trigger(test);
+            Trigger trigger = trigger(test, environment);
 
             for(Run run : trigger.getRuns()) {
                 FlowLogger runLogger = logger.getFlowLogger(run.getTestRunId());
@@ -71,8 +71,8 @@ public class RunscopeTestSet {
         return tests;
     }
 
-    private Trigger trigger(final Test test) {
-        Trigger trigger = client.trigger(test);
+    private Trigger trigger(final Test test, final String environment) {
+        Trigger trigger = client.trigger(test, environment);
         logger.logSuiteStarted(test.getName());
 
         return trigger;

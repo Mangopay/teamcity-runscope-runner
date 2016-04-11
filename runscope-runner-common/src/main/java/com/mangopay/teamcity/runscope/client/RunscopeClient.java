@@ -1,4 +1,5 @@
 package com.mangopay.teamcity.runscope.client;
+import com.mangopay.teamcity.runscope.RunscopeConstants;
 import com.mangopay.teamcity.runscope.model.*;
 
 import javax.ws.rs.client.WebTarget;
@@ -66,8 +67,17 @@ public class RunscopeClient {
         return trigger(test.getTriggerUrl());
     }
 
+    public Trigger trigger(Test test, String environment) { return trigger(test.getTriggerUrl(), environment); }
+
     public Trigger trigger(String triggerUrl) {
+        return trigger(triggerUrl, null);
+    }
+
+    public Trigger trigger(String triggerUrl, String environment) {
         WebTarget target = builderFactory.getAbsoluteTarget(triggerUrl);
+        if(environment != null && !environment.isEmpty()) {
+            target = target.queryParam(RunscopeConstants.CLIENT_ENVIRONMENT, environment);
+        }
 
         return builderFactory.getBuilder(target)
                 .get(TriggerResponse.class)

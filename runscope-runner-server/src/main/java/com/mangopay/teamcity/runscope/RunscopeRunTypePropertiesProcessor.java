@@ -27,10 +27,6 @@ public class RunscopeRunTypePropertiesProcessor implements PropertiesProcessor {
             result.add(new InvalidProperty(RunscopeConstants.SETTINGS_BUCKET, "Bucket must be specified"));
         }
 
-        if(PropertiesUtil.isEmptyOrNull((environment))) {
-            result.add(new InvalidProperty(RunscopeConstants.SETTINGS_ENVIRONMENT, "Environment must be specified"));
-        }
-
         return result;
     }
 }
