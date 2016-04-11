@@ -2,10 +2,14 @@ package com.mangopay.teamcity.runscope;
 
 import com.mangopay.teamcity.runscope.client.RunscopeClient;
 import com.mangopay.teamcity.runscope.model.*;
+import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.BuildProgressLogger;
 
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 
 public class RunscopeRunWatcher {
     private final RunscopeClient client;
@@ -31,14 +35,29 @@ public class RunscopeRunWatcher {
         formatter = new RequestFormatter(run);
     }
 
-    public TestResult watch() throws InterruptedException, CancellationException {
+    public TestResult watch() throws InterruptedException, CancellationException, RunBuildException {
         logStepStarted(0);
         Boolean done = false;
         TestResult result = null;
+        int errorsInARow = 0;
 
         while(!done) {
             Thread.sleep(1000);
-            result = client.getRunResult(run);
+            try {
+                result = client.getRunResult(run);
+                errorsInARow = 0;
+            }
+            catch(NotFoundException ex) {
+                errorsInARow++;
+            }
+            catch(InternalServerErrorException ex) {
+                errorsInARow++;
+            }
+            finally {
+                if(errorsInARow > 10) {
+                    throw new RunBuildException("Maximum errors in a row reached, aborting build !");
+                }
+            }
             logProgress(result);
             done = result.getResult().isDone();
         }
