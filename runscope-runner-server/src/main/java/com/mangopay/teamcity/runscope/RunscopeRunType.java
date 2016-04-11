@@ -52,7 +52,7 @@ public class RunscopeRunType extends RunType{
     @Nullable
     @Override
     public String getViewRunnerParamsJspFilePath() {
-        return pluginDescriptor.getPluginResourcesPath("editRunscopeRunParams.jsp");
+        return pluginDescriptor.getPluginResourcesPath("viewRunscopeRunParams.jsp");
     }
 
     @Nullable
