@@ -1,5 +1,7 @@
 package com.mangopay.teamcity.runscope.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.xml.bind.annotation.XmlElement;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +19,7 @@ public class TestResult {
     }
 
     @XmlElement(name="assertions_defined")
+	@JsonProperty("assertions_defined")
     public void setAssertionsDefined(Integer assertionsDefined) {
         this.assertionsDefined = assertionsDefined;
     }
@@ -26,6 +29,7 @@ public class TestResult {
     }
 
     @XmlElement(name="assertions_failed")
+	@JsonProperty("assertions_failed")
     public void setAssertionsFailed(Integer assertionsFailed) {
         this.assertionsFailed = assertionsFailed;
     }
@@ -35,6 +39,7 @@ public class TestResult {
     }
 
     @XmlElement(name="assertions_passed")
+	@JsonProperty("assertions_passed")
     public void setAssertionsPassed(Integer assertionsPassed) {
         this.assertionsPassed = assertionsPassed;
     }
@@ -52,6 +57,7 @@ public class TestResult {
     }
 
     @XmlElement(name="finished_at")
+	@JsonProperty("finished_at")
     public void setFinishedAt(Date finishedAt) {
         this.finishedAt = finishedAt;
     }

@@ -1,7 +1,7 @@
 package com.mangopay.teamcity.runscope.client;
 
-import com.mangopay.teamcity.runscope.RunscopeError;
-import com.mangopay.teamcity.runscope.RunscopeMeta;
+import com.mangopay.teamcity.runscope.model.RunscopeError;
+import com.mangopay.teamcity.runscope.model.RunscopeMeta;
 
 class Response {
     private RunscopeMeta meta;

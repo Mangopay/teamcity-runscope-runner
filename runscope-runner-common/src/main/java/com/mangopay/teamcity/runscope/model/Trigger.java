@@ -1,5 +1,7 @@
 package com.mangopay.teamcity.runscope.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.xml.bind.annotation.XmlElement;
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class Trigger {
     }
 
     @XmlElement(name="runs_failed")
+	@JsonProperty("runs_failed")
     public void setRunsFailed(int runsFailed) {
         this.runsFailed = runsFailed;
     }
@@ -31,6 +34,7 @@ public class Trigger {
     }
 
     @XmlElement(name="runs_started")
+	@JsonProperty("runs_started")
     public void setRunsStarted(int runsStarted) {
         this.runsStarted = runsStarted;
     }
@@ -40,6 +44,7 @@ public class Trigger {
     }
 
     @XmlElement(name="runs_total")
+	@JsonProperty("runs_total")
     public void setRunsTotal(int runsTotal) {
         this.runsTotal = runsTotal;
     }

@@ -1,5 +1,7 @@
 package com.mangopay.teamcity.runscope.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.xml.bind.annotation.XmlElement;
 
 public class Step {
@@ -30,6 +32,7 @@ public class Step {
     }
 
     @XmlElement(name="step_type")
+	@JsonProperty("step_type")
     public void setStepType(StepType stepType) {
         this.stepType = stepType;
     }
@@ -47,6 +50,7 @@ public class Step {
     }
 
     @XmlElement(name="test_name")
+	@JsonProperty("test_name")
     public void setTestName(String testName) {
         this.testName = testName;
     }

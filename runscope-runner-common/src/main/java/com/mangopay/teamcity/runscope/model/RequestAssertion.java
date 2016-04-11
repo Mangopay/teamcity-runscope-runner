@@ -1,5 +1,7 @@
 package com.mangopay.teamcity.runscope.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.xml.bind.annotation.XmlElement;
 
 public class RequestAssertion {
@@ -32,6 +34,7 @@ public class RequestAssertion {
     }
 
     @XmlElement(name="actual_value")
+	@JsonProperty("actual_value")
     public void setActualValue(String actualValue) {
         this.actualValue = actualValue;
     }
@@ -41,6 +44,7 @@ public class RequestAssertion {
     }
 
     @XmlElement(name="target_value")
+	@JsonProperty("target_value")
     public void setTargetValue(String targetValue) {
         this.targetValue = targetValue;
     }

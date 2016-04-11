@@ -1,5 +1,7 @@
 package com.mangopay.teamcity.runscope.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.xml.bind.annotation.XmlElement;
 import java.util.List;
 
@@ -57,6 +59,7 @@ public class Test {
     }
 
     @XmlElement(name="trigger_url")
+	@JsonProperty("trigger_url")
     public void setTriggerUrl(String triggerUrl) {
         this.triggerUrl = triggerUrl;
     }

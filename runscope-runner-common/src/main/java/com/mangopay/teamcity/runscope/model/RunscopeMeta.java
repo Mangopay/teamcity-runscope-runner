@@ -1,4 +1,4 @@
-package com.mangopay.teamcity.runscope;
+package com.mangopay.teamcity.runscope.model;
 
 public class RunscopeMeta {
     private String status;
