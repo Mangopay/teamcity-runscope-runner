@@ -5,4 +5,5 @@
        default-autowire="constructor">
     
     <bean id="RunscopeRunType" class="com.mangopay.teamcity.runscope.RunscopeRunType" />
+    <bean id="RunscopeTestDetail" class="com.mangopay.teamcity.runscope.RunscopeTestExtension" />
 </beans>

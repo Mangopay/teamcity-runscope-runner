@@ -8,5 +8,7 @@ public interface RunscopeConstants {
 
     String RUNNER_DISPLAY_NAME = "Runscope";
     String RUNNER_DESCRIPTION = "Runscope tests runner";
-    String RUNNER_TYPE = "FxCop";
+    String RUNNER_TYPE = "Runscope";
+
+    String LOG_SEE_FULL_LOG = "See full log at : %s";
 }
