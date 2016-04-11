@@ -15,21 +15,44 @@ import javax.ws.rs.core.MediaType;
 
 class BuilderFactory {
     private final String token;
+    private final ClientConfig config;
 
     public BuilderFactory(String token) {
         this.token = token;
+        this.config = CreateConfig();
     }
 
-    public WebTarget getAbsoluteTarget(String path) {
-
+    private ClientConfig CreateConfig() {
         ClientConfig config = new ClientConfig();
         config.connectorProvider(new ApacheConnectorProvider());
         config.register(ObjectMapperProvider.class);
         config.register(JacksonFeature.class);
-        //config.property(ClientProperties.PROXY_URI, "http://127.0.0.1:8888");
+        SetProxy(config);
+
+        return config;
+    }
+
+    public WebTarget getAbsoluteTarget(String path) {
+
+
 
         Client client = ClientBuilder.newClient(config);
         return client.target(path);
+    }
+
+    private void SetProxy(ClientConfig config) {
+        String host = System.getProperty("http.proxyHost");
+        String port = System.getProperty("http.proxyPort");
+        StringBuilder sb = new StringBuilder("http://");
+
+        if(host == null || host.isEmpty()) return;
+        sb.append(host);
+        if(port != null && !port.isEmpty()) {
+            sb.append(':');
+            sb.append(port);
+        }
+
+        config.property(ClientProperties.PROXY_URI, sb.toString());
     }
 
     public WebTarget getTarget(String path) {
