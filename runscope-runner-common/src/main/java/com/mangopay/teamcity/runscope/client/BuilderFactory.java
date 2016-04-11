@@ -1,5 +1,6 @@
 package com.mangopay.teamcity.runscope.client;
 
+import com.mangopay.teamcity.runscope.RunscopeConstants;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
@@ -13,7 +14,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 class BuilderFactory {
-    private static final String BASE_URL ="https://api.runscope.com";
     private final String token;
 
     public BuilderFactory(String token) {
@@ -26,14 +26,14 @@ class BuilderFactory {
         config.connectorProvider(new ApacheConnectorProvider());
         config.register(ObjectMapperProvider.class);
         config.register(JacksonFeature.class);
-        config.property(ClientProperties.PROXY_URI, "http://127.0.0.1:8888");
+        //config.property(ClientProperties.PROXY_URI, "http://127.0.0.1:8888");
 
         Client client = ClientBuilder.newClient(config);
         return client.target(path);
     }
 
     public WebTarget getTarget(String path) {
-        return getTarget(BASE_URL, path);
+        return getTarget(RunscopeConstants.BASE_URL, path);
     }
 
     public WebTarget getTarget(String baseUrl, String path) {

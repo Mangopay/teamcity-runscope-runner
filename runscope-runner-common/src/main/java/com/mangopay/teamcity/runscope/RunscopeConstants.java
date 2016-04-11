@@ -11,4 +11,6 @@ public interface RunscopeConstants {
     String RUNNER_TYPE = "Runscope";
 
     String LOG_SEE_FULL_LOG = "See full log at : %s";
+
+    String BASE_URL = "https://api.runscope.com";
 }

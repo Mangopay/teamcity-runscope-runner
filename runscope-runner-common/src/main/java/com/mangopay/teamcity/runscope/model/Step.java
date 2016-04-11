@@ -3,6 +3,7 @@ package com.mangopay.teamcity.runscope.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.xml.bind.annotation.XmlElement;
+import java.util.List;
 
 public class Step {
     private String id;
@@ -10,6 +11,7 @@ public class Step {
     private StepType stepType;
     private String testName;
     private int duration;
+    private List<StepAssertion> assertions;
 
     public String getId() {
         return id;
@@ -53,5 +55,13 @@ public class Step {
 	@JsonProperty("test_name")
     public void setTestName(String testName) {
         this.testName = testName;
+    }
+
+    public List<StepAssertion> getAssertions() {
+        return assertions;
+    }
+
+    public void setAssertions(List<StepAssertion> assertions) {
+        this.assertions = assertions;
     }
 }

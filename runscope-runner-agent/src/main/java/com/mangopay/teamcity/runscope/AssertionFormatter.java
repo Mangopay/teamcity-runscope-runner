@@ -44,47 +44,50 @@ class AssertionFormatter {
 
     private static final Map<String, String> okMap = new HashMap<String, String>() {
         {
-            put(COMPARISON_EQUALS, "%s was equal to %s");
-            put(COMPARISON_NOT_EQUALS, "%s was not equal to %s");
+            put(COMPARISON_EQUALS, "'%s' was equal to '%s'");
+            put(COMPARISON_NOT_EQUALS, "'%s' was not equal to '%s'");
             put(COMPARISON_EMPTY, "was empty");
             put(COMPARISON_NOT_EMPTY, "was not empty");
-            put(COMPARISON_GTE, "%s was greater than or equal to %s");
-            put(COMPARISON_GT, "%s was greater than %s");
-            put(COMPARISON_LTE, "%s was lower than or equal to %s");
-            put(COMPARISON_LT, "%s was lower than %s");
-            put(COMPARISON_EQUALS_NUMBER, "%s was equal to the number %s");
-            put(COMPARISON_CONTAINS, "%s contained %s");
-            put(COMPARISON_NOT_CONTAINS, "%s did not contained %s");
-            put(COMPARISON_HAS_KEY, "%s had the key %s");
-            put(COMPARISON_HAS_VALUE, "%s had the value %s");
+            put(COMPARISON_GTE, "'%s' was greater than or equal to %s");
+            put(COMPARISON_GT, "'%s' was greater than %s");
+            put(COMPARISON_LTE, "'%s' was lower than or equal to %s");
+            put(COMPARISON_LT, "'%s' was lower than %s");
+            put(COMPARISON_EQUALS_NUMBER, "'%s' was equal to the number %s");
+            put(COMPARISON_CONTAINS, "'%s' contained '%s'");
+            put(COMPARISON_NOT_CONTAINS, "'%s' did not contained '%s'");
+            put(COMPARISON_HAS_KEY, "'%s' had the key '%s'");
+            put(COMPARISON_HAS_VALUE, "'%s' had the value '%s'");
             put(COMPARISON_IS_NULL, "was null");
         }
     };
 
     private static final Map<String, String> koMap = new HashMap<String, String>() {
         {
-            put(COMPARISON_EQUALS, "%s was not equal to %s");
-            put(COMPARISON_NOT_EQUALS, "%s was equal to %s");
+            put(COMPARISON_EQUALS, "'%s' was not equal to '%s'");
+            put(COMPARISON_NOT_EQUALS, "'%s' was equal to '%s'");
             put(COMPARISON_EMPTY, "was not empty");
             put(COMPARISON_NOT_EMPTY, "was empty");
-            put(COMPARISON_GTE, "%s was lower than %s");
-            put(COMPARISON_GT, "%s was lower than or equal to %s");
-            put(COMPARISON_LTE, "%s was greater than %s");
-            put(COMPARISON_LT, "%s was greater than or equal to %s");
-            put(COMPARISON_EQUALS_NUMBER, "%s was not equal to the number %s");
-            put(COMPARISON_CONTAINS, "%s did not contain %s");
-            put(COMPARISON_NOT_CONTAINS, "%s contained %s");
-            put(COMPARISON_HAS_KEY, "%s did not have the key %s");
-            put(COMPARISON_HAS_VALUE, "%s did not have the value %s");
+            put(COMPARISON_GTE, "'%s' was lower than %s");
+            put(COMPARISON_GT, "'%s' was lower than or equal to %s");
+            put(COMPARISON_LTE, "'%s' was greater than %s");
+            put(COMPARISON_LT, "'%s' was greater than or equal to %s");
+            put(COMPARISON_EQUALS_NUMBER, "'%s' was not equal to the number %s");
+            put(COMPARISON_CONTAINS, "'%s' did not contain '%s'");
+            put(COMPARISON_NOT_CONTAINS, "'%s' contained '%s'");
+            put(COMPARISON_HAS_KEY, "'%s' did not have the key '%s'");
+            put(COMPARISON_HAS_VALUE, "'%s' did not have the value '%s'");
             put(COMPARISON_IS_NULL, "was not null");
         }
     };
 
-    public final void format(final RequestAssertion assertion, final StringBuilder sb) {
+    public final String format(final RequestAssertion assertion) {
+        StringBuilder sb = new StringBuilder();
         formatStatus(assertion, sb);
         formatSource(assertion, sb);
         formatComparison(assertion, sb);
         formatError(assertion, sb);
+
+        return sb.toString();
     }
 
     protected void formatStatus(final RequestAssertion assertion, final StringBuilder sb) {

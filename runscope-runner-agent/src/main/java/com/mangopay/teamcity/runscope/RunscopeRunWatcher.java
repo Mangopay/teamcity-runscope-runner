@@ -1,5 +1,6 @@
 package com.mangopay.teamcity.runscope;
 
+import com.intellij.openapi.util.text.StringUtil;
 import com.mangopay.teamcity.runscope.client.RunscopeClient;
 import com.mangopay.teamcity.runscope.model.*;
 import jetbrains.buildServer.RunBuildException;
@@ -9,7 +10,6 @@ import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
 
 public class RunscopeRunWatcher {
     private final RunscopeClient client;
@@ -19,7 +19,7 @@ public class RunscopeRunWatcher {
     private final BuildProgressLogger logger;
     private final RequestStatus[] stepsStatus;
 
-    private final RequestFormatter formatter;
+    private final RequestLogger requestLogger;
 
     public RunscopeRunWatcher(final RunscopeClient client, final Run run, final BuildProgressLogger logger) {
         this.client = client;
@@ -32,7 +32,7 @@ public class RunscopeRunWatcher {
         steps.add(0, initialStep);
         stepsStatus = new RequestStatus[steps.size()];
 
-        formatter = new RequestFormatter(run);
+        requestLogger = new RequestLogger(run, logger);
     }
 
     public TestResult watch() throws InterruptedException, CancellationException, RunBuildException {
@@ -45,6 +45,9 @@ public class RunscopeRunWatcher {
             Thread.sleep(1000);
             try {
                 result = client.getRunResult(run);
+                logProgress(result);
+                done = result.getResult().isDone();
+
                 errorsInARow = 0;
             }
             catch(NotFoundException ex) {
@@ -58,8 +61,6 @@ public class RunscopeRunWatcher {
                     throw new RunBuildException("Maximum errors in a row reached, aborting build !");
                 }
             }
-            logProgress(result);
-            done = result.getResult().isDone();
         }
 
         if(result.getResult() == TestStatus.CANCELED) throw new CancellationException("Test has been canceled on Runscope side");
@@ -71,6 +72,7 @@ public class RunscopeRunWatcher {
 
         for(int i = 0; i < requests.size(); i++) {
             Request request = requests.get(i);
+            replaceProperties(request, i);
             RequestStatus status = request.getResult();
 
             if(status == null) continue;
@@ -84,6 +86,25 @@ public class RunscopeRunWatcher {
             stepsStatus[i] = status;
         }
     }
+
+    private void replaceProperties(Request request, int stepIndex) {
+        if(request.getAssertions() == null) return;
+
+        Step step = steps.get(stepIndex);
+        int i = 0;
+
+        for(RequestAssertion assertion : request.getAssertions()) {
+            if(i >= step.getAssertions().size()) break;
+
+            String stepProperty = step.getAssertions().get(i).getProperty();
+            if(StringUtil.isEmptyOrSpaces(assertion.getProperty()) && !StringUtil.isEmptyOrSpaces(stepProperty)) {
+                assertion.setProperty(stepProperty);
+            }
+
+            i++;
+        }
+    }
+
     private void logStepStarted(final int stepIndex) {
         if(stepIndex > steps.size() - 1) return;
         logger.logTestStarted(getStepTestName(stepIndex));
@@ -94,7 +115,7 @@ public class RunscopeRunWatcher {
         Step step = steps.get(stepIndex);
 
         String testName = getStepTestName(stepIndex);
-        String output = formatter.getOutput(step, request);
+        String output = requestLogger.log(step, request);
 
         if(result == RequestStatus.FAILED) {
             logger.logTestFailed(testName, "Failed", output);
@@ -102,7 +123,6 @@ public class RunscopeRunWatcher {
         else if(result == RequestStatus.CANCELED) {
             logger.logTestFailed(testName, "Canceled", output);
         }
-        else logger.message(output);
 
         logger.logTestFinished(testName);
     }
@@ -115,6 +135,6 @@ public class RunscopeRunWatcher {
         }
 
         Step step = steps.get(stepIndex);
-        return sb.append(formatter.getName(step)).toString();
+        return sb.append(requestLogger.getName(step)).toString();
     }
 }
