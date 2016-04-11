@@ -1,13 +1,10 @@
 package com.mangopay.teamcity.runscope;
 
 import jetbrains.buildServer.agent.BuildFinishedStatus;
-import jetbrains.buildServer.agent.BuildParametersMap;
 import jetbrains.buildServer.agent.BuildRunnerContext;
-import jetbrains.buildServer.agent.FlowLogger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
-import java.util.concurrent.CancellationException;
 
 class RunscopeBuildProcess extends FutureBasedBuildProcess {
     private String token;
@@ -21,7 +18,7 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
         Map<String, String> parameters = context.getRunnerParameters();
         token = parameters.get(RunscopeConstants.SETTINGS_APIKEY);
         bucket = parameters.get(RunscopeConstants.SETTINGS_BUCKET);
-        test = parameters.get(RunscopeConstants.SETTINGS_TEST);
+        test = parameters.get(RunscopeConstants.SETTINGS_TESTS);
         environment = parameters.get(RunscopeConstants.SETTINGS_ENVIRONMENT);
     }
 

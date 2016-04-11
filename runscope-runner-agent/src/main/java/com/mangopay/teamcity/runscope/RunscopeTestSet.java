@@ -11,16 +11,16 @@ import java.util.Vector;
 
 public class RunscopeTestSet {
     private final String bucketId;
-    private final String testId;
+    private final String testsId;
     private final String environment;
     private final RunscopeClient client;
     private final BuildProgressLogger logger;
 
-    public RunscopeTestSet(final String token, final String bucketId, final String testId, final String environment, final BuildProgressLogger logger) {
+    public RunscopeTestSet(final String token, final String bucketId, final String testsId, final String environment, final BuildProgressLogger logger) {
         this.client = new RunscopeClient(token);
 
         this.bucketId = bucketId;
-        this.testId = testId;
+        this.testsId = testsId;
         this.environment = environment;
 
         this.logger = logger.getFlowLogger(this.bucketId);
@@ -41,7 +41,7 @@ public class RunscopeTestSet {
                 logTestFinished(test);
             }
         }
-        this.logger.logSuiteFinished(bucket.getName());
+        logger.logSuiteFinished(bucket.getName());
     }
 
     private Bucket getBucket() throws RunBuildException {
@@ -54,17 +54,20 @@ public class RunscopeTestSet {
     }
 
     private List<Test> getTests() throws RunBuildException {
-        if(this.testId == null || this.testId.isEmpty()) {
-            return client.getBucketTests(this.bucketId);
+        if(testsId == null || testsId.isEmpty()) {
+            return client.getBucketTests(bucketId);
         }
 
         List<Test> tests = new Vector<Test>();
-        Test test = client.getTest(this.bucketId, this.testId);
-        if(test == null) {
-            throw new RunBuildException("Cannot retrieve test " + this.testId);
+        for(String testId : testsId.split("[\n,]")) {
+            Test test = client.getTest(bucketId, testId);
+            if (test == null) {
+                throw new RunBuildException("Cannot retrieve test " + testId);
+            }
+
+            tests.add(test);
         }
 
-        tests.add(test);
         return tests;
     }
 

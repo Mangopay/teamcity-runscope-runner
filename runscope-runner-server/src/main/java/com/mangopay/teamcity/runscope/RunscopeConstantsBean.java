@@ -10,7 +10,7 @@ public class RunscopeConstantsBean {
     public String getBucketKey() { return RunscopeConstants.SETTINGS_BUCKET; }
 
     @NotNull
-    public String getTestKey() { return RunscopeConstants.SETTINGS_TEST; }
+    public String getTestsKey() { return RunscopeConstants.SETTINGS_TESTS; }
 
     @NotNull
     public String getEnvironmentKey() { return RunscopeConstants.SETTINGS_ENVIRONMENT; }
