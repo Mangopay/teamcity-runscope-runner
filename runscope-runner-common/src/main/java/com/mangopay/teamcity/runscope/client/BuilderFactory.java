@@ -23,48 +23,43 @@ class BuilderFactory {
     }
 
     private ClientConfig CreateConfig() {
-        ClientConfig config = new ClientConfig();
-        config.connectorProvider(new ApacheConnectorProvider());
-        config.register(ObjectMapperProvider.class);
-        config.register(JacksonFeature.class);
-        SetProxy(config);
-
-        return config;
+        return new ClientConfig()
+                .connectorProvider(new ApacheConnectorProvider())
+                .register(ObjectMapperProvider.class)
+                .register(JacksonFeature.class)
+                .property(ClientProperties.PROXY_URI, getProxy());
     }
 
     public WebTarget getAbsoluteTarget(String path) {
-
-
-
-        Client client = ClientBuilder.newClient(config);
+        final Client client = ClientBuilder.newClient(config);
         return client.target(path);
     }
 
-    private void SetProxy(ClientConfig config) {
-        String host = System.getProperty("http.proxyHost");
-        String port = System.getProperty("http.proxyPort");
-        StringBuilder sb = new StringBuilder("http://");
+    private String getProxy() {
+        final String host = System.getProperty("http.proxyHost");
+        final String port = System.getProperty("http.proxyPort");
+        final StringBuilder sb = new StringBuilder("http://");
 
-        if(host == null || host.isEmpty()) return;
+        if(host == null || host.isEmpty()) return null;
         sb.append(host);
         if(port != null && !port.isEmpty()) {
             sb.append(':');
             sb.append(port);
         }
 
-        config.property(ClientProperties.PROXY_URI, sb.toString());
+        return sb.toString();
     }
 
-    public WebTarget getTarget(String path) {
+    public WebTarget getTarget(final String path) {
         return getTarget(RunscopeConstants.BASE_URL, path);
     }
 
-    public WebTarget getTarget(String baseUrl, String path) {
+    public WebTarget getTarget(final String baseUrl, final String path) {
         return getAbsoluteTarget(baseUrl)
                 .path(path);
     }
 
-    public Invocation.Builder getBuilder(WebTarget target) {
+    public Invocation.Builder getBuilder(final WebTarget target) {
         return target
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)

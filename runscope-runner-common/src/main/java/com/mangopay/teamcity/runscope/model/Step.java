@@ -2,7 +2,6 @@ package com.mangopay.teamcity.runscope.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.xml.bind.annotation.XmlElement;
 import java.util.List;
 
 public class Step {

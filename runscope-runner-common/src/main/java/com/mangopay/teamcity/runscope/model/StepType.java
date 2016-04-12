@@ -5,8 +5,7 @@ public enum StepType {
     PAUSE("pause"),
     CONDITION("condition"),
     GHOST_INSPECTOR("ghost-inspector"),
-    INITIAL_SCRIPT("initial-script"),
-    UNKNOWN("unknown");
+    INITIAL_SCRIPT("initial-script");
 
     private final String type;
 

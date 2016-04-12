@@ -2,7 +2,7 @@ package com.mangopay.teamcity.runscope.client;
 
 import com.mangopay.teamcity.runscope.model.Trigger;
 
-class TriggerResponse extends Response {
+class TriggerResponse {
     private Trigger data;
 
     public Trigger getData() {

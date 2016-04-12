@@ -78,11 +78,8 @@ public class RunscopeRunWatcher {
             if(status == null) continue;
             else if(status.equals(stepsStatus[i])) continue;
 
-            if(status.isDone()) {
-                logStepFinished(i, request);
-                logStepStarted(i + 1);
-            }
-
+            logStepFinished(i, request);
+            logStepStarted(i + 1);
             stepsStatus[i] = status;
         }
     }

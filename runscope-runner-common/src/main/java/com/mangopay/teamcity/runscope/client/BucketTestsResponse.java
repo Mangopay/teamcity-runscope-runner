@@ -4,7 +4,7 @@ import com.mangopay.teamcity.runscope.model.Test;
 
 import java.util.List;
 
-class BucketTestsResponse extends Response {
+class BucketTestsResponse {
     private List<Test> data;
 
     public List<Test> getData() {

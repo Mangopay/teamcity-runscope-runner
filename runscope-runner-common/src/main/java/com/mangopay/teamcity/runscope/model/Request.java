@@ -124,7 +124,6 @@ public class Request {
         this.variablesPassed = variablesPassed;
     }
 
-
     public List<RequestAssertion> getAssertions() {
         return assertions;
     }

@@ -2,7 +2,7 @@ package com.mangopay.teamcity.runscope.client;
 
 import com.mangopay.teamcity.runscope.model.Bucket;
 
-class BucketResponse extends Response {
+class BucketResponse {
     private Bucket data;
 
     public Bucket getData() {
