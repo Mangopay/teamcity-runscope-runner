@@ -27,6 +27,8 @@ class RunscopeTestSet {
     }
 
     public void run() throws RunBuildException, InterruptedException {
+        logRunStart();
+
         Bucket bucket = getBucket();
         List<Test> tests = getTests();
 
@@ -76,6 +78,14 @@ class RunscopeTestSet {
         logger.logSuiteStarted(test.getName());
 
         return trigger;
+    }
+
+    private void logRunStart() {
+        logger.message("Running Runscope tests");
+        logger.message("Bucket : " + bucketId);
+        logger.message("Environment : " + environment);
+        logger.message("Tests : " + testsId);
+
     }
 
     private void logTestFinished(final Test test) {
