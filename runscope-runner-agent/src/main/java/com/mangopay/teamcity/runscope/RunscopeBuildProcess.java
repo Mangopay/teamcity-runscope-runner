@@ -26,6 +26,7 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
     @Override
     public BuildFinishedStatus call() throws Exception {
         final RunscopeTestSet runscopeTestSet = new RunscopeTestSet(token, bucket, tests, environment, logger);
+        logRunStart();
         runscopeTestSet.run();
 
         return BuildFinishedStatus.FINISHED_SUCCESS;
