@@ -9,7 +9,7 @@ import jetbrains.buildServer.agent.FlowLogger;
 import java.util.List;
 import java.util.Vector;
 
-public class RunscopeTestSet {
+class RunscopeTestSet {
     private final String bucketId;
     private final String testsId;
     private final String environment;

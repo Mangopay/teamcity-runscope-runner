@@ -35,7 +35,7 @@ class RequestLogger {
         }
 
         if(failed) {
-            sb.append(String.format("See full log at : %s", run.getUrl()));
+            sb.append(String.format(RunscopeConstants.LOG_SEE_FULL_LOG, run.getUrl()));
             if (!StringUtil.isEmptyOrSpaces(step.getId())) {
                 sb.append('#');
                 sb.append(step.getId());

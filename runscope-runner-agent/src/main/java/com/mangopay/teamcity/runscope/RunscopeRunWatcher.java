@@ -11,7 +11,7 @@ import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 
-public class RunscopeRunWatcher {
+class RunscopeRunWatcher {
     private final RunscopeClient client;
     private final Run run;
     private final List<Step> steps;

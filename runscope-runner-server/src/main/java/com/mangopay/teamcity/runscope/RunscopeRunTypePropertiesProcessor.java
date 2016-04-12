@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-public class RunscopeRunTypePropertiesProcessor implements PropertiesProcessor {
+class RunscopeRunTypePropertiesProcessor implements PropertiesProcessor {
 
     @Override
     public Collection<InvalidProperty> process(Map<String, String> properties) {

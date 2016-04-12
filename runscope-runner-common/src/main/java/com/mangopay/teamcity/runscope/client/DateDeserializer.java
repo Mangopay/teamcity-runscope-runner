@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 import java.util.Date;
 
-public class DateDeserializer extends JsonDeserializer<Date> {
+class DateDeserializer extends JsonDeserializer<Date> {
     @Override
     public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         double v = jsonParser.getDoubleValue();
