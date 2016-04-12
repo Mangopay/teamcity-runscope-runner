@@ -13,7 +13,7 @@ abstract class FutureBasedBuildProcess implements BuildProcess, Callable<BuildFi
 {
     @NotNull
     protected final BuildProgressLogger logger;
-    private Future<BuildFinishedStatus> myFuture;
+    private Future<BuildFinishedStatus> future;
 
     public FutureBasedBuildProcess(@NotNull final BuildRunnerContext context) {
         this.logger = context.getBuild().getBuildLogger();
@@ -22,7 +22,7 @@ abstract class FutureBasedBuildProcess implements BuildProcess, Callable<BuildFi
     public void start() throws RunBuildException
     {
         try {
-            myFuture = Executors.newSingleThreadExecutor().submit(this);
+            future = Executors.newSingleThreadExecutor().submit(this);
         } catch (final RejectedExecutionException e) {
             logger.error("Failed to start build!");
             logger.exception(e);
@@ -32,26 +32,25 @@ abstract class FutureBasedBuildProcess implements BuildProcess, Callable<BuildFi
 
     public boolean isInterrupted()
     {
-        return myFuture.isCancelled() && isFinished();
+        return future.isCancelled() && isFinished();
     }
 
     public boolean isFinished()
     {
-        return myFuture.isDone();
+        return future.isDone();
     }
 
     public void interrupt()
     {
         logger.message("Attempt to interrupt build process");
-        myFuture.cancel(true);
+        future.cancel(true);
     }
 
     @NotNull
     public BuildFinishedStatus waitFor() throws RunBuildException
     {
         try {
-            final BuildFinishedStatus status = myFuture.get();
-            return status;
+            return future.get();
         } catch (final InterruptedException e) {
             throw new RunBuildException(e);
         } catch (final ExecutionException e) {

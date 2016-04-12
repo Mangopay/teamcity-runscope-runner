@@ -20,7 +20,7 @@ class RequestLogger {
     }
 
     public String log(final Step step, final Request request) {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         boolean failed = false;
 
         for(RequestAssertion assertion : request.getAssertions()) {
@@ -46,7 +46,7 @@ class RequestLogger {
     }
 
     public String getName(final Step step) {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         if("pause".equals(step.getStepType())) {
             sb.append("Pause ");

@@ -25,14 +25,13 @@ public class RunscopeRunWatcher {
         this.client = client;
         this.run = run;
         this.logger = logger;
+        requestLogger = new RequestLogger(run, logger);
 
-        Step initialStep = new Step();
+        final Step initialStep = new Step();
         initialStep.setNote("Initial script");
         steps = client.getTestSteps(this.run.getBucketKey(), this.run.getTestId());
         steps.add(0, initialStep);
         stepsStatus = new RequestStatus[steps.size()];
-
-        requestLogger = new RequestLogger(run, logger);
     }
 
     public TestResult watch() throws InterruptedException, CancellationException, RunBuildException {
@@ -68,12 +67,12 @@ public class RunscopeRunWatcher {
     }
 
     private void logProgress(final TestResult result) {
-        List<Request> requests = result.getRequests();
+        final List<Request> requests = result.getRequests();
 
         for(int i = 0; i < requests.size(); i++) {
-            Request request = requests.get(i);
+            final Request request = requests.get(i);
+            final RequestStatus status = request.getResult();
             replaceProperties(request, i);
-            RequestStatus status = request.getResult();
 
             if(status == null) continue;
             else if(status.equals(stepsStatus[i])) continue;
@@ -84,7 +83,7 @@ public class RunscopeRunWatcher {
         }
     }
 
-    private void replaceProperties(Request request, int stepIndex) {
+    private void replaceProperties(final Request request, int stepIndex) {
         if(request.getAssertions() == null) return;
 
         Step step = steps.get(stepIndex);
@@ -108,11 +107,11 @@ public class RunscopeRunWatcher {
     }
 
     private void logStepFinished(final int stepIndex, final Request request) {
-        RequestStatus result = request.getResult();
-        Step step = steps.get(stepIndex);
+        final RequestStatus result = request.getResult();
+        final Step step = steps.get(stepIndex);
 
-        String testName = getStepTestName(stepIndex);
-        String output = requestLogger.log(step, request);
+        final String testName = getStepTestName(stepIndex);
+        final String output = requestLogger.log(step, request);
 
         if(result == RequestStatus.FAILED) {
             logger.logTestFailed(testName, "Failed", output);
@@ -125,7 +124,7 @@ public class RunscopeRunWatcher {
     }
 
     private String getStepTestName(final int stepIndex) {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         if(stepIndex > 0) {
             sb.append(stepIndex);
             sb.append(" - ");

@@ -97,8 +97,8 @@ class AssertionFormatter {
         else sb.append("KO : ");
     }
 
-    protected void formatSource(RequestAssertion assertion, StringBuilder sb) {
-        String source = assertion.getSource();
+    protected void formatSource(final RequestAssertion assertion, final StringBuilder sb) {
+        final String source = assertion.getSource();
         if(!sourceMap.containsKey(source)) {
             sb.append(source);
         }
@@ -121,7 +121,7 @@ class AssertionFormatter {
     }
 
     protected void formatComparison(final RequestAssertion assertion, final StringBuilder sb) {
-        Map<String, String> map;
+        final Map<String, String> map;
 
         if(assertion.getResult() == AssertionStatus.PASSED) map = okMap;
         else map = koMap;
@@ -137,15 +137,5 @@ class AssertionFormatter {
             String comparison = String.format(map.get(assertion.getComparison()), assertion.getActualValue(), assertion.getTargetValue());
             sb.append(comparison);
         }
-    }
-
-    private boolean isUnaryComparison(final RequestAssertion assertion) {
-        String comparison = assertion.getComparison();
-
-        boolean unary = COMPARISON_IS_NULL.equals(comparison) ||
-                COMPARISON_EMPTY.equals(comparison) ||
-                COMPARISON_NOT_EMPTY.equals(comparison);
-
-        return !unary;
     }
 }

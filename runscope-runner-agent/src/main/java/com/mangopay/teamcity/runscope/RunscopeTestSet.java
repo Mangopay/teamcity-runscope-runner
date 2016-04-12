@@ -45,9 +45,9 @@ public class RunscopeTestSet {
     }
 
     private Bucket getBucket() throws RunBuildException {
-        Bucket bucket = client.getBucket(this.bucketId);
+        Bucket bucket = client.getBucket(bucketId);
         if(bucket == null) {
-            throw new RunBuildException("Cannot retrieve bucket " + this.bucketId);
+            throw new RunBuildException("Cannot retrieve bucket " + bucketId);
         }
 
         return bucket;

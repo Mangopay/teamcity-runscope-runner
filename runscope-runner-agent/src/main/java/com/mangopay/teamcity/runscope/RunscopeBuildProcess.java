@@ -8,15 +8,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 class RunscopeBuildProcess extends FutureBasedBuildProcess {
-    private String token;
-    private String bucket;
-    private String tests;
-    private String environment;
+    private final String token;
+    private final String bucket;
+    private final String tests;
+    private final String environment;
 
     RunscopeBuildProcess(@NotNull final BuildRunnerContext context) {
         super(context);
 
-        Map<String, String> parameters = context.getRunnerParameters();
+        final Map<String, String> parameters = context.getRunnerParameters();
         token = parameters.get(RunscopeConstants.SETTINGS_APIKEY);
         bucket = parameters.get(RunscopeConstants.SETTINGS_BUCKET);
         tests = parameters.get(RunscopeConstants.SETTINGS_TESTS);
@@ -25,7 +25,7 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
 
     @Override
     public BuildFinishedStatus call() throws Exception {
-        RunscopeTestSet runscopeTestSet = new RunscopeTestSet(token, bucket, tests, environment, logger);
+        final RunscopeTestSet runscopeTestSet = new RunscopeTestSet(token, bucket, tests, environment, logger);
         logRunStart();
         runscopeTestSet.run();
 
