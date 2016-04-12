@@ -7,10 +7,10 @@ Install the plugin [as usual](https://confluence.jetbrains.com/display/TCD9/Inst
 
 # Using
 
-Comming soon !
+Coming soon !
 
 # Building
-To build the plugin from code:
+To build the plugin :
 1. Install the java SDK. Version 8u77 was used to develop this plugin
 2. Install Maven
 3. Set ```JAVA_HOME``` and ```M2_HOME``` variables
