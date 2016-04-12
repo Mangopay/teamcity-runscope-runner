@@ -8,75 +8,53 @@ import java.util.HashMap;
 import java.util.Map;
 
 class AssertionFormatter {
-
-    private static final String SOURCE_JSON = "json";
-    private static final String SOURCE_XML = "xml";
-    private static final String SOURCE_HEADER = "response_header";
-    private static final String SOURCE_SIZE = "response_size_bytes";
-    private static final String SOURCE_TIME = "response_time_ms";
-    private static final String SOURCE_STATUS = "status_code";
-
-    private static final String COMPARISON_EQUALS = "equals";
-    private static final String COMPARISON_NOT_EQUALS = "does_not_equal";
-    private static final String COMPARISON_EMPTY = "is_empty";
-    private static final String COMPARISON_NOT_EMPTY = "is_not_empty";
-    private static final String COMPARISON_GTE = "greater_than_or_equal";
-    private static final String COMPARISON_GT = "greater_than";
-    private static final String COMPARISON_LTE = "less_than_or_equal";
-    private static final String COMPARISON_LT = "less_than";
-    private static final String COMPARISON_EQUALS_NUMBER = "equals_number";
-    private static final String COMPARISON_CONTAINS = "contains";
-    private static final String COMPARISON_NOT_CONTAINS = "does_not_contain";
-    private static final String COMPARISON_HAS_KEY = "has_key";
-    private static final String COMPARISON_HAS_VALUE = "has_value";
-    private static final String COMPARISON_IS_NULL = "is_null";
-
+    
     private static final Map<String, String> sourceMap = new HashMap<String, String>() {
         {
-            put(SOURCE_JSON, "body.");
-            put(SOURCE_XML, "body.");
-            put(SOURCE_HEADER, "header.");
-            put(SOURCE_SIZE, "Response (bytes)");
-            put(SOURCE_TIME, "Response time (ms)");
-            put(SOURCE_STATUS, "Status");
+            put(AssertionContants.SOURCE_JSON, "body.");
+            put(AssertionContants.SOURCE_XML, "body.");
+            put(AssertionContants.SOURCE_HEADER, "header.");
+            put(AssertionContants.SOURCE_SIZE, "Response (bytes)");
+            put(AssertionContants.SOURCE_TIME, "Response time (ms)");
+            put(AssertionContants.SOURCE_STATUS, "Status");
         }
     };
 
     private static final Map<String, String> okMap = new HashMap<String, String>() {
         {
-            put(COMPARISON_EQUALS, "'%s' was equal to '%s'");
-            put(COMPARISON_NOT_EQUALS, "'%s' was not equal to '%s'");
-            put(COMPARISON_EMPTY, "was empty");
-            put(COMPARISON_NOT_EMPTY, "was not empty");
-            put(COMPARISON_GTE, "'%s' was greater than or equal to %s");
-            put(COMPARISON_GT, "'%s' was greater than %s");
-            put(COMPARISON_LTE, "'%s' was lower than or equal to %s");
-            put(COMPARISON_LT, "'%s' was lower than %s");
-            put(COMPARISON_EQUALS_NUMBER, "'%s' was equal to the number %s");
-            put(COMPARISON_CONTAINS, "'%s' contained '%s'");
-            put(COMPARISON_NOT_CONTAINS, "'%s' did not contained '%s'");
-            put(COMPARISON_HAS_KEY, "'%s' had the key '%s'");
-            put(COMPARISON_HAS_VALUE, "'%s' had the value '%s'");
-            put(COMPARISON_IS_NULL, "was null");
+            put(AssertionContants.COMPARISON_EQUALS, "'%s' was equal to '%s'");
+            put(AssertionContants.COMPARISON_NOT_EQUALS, "'%s' was not equal to '%s'");
+            put(AssertionContants.COMPARISON_EMPTY, "was empty");
+            put(AssertionContants.COMPARISON_NOT_EMPTY, "was not empty");
+            put(AssertionContants.COMPARISON_GTE, "'%s' was greater than or equal to %s");
+            put(AssertionContants.COMPARISON_GT, "'%s' was greater than %s");
+            put(AssertionContants.COMPARISON_LTE, "'%s' was lower than or equal to %s");
+            put(AssertionContants.COMPARISON_LT, "'%s' was lower than %s");
+            put(AssertionContants.COMPARISON_EQUALS_NUMBER, "'%s' was equal to the number %s");
+            put(AssertionContants.COMPARISON_CONTAINS, "'%s' contained '%s'");
+            put(AssertionContants.COMPARISON_NOT_CONTAINS, "'%s' did not contained '%s'");
+            put(AssertionContants.COMPARISON_HAS_KEY, "'%s' had the key '%s'");
+            put(AssertionContants.COMPARISON_HAS_VALUE, "'%s' had the value '%s'");
+            put(AssertionContants.COMPARISON_IS_NULL, "was null");
         }
     };
 
     private static final Map<String, String> koMap = new HashMap<String, String>() {
         {
-            put(COMPARISON_EQUALS, "'%s' was not equal to '%s'");
-            put(COMPARISON_NOT_EQUALS, "'%s' was equal to '%s'");
-            put(COMPARISON_EMPTY, "was not empty");
-            put(COMPARISON_NOT_EMPTY, "was empty");
-            put(COMPARISON_GTE, "'%s' was lower than %s");
-            put(COMPARISON_GT, "'%s' was lower than or equal to %s");
-            put(COMPARISON_LTE, "'%s' was greater than %s");
-            put(COMPARISON_LT, "'%s' was greater than or equal to %s");
-            put(COMPARISON_EQUALS_NUMBER, "'%s' was not equal to the number %s");
-            put(COMPARISON_CONTAINS, "'%s' did not contain '%s'");
-            put(COMPARISON_NOT_CONTAINS, "'%s' contained '%s'");
-            put(COMPARISON_HAS_KEY, "'%s' did not have the key '%s'");
-            put(COMPARISON_HAS_VALUE, "'%s' did not have the value '%s'");
-            put(COMPARISON_IS_NULL, "was not null");
+            put(AssertionContants.COMPARISON_EQUALS, "'%s' was not equal to '%s'");
+            put(AssertionContants.COMPARISON_NOT_EQUALS, "'%s' was equal to '%s'");
+            put(AssertionContants.COMPARISON_EMPTY, "was not empty");
+            put(AssertionContants.COMPARISON_NOT_EMPTY, "was empty");
+            put(AssertionContants.COMPARISON_GTE, "'%s' was lower than %s");
+            put(AssertionContants.COMPARISON_GT, "'%s' was lower than or equal to %s");
+            put(AssertionContants.COMPARISON_LTE, "'%s' was greater than %s");
+            put(AssertionContants.COMPARISON_LT, "'%s' was greater than or equal to %s");
+            put(AssertionContants.COMPARISON_EQUALS_NUMBER, "'%s' was not equal to the number %s");
+            put(AssertionContants.COMPARISON_CONTAINS, "'%s' did not contain '%s'");
+            put(AssertionContants.COMPARISON_NOT_CONTAINS, "'%s' contained '%s'");
+            put(AssertionContants.COMPARISON_HAS_KEY, "'%s' did not have the key '%s'");
+            put(AssertionContants.COMPARISON_HAS_VALUE, "'%s' did not have the value '%s'");
+            put(AssertionContants.COMPARISON_IS_NULL, "was not null");
         }
     };
 
