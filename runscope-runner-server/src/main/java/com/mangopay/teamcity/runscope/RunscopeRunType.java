@@ -22,7 +22,6 @@ public class RunscopeRunType extends RunType{
     @Override
     public String getType() {
         return RunscopeConstants.RUNNER_TYPE;
-
     }
 
     @NotNull

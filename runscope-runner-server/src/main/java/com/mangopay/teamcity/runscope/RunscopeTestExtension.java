@@ -14,32 +14,32 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RunscopeTestExtension extends SimplePageExtension {
-    private final static Pattern fullLogPattern;
     private final static String RUNSCOPE_TEST_LINK_ATTRIBUTE = "runscopeTestLink";
 
-    static{
-        String pattern = RunscopeConstants.LOG_SEE_FULL_LOG
-                .replaceAll("%s", "(?<url>.*)");
+    private final static Pattern fullLogPattern;
 
+    static{
+        final String pattern = RunscopeConstants.LOG_SEE_FULL_LOG.replaceAll("%s", "(?<url>.*)");
         fullLogPattern = Pattern.compile(pattern);
     }
     public RunscopeTestExtension(@NotNull PagePlaces pagePlaces, @NotNull PluginDescriptor pluginDescriptor){
-        super(pagePlaces, PlaceId.TEST_DETAILS_BLOCK, "runscope", pluginDescriptor.getPluginResourcesPath("runscopeTestDetail.jsp"));
+        super(pagePlaces, PlaceId.TEST_DETAILS_BLOCK, RunscopeConstants.PLUGIN_ID, pluginDescriptor.getPluginResourcesPath("runscopeTestDetail.jsp"));
         register();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public boolean isAvailable(@NotNull HttpServletRequest request) {
-        List<? extends STestRun> runs = (List<? extends STestRun>) request.getAttribute("testRuns");
-        if(runs != null && runs.size() < 1) return false;
+        final Object testRuns = request.getAttribute("testRuns");
+        if(testRuns == null) return false;
 
-        STestRun run;
+        final List<? extends STestRun> runs = (List<? extends STestRun>)testRuns;
+        if(runs != null && runs.size() < 1) return false;
 
         //finding test details
         for(int i = 0; i < runs.size(); i++) {
-            run = runs.get(i);
-            Matcher matcher = fullLogPattern.matcher(run.getFullText());
+            final STestRun run = runs.get(i);
+            final Matcher matcher = fullLogPattern.matcher(run.getFullText());
             if(!matcher.find()) continue;
 
             request.setAttribute(RUNSCOPE_TEST_LINK_ATTRIBUTE, matcher.group("url"));
@@ -52,7 +52,7 @@ public class RunscopeTestExtension extends SimplePageExtension {
     @Override
     @SuppressWarnings("unchecked")
     public void fillModel(@NotNull Map<String, Object> model, @NotNull HttpServletRequest request) {
-        Object url = request.getAttribute(RUNSCOPE_TEST_LINK_ATTRIBUTE);
+        final Object url = request.getAttribute(RUNSCOPE_TEST_LINK_ATTRIBUTE);
         model.put("url", url);
     }
 }

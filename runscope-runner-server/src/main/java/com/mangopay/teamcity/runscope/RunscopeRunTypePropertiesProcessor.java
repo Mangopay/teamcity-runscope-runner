@@ -17,7 +17,6 @@ public class RunscopeRunTypePropertiesProcessor implements PropertiesProcessor {
 
         final String apiKey = properties.get(RunscopeConstants.SETTINGS_APIKEY);
         final String bucket = properties.get(RunscopeConstants.SETTINGS_BUCKET);
-        final String environment = properties.get(RunscopeConstants.SETTINGS_ENVIRONMENT);
 
         if(PropertiesUtil.isEmptyOrNull((apiKey))) {
             result.add(new InvalidProperty(RunscopeConstants.SETTINGS_APIKEY, "Api key must be specified"));

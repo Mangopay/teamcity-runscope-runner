@@ -15,4 +15,6 @@ public interface RunscopeConstants {
     String BASE_URL = "https://api.runscope.com";
 
     String CLIENT_ENVIRONMENT = "runscope_environment";
+
+    String PLUGIN_ID = "runscope";
 }
