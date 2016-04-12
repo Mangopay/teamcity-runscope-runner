@@ -1,4 +1,4 @@
-This plugin allows TeamCity buids to trigger and parse Runscope tests.
+This plugin allows TeamCity builds to trigger and parse Runscope tests.
 
 # Installing
 
