@@ -24,7 +24,7 @@ class RequestLogger {
         boolean failed = false;
 
         for(RequestAssertion assertion : request.getAssertions()) {
-            String assertionLog = assertionFormatter.format(assertion);
+            final String assertionLog = assertionFormatter.format(assertion);
             logger.message(assertionLog);
 
             if(assertion.getResult() != AssertionStatus.PASSED) {

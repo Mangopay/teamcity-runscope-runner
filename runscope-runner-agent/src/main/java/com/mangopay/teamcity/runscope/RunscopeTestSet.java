@@ -5,6 +5,8 @@ import com.mangopay.teamcity.runscope.model.*;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.BuildProgressLogger;
 import jetbrains.buildServer.agent.FlowLogger;
+import jetbrains.buildServer.util.StringUtil;
+import jetbrains.buildServer.util.StringUtils;
 
 import java.util.List;
 import java.util.Vector;
@@ -56,7 +58,7 @@ class RunscopeTestSet {
     }
 
     private List<Test> getTests() throws RunBuildException {
-        if(testsId == null || testsId.isEmpty()) {
+        if(StringUtil.isEmptyOrSpaces(testsId)) {
             return client.getBucketTests(bucketId);
         }
 

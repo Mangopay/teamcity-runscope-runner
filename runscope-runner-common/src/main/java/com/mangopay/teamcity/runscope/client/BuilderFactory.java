@@ -17,7 +17,7 @@ class BuilderFactory {
     private final String token;
     private final ClientConfig config;
 
-    public BuilderFactory(String token) {
+    public BuilderFactory(final String token) {
         this.token = token;
         this.config = CreateConfig();
     }
@@ -30,7 +30,7 @@ class BuilderFactory {
                 .property(ClientProperties.PROXY_URI, getProxy());
     }
 
-    public WebTarget getAbsoluteTarget(String path) {
+    public WebTarget getAbsoluteTarget(final String path) {
         final Client client = ClientBuilder.newClient(config);
         return client.target(path);
     }

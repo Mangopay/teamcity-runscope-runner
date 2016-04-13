@@ -40,8 +40,7 @@ abstract class FutureBasedBuildProcess implements BuildProcess, Callable<BuildFi
         return future.isDone();
     }
 
-    public void interrupt()
-    {
+    public void interrupt()  {
         logger.message("Attempt to interrupt build process");
         future.cancel(true);
     }

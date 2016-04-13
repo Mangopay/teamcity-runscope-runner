@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 class AssertionFormatter {
-    
+
     private static final Map<String, String> sourceMap = new HashMap<String, String>() {
         {
             put(AssertionContants.SOURCE_JSON, "body.");
@@ -59,7 +59,7 @@ class AssertionFormatter {
     };
 
     public final String format(final RequestAssertion assertion) {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         formatStatus(assertion, sb);
         formatSource(assertion, sb);
         formatComparison(assertion, sb);
