@@ -1,51 +1,69 @@
 package com.mangopay.teamcity.runscope;
 
 import com.mangopay.teamcity.runscope.client.RunscopeClient;
-import com.mangopay.teamcity.runscope.model.*;
+import com.mangopay.teamcity.runscope.model.Bucket;
+import com.mangopay.teamcity.runscope.model.Test;
+import com.mangopay.teamcity.runscope.model.TestResult;
+import jersey.repackaged.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.BuildProgressLogger;
 import jetbrains.buildServer.agent.FlowLogger;
 import jetbrains.buildServer.util.StringUtil;
-import jetbrains.buildServer.util.StringUtils;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.*;
 
-class RunscopeTestSet {
+public class RunscopeTestSetRunner implements Callable {
+
+    private final RunscopeClient client;
     private final String bucketId;
     private final String testsId;
     private final String environment;
-    private final RunscopeClient client;
-    private final BuildProgressLogger logger;
+    private final FlowLogger logger;
 
-    public RunscopeTestSet(final String token, final String bucketId, final String testsId, final String environment, final BuildProgressLogger logger) {
+    public RunscopeTestSetRunner(final String token, final String bucketId, final String testsId, final String environment, final BuildProgressLogger logger) {
         this.client = new RunscopeClient(token);
-
         this.bucketId = bucketId;
         this.testsId = testsId;
         this.environment = environment;
-
         this.logger = logger.getFlowLogger(this.bucketId);
     }
-
-    public void run() throws RunBuildException, InterruptedException {
-        logRunStart();
+    @Override
+    public Object call() throws RunBuildException {
+        logStarted();
 
         Bucket bucket = getBucket();
         List<Test> tests = getTests();
 
         logger.logSuiteStarted(bucket.getName());
-        for(Test test : tests) {
-            Trigger trigger = trigger(test, environment);
 
-            for(Run run : trigger.getRuns()) {
-                FlowLogger runLogger = logger.getFlowLogger(run.getTestRunId());
-                RunscopeRunWatcher watcher = new RunscopeRunWatcher(client, run, runLogger);
-                watcher.watch();
-                logTestFinished(test);
+        ExecutorService threadPool = Executors.newFixedThreadPool(10);
+        CompletionService<TestResult> completionService = new ExecutorCompletionService<TestResult>(threadPool);
+
+        for(Test test : tests) {
+            RunscopeTestRunner runner = new RunscopeTestRunner(client, test, environment, logger);
+            completionService.submit(runner);
+        }
+
+        for(int i = 0; i < tests.size(); i++) {
+            try {
+                Future<TestResult> resultFuture = completionService.take();
+            } catch (InterruptedException e) {
+                logger.exception(e);
             }
         }
+
+        threadPool.shutdown();
         logger.logSuiteFinished(bucket.getName());
+        return null;
+    }
+
+    private void logStarted() {
+        logger.message("Running Runscope tests");
+        logger.message("Bucket : " + bucketId);
+        logger.message("Environment : " + environment);
+        logger.message("Tests : " + testsId);
     }
 
     private Bucket getBucket() throws RunBuildException {
@@ -73,24 +91,5 @@ class RunscopeTestSet {
         }
 
         return tests;
-    }
-
-    private Trigger trigger(final Test test, final String environment) {
-        Trigger trigger = client.trigger(test, environment);
-        logger.logSuiteStarted(test.getName());
-
-        return trigger;
-    }
-
-    private void logRunStart() {
-        logger.message("Running Runscope tests");
-        logger.message("Bucket : " + bucketId);
-        logger.message("Environment : " + environment);
-        logger.message("Tests : " + testsId);
-
-    }
-
-    private void logTestFinished(final Test test) {
-        logger.logSuiteFinished(test.getName());
     }
 }

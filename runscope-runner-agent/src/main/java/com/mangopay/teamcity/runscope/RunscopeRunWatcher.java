@@ -9,9 +9,10 @@ import jetbrains.buildServer.agent.BuildProgressLogger;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 
-class RunscopeRunWatcher {
+class RunscopeRunWatcher implements Callable<TestResult> {
     private final RunscopeClient client;
     private final Run run;
     private final List<Step> steps;
@@ -34,11 +35,11 @@ class RunscopeRunWatcher {
         stepsStatus = new RequestStatus[steps.size()];
     }
 
-    public TestResult watch() throws InterruptedException, CancellationException, RunBuildException {
+    public TestResult watch() throws InterruptedException, RunBuildException {
         logStepStarted(0);
         Boolean done = false;
         TestResult result = null;
-        int errorsInARow = 0;
+        Integer errorsInARow = 0;
 
         while(!done) {
             Thread.sleep(1000);
@@ -50,20 +51,20 @@ class RunscopeRunWatcher {
                 errorsInARow = 0;
             }
             catch(NotFoundException ex) {
-                errorsInARow++;
+                throwIfNecessary(errorsInARow, ex);
+
             }
             catch(InternalServerErrorException ex) {
-                errorsInARow++;
-            }
-            finally {
-                if(errorsInARow > 10) {
-                    throw new RunBuildException("Maximum errors in a row reached, aborting build !");
-                }
+                throwIfNecessary(errorsInARow, ex);
             }
         }
 
-        if(result.getResult() == TestStatus.CANCELED) throw new CancellationException("Test has been canceled on Runscope side");
         return result;
+    }
+
+    private void throwIfNecessary(Integer errorsInARow, Exception ex) throws RunBuildException {
+        errorsInARow++;
+        if(errorsInARow > 10) throw new RunBuildException("Maximum retries exceeded", ex);
     }
 
     private void logProgress(final TestResult result) {

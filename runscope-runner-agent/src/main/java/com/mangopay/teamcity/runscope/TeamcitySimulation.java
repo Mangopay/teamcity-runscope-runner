@@ -16,9 +16,8 @@ public class TeamcitySimulation {
         String bucket = args[1];
         String test =  args.length > 2 ? args[2] : "";
 
-        RunscopeClient client = new RunscopeClient(token);
-        RunscopeTestSet runscopeTestSet = new RunscopeTestSet(token, bucket, test, "", new SystemOutLogger());
-        runscopeTestSet.run();
+        RunscopeTestSetRunner runner = new RunscopeTestSetRunner(token, bucket, test, "", new SystemOutLogger());
+        Object result = runner.call();
     }
 }
 
