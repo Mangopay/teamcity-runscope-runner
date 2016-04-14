@@ -11,6 +11,7 @@ import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.Vector;
 import java.util.concurrent.Callable;
 
 class RunscopeRunWatcher implements Callable<TestResult> {
@@ -29,9 +30,34 @@ class RunscopeRunWatcher implements Callable<TestResult> {
         this.logger = logger;
         requestLogger = new RequestLogger(this.run, this.logger);
 
-        steps = client.getTestSteps(this.run.getBucketKey(), this.run.getTestId());
+        steps = getTestSteps(this.run.getBucketKey(), this.run.getTestId());
         insertInitialStep();
         stepsStatus = new RequestStatus[steps.size()];
+    }
+
+    private List<Step> getTestSteps(String bucketKey, String testId) {
+        List<Step> steps = client.getTestSteps(this.run.getBucketKey(), this.run.getTestId());
+        List<Step> result = new Vector<Step>();
+
+        for(Step step : steps) {
+            addSteps(step, result);
+        }
+        return result;
+    }
+
+    private void addSteps(Step step, List<Step> list) {
+        list.add(step);
+        if(step.getSteps() == null || step.getSteps().size() == 0) return;
+
+        for(Step s2 : step.getSteps()) {
+            addSteps(s2, list);
+        }
+
+        if(step.getStepType() == StepType.CONDITION) {
+            //condition step adds another request at the end. Adding a fake step to match it.
+            Step fakeStep = new Step();
+            list.add(step);
+        }
     }
 
     private void insertInitialStep() {

@@ -11,6 +11,7 @@ public class Step {
     private String testName;
     private int duration;
     private List<StepAssertion> assertions;
+    private List<Step> steps;
 
     public String getId() {
         return id;
@@ -60,5 +61,13 @@ public class Step {
 
     public void setAssertions(List<StepAssertion> assertions) {
         this.assertions = assertions;
+    }
+
+    public List<Step> getSteps() {
+        return steps;
+    }
+
+    public void setSteps(List<Step> steps) {
+        this.steps = steps;
     }
 }
