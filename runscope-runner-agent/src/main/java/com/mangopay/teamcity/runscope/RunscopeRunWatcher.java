@@ -10,6 +10,7 @@ import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 
 class RunscopeRunWatcher implements Callable<TestResult> {
@@ -36,6 +37,7 @@ class RunscopeRunWatcher implements Callable<TestResult> {
     private void insertInitialStep() {
         final Step initialStep = new Step();
         initialStep.setNote("Initial script");
+        initialStep.setId(UUID.randomUUID().toString());
         steps.add(0, initialStep);
     }
 
