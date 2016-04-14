@@ -17,7 +17,7 @@ public class RunscopeTestRunner implements Callable<TestResult> {
     private final RunscopeClient client;
     private final Test test;
     private final String environment;
-    private final BuildProgressLogger logger;
+    private BuildProgressLogger logger;
 
     public RunscopeTestRunner(final RunscopeClient client, final Test test, final String environment, final BuildProgressLogger logger) {
         this.client = client;
@@ -28,7 +28,6 @@ public class RunscopeTestRunner implements Callable<TestResult> {
 
     @Override
     public TestResult call() throws RunBuildException, InterruptedException {
-        BuildProgressLogger logger = this.logger.getThreadLogger();
         TestResult result = null;
 
         final String testName = test.getName();

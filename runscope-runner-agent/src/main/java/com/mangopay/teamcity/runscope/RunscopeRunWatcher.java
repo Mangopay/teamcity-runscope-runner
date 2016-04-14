@@ -9,6 +9,7 @@ import jetbrains.buildServer.agent.BuildProgressLogger;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 
 class RunscopeRunWatcher implements Callable<TestResult> {
@@ -128,13 +129,9 @@ class RunscopeRunWatcher implements Callable<TestResult> {
     }
 
     private String getStepTestName(final int stepIndex) {
-        final StringBuilder sb = new StringBuilder();
-        if(stepIndex > 0) {
-            sb.append(stepIndex);
-            sb.append(" - ");
-        }
+        String format = "%d - %s";
+        final Step step = steps.get(stepIndex);
 
-        Step step = steps.get(stepIndex);
-        return sb.append(requestLogger.getName(step)).toString();
+        return String.format(format, stepIndex, requestLogger.getName(step));
     }
 }

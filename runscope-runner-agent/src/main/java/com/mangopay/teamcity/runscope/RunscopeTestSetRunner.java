@@ -7,6 +7,7 @@ import com.mangopay.teamcity.runscope.model.TestResult;
 import jetbrains.buildServer.BuildProblemData;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.BuildProgressLogger;
+import jetbrains.buildServer.agent.LoggerFactory;
 import jetbrains.buildServer.util.StringUtil;
 
 import javax.ws.rs.NotFoundException;
@@ -27,7 +28,7 @@ public class RunscopeTestSetRunner implements Callable {
         this.bucketId = bucketId;
         this.testsId = testsId;
         this.environment = environment;
-        this.logger = logger.getThreadLogger();
+        this.logger = logger;
     }
 
     @Override
@@ -41,7 +42,7 @@ public class RunscopeTestSetRunner implements Callable {
         final CompletionService<TestResult> completionService = new ExecutorCompletionService<TestResult>(threadPool);
 
         for(Test test : tests) {
-            final RunscopeTestRunner runner = new RunscopeTestRunner(client, test, environment, logger);
+            final RunscopeTestRunner runner = new RunscopeTestRunner(client, test, environment, logger.getFlowLogger(test.getId()));
             completionService.submit(runner);
         }
 
