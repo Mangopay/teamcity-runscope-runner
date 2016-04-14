@@ -10,7 +10,6 @@ import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CancellationException;
 
 class RunscopeRunWatcher implements Callable<TestResult> {
     private final RunscopeClient client;
@@ -26,16 +25,21 @@ class RunscopeRunWatcher implements Callable<TestResult> {
         this.client = client;
         this.run = run;
         this.logger = logger;
-        requestLogger = new RequestLogger(run, logger);
+        requestLogger = new RequestLogger(this.run, this.logger);
 
-        final Step initialStep = new Step();
-        initialStep.setNote("Initial script");
         steps = client.getTestSteps(this.run.getBucketKey(), this.run.getTestId());
-        steps.add(0, initialStep);
+        insertInitialStep();
         stepsStatus = new RequestStatus[steps.size()];
     }
 
-    public TestResult watch() throws InterruptedException, RunBuildException {
+    private void insertInitialStep() {
+        final Step initialStep = new Step();
+        initialStep.setNote("Initial script");
+        steps.add(0, initialStep);
+    }
+
+    @Override
+    public TestResult call() throws InterruptedException, RunBuildException {
         logStepStarted(0);
         Boolean done = false;
         TestResult result = null;
@@ -51,18 +55,17 @@ class RunscopeRunWatcher implements Callable<TestResult> {
                 errorsInARow = 0;
             }
             catch(NotFoundException ex) {
-                throwIfNecessary(errorsInARow, ex);
-
+                throwIfNeeded(errorsInARow, ex);
             }
             catch(InternalServerErrorException ex) {
-                throwIfNecessary(errorsInARow, ex);
+                throwIfNeeded(errorsInARow, ex);
             }
         }
 
         return result;
     }
 
-    private void throwIfNecessary(Integer errorsInARow, Exception ex) throws RunBuildException {
+    private void throwIfNeeded(Integer errorsInARow, Exception ex) throws RunBuildException {
         errorsInARow++;
         if(errorsInARow > 10) throw new RunBuildException("Maximum retries exceeded", ex);
     }

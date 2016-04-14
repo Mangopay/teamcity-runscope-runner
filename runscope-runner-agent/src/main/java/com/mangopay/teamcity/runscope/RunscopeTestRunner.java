@@ -7,7 +7,9 @@ import com.mangopay.teamcity.runscope.model.TestResult;
 import com.mangopay.teamcity.runscope.model.Trigger;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.BuildProgressLogger;
+import jetbrains.buildServer.util.StringUtil;
 
+import javax.ws.rs.NotFoundException;
 import java.util.concurrent.Callable;
 
 public class RunscopeTestRunner implements Callable<TestResult> {
@@ -21,23 +23,35 @@ public class RunscopeTestRunner implements Callable<TestResult> {
         this.client = client;
         this.test = test;
         this.environment = environment;
-        this.logger = logger.getFlowLogger(this.test.getId());
+        this.logger = logger;
     }
 
     @Override
     public TestResult call() throws RunBuildException, InterruptedException {
+        BuildProgressLogger logger = this.logger.getThreadLogger();
         TestResult result = null;
 
-        String testName = test.getName();
+        final String testName = test.getName();
         logger.logSuiteStarted(testName);
 
-        Trigger trigger = client.trigger(test, environment);
+        final Trigger trigger = trigger(test, environment);
         for(Run run : trigger.getRuns()) {
             RunscopeRunWatcher watcher = new RunscopeRunWatcher(client, run, logger);
-            result = watcher.watch();
+            result = watcher.call();
         }
 
         logger.logSuiteFinished(testName);
         return result;
+    }
+
+    public Trigger trigger(Test test, String environment) throws RunBuildException {
+        try {
+            return client.trigger(test, environment);
+        }
+        catch(NotFoundException ex) {
+            String message = "Cannot trigger test %s";
+            if(!StringUtil.isEmptyOrSpaces(environment)) message += " on environment %s";
+            throw new RunBuildException(String.format(message, test.getId(), environment));
+        }
     }
 }

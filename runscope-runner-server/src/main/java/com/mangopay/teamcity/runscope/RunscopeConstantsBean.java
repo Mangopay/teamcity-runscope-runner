@@ -2,7 +2,7 @@ package com.mangopay.teamcity.runscope;
 
 import org.jetbrains.annotations.NotNull;
 
-class RunscopeConstantsBean {
+public class RunscopeConstantsBean {
     @NotNull
     public String getApiKey() { return RunscopeConstants.SETTINGS_APIKEY; }
 

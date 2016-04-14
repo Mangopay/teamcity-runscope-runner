@@ -5,7 +5,6 @@ import com.mangopay.teamcity.runscope.model.*;
 import javax.ws.rs.client.WebTarget;
 import java.util.List;
 
-
 public class RunscopeClient {
 
     private final BuilderFactory builderFactory;

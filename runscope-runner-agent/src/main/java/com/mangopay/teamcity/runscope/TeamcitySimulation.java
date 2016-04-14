@@ -1,29 +1,429 @@
 package com.mangopay.teamcity.runscope;
 
 
-import com.mangopay.teamcity.runscope.client.RunscopeClient;
 import jetbrains.buildServer.BuildProblemData;
-import jetbrains.buildServer.agent.FlowLogger;
+import jetbrains.buildServer.agent.*;
+import jetbrains.buildServer.artifacts.ArtifactDependencyInfo;
 import jetbrains.buildServer.messages.BuildMessage1;
+import jetbrains.buildServer.parameters.ValueResolver;
+import jetbrains.buildServer.util.Option;
+import jetbrains.buildServer.vcs.VcsChangeInfo;
+import jetbrains.buildServer.vcs.VcsRoot;
+import jetbrains.buildServer.vcs.VcsRootEntry;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Date;
+import java.io.File;
+import java.util.*;
 
 public class TeamcitySimulation {
 
     //simulate workflow that teamcity should implement on a test run
     public static void main(String[] args) throws Exception {
-        String token = args[0];
-        String bucket = args[1];
-        String test =  args.length > 2 ? args[2] : "";
+        final String token = args[0];
+        final String bucket = args[1];
+        final String tests =  args.length > 2 ? args[2] : "";
+        final String environment = args.length > 3 ? args[3] : "";
 
-        RunscopeTestSetRunner runner = new RunscopeTestSetRunner(token, bucket, test, "", new SystemOutLogger());
-        Object result = runner.call();
+        BuildRunnerContext context = new FakeContext(token, bucket, tests, environment);
+        RunscopeBuildRunner buildRunner = new RunscopeBuildRunner();
+        BuildProcess buildProcess = buildRunner.createBuildProcess(context.getBuild(), context);
+
+        buildProcess.start();
+        BuildFinishedStatus status = buildProcess.waitFor();
+    }
+}
+
+class FakeContext implements BuildRunnerContext {
+
+    private final Map<String, String> runnerParameters;
+    private final AgentRunningBuild agentRunningBuild;
+
+    public FakeContext(final String token, final String bucket, final String tests, final String environment) {
+        runnerParameters = new HashMap<String, String>() {
+            {
+                put(RunscopeConstants.SETTINGS_APIKEY, token);
+                put(RunscopeConstants.SETTINGS_BUCKET, bucket);
+                put(RunscopeConstants.SETTINGS_TESTS, tests);
+                put(RunscopeConstants.SETTINGS_ENVIRONMENT, environment);
+            }
+        };
+
+        agentRunningBuild = new FakeBuild();
+    }
+
+    @Override
+    public String getId() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public AgentRunningBuild getBuild() {
+        return agentRunningBuild;
+    }
+
+    @NotNull
+    @Override
+    public File getWorkingDirectory() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public String getRunType() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public BuildParametersMap getBuildParameters() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public Map<String, String> getConfigParameters() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public Map<String, String> getRunnerParameters() {
+        return runnerParameters;
+    }
+
+    @Override
+    public void addSystemProperty(@NotNull String key, @NotNull String value) {
+
+    }
+
+    @Override
+    public void addEnvironmentVariable(@NotNull String key, @NotNull String value) {
+
+    }
+
+    @Override
+    public void addConfigParameter(@NotNull String key, @NotNull String value) {
+
+    }
+
+    @Override
+    public void addRunnerParameter(@NotNull String key, @NotNull String value) {
+
+    }
+
+    @NotNull
+    @Override
+    public ValueResolver getParametersResolver() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public String getToolPath(@NotNull String toolName) throws ToolCannotBeFoundException {
+        return null;
+    }
+
+    @Override
+    public boolean parametersHaveReferencesTo(@NotNull Collection<String> keys) {
+        return false;
+    }
+}
+
+class FakeBuild implements AgentRunningBuild {
+
+    private final BuildProgressLogger logger;
+
+    public FakeBuild() {
+        logger = new SystemOutLogger();
+    }
+
+    @NotNull
+    @Override
+    public BuildParametersMap getMandatoryBuildParameters() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public File getCheckoutDirectory() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public File getWorkingDirectory() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public String getArtifactsPaths() {
+        return null;
+    }
+
+    @Override
+    public boolean getFailBuildOnExitCode() {
+        return false;
+    }
+
+    @NotNull
+    @Override
+    public ResolvedParameters getResolvedParameters() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public String getRunType() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public UnresolvedParameters getUnresolvedParameters() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public BuildParametersMap getBuildParameters() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public Map<String, String> getRunnerParameters() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public String getBuildNumber() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public Map<String, String> getSharedConfigParameters() {
+        return null;
+    }
+
+    @Override
+    public void addSharedConfigParameter(@NotNull String key, @NotNull String value) {
+
+    }
+
+    @Override
+    public void addSharedSystemProperty(@NotNull String key, @NotNull String value) {
+
+    }
+
+    @Override
+    public void addSharedEnvironmentVariable(@NotNull String key, @NotNull String value) {
+
+    }
+
+    @NotNull
+    @Override
+    public BuildParametersMap getSharedBuildParameters() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public ValueResolver getSharedParametersResolver() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public Collection<AgentBuildFeature> getBuildFeatures() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public Collection<AgentBuildFeature> getBuildFeaturesOfType(@NotNull String type) {
+        return null;
+    }
+
+    @Override
+    public void stopBuild(@NotNull String reason) {
+
+    }
+
+    @Nullable
+    @Override
+    public BuildInterruptReason getInterruptReason() {
+        return null;
+    }
+
+    @Override
+    public boolean isBuildFailingOnServer() throws InterruptedException {
+        return false;
+    }
+
+    @Override
+    public boolean isInAlwaysExecutingStage() {
+        return false;
+    }
+
+    @Override
+    public String getProjectName() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public String getBuildTypeId() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public String getBuildTypeExternalId() {
+        return null;
+    }
+
+    @Override
+    public String getBuildTypeName() {
+        return null;
+    }
+
+    @Override
+    public long getBuildId() {
+        return 0;
+    }
+
+    @Override
+    public boolean isCleanBuild() {
+        return false;
+    }
+
+    @Override
+    public boolean isPersonal() {
+        return false;
+    }
+
+    @Override
+    public boolean isPersonalPatchAvailable() {
+        return false;
+    }
+
+    @Override
+    public boolean isCheckoutOnAgent() {
+        return false;
+    }
+
+    @Override
+    public boolean isCheckoutOnServer() {
+        return false;
+    }
+
+    @Override
+    public long getExecutionTimeoutMinutes() {
+        return 0;
+    }
+
+    @NotNull
+    @Override
+    public List<ArtifactDependencyInfo> getArtifactDependencies() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public String getAccessUser() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public String getAccessCode() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public List<VcsRootEntry> getVcsRootEntries() {
+        return null;
+    }
+
+    @Override
+    public String getBuildCurrentVersion(@NotNull VcsRoot vcsRoot) {
+        return null;
+    }
+
+    @Override
+    public String getBuildPreviousVersion(@NotNull VcsRoot vcsRoot) {
+        return null;
+    }
+
+    @Override
+    public boolean isCustomCheckoutDirectory() {
+        return false;
+    }
+
+    @NotNull
+    @Override
+    public List<VcsChangeInfo> getVcsChanges() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public List<VcsChangeInfo> getPersonalVcsChanges() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public File getBuildTempDirectory() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public File getAgentTempDirectory() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public BuildProgressLogger getBuildLogger() {
+        return logger;
+    }
+
+    @NotNull
+    @Override
+    public BuildAgentConfiguration getAgentConfiguration() {
+        return null;
+    }
+
+    @Override
+    public <T> T getBuildTypeOptionValue(@NotNull Option<T> option) {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public File getDefaultCheckoutDirectory() {
+        return null;
     }
 }
 
 class SystemOutLogger implements FlowLogger {
 
     private String flow;
+    private static int index;
 
     public SystemOutLogger() {
 
@@ -180,12 +580,17 @@ class SystemOutLogger implements FlowLogger {
 
     @Override
     public FlowLogger getFlowLogger(String s) {
-        return new SystemOutLogger(s);
+        Integer thisIndex = index++;
+        return new SystemOutLogger(thisIndex.toString());
+
+
+        //return new SystemOutLogger(s);
+
     }
 
     @Override
     public FlowLogger getThreadLogger() {
-        return null;
+        return this;
     }
 
     public String getFlowId() {
