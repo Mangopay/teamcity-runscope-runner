@@ -1,6 +1,6 @@
 package com.mangopay.teamcity.runscope;
 
-interface AssertionContants {
+interface AssertionConstants {
     String SOURCE_JSON = "json";
     String SOURCE_XML = "xml";
     String SOURCE_HEADER = "response_header";
