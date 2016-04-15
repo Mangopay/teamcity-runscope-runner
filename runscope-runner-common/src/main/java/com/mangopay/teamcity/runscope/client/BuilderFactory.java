@@ -1,5 +1,6 @@
 package com.mangopay.teamcity.runscope.client;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.mangopay.teamcity.runscope.RunscopeConstants;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;

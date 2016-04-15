@@ -4,15 +4,13 @@ import com.mangopay.teamcity.runscope.client.RunscopeClient;
 import com.mangopay.teamcity.runscope.model.Bucket;
 import com.mangopay.teamcity.runscope.model.Test;
 import com.mangopay.teamcity.runscope.model.TestResult;
-import jetbrains.buildServer.BuildProblemData;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.BuildProgressLogger;
-import jetbrains.buildServer.agent.LoggerFactory;
 import jetbrains.buildServer.util.StringUtil;
 
 import javax.ws.rs.NotFoundException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.*;
 
 public class RunscopeTestSetRunner implements Callable {
@@ -79,7 +77,7 @@ public class RunscopeTestSetRunner implements Callable {
             return client.getBucketTests(bucketId);
         }
 
-        final List<Test> tests = new Vector<Test>();
+        final List<Test> tests = new ArrayList<Test>();
         for(String testId : testsId.split("[\n, ]")) {
             try {
                 Test test = client.getTest(bucketId, testId);

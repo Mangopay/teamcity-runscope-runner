@@ -17,10 +17,12 @@ class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
     private ObjectMapper createDefaultMapper() {
         final ObjectMapper result = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);
+                .configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true)
+                .configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
 
         SimpleModule module = new SimpleModule();
         module.addDeserializer(Date.class, new DateDeserializer());
+        module.setDeserializerModifier(new EmptyCollectionDeserializerModifier());
         result.registerModule(module);
 
         return result;
