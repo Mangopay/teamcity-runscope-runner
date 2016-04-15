@@ -23,8 +23,16 @@ public class RunscopeClient {
     }
 
     public List<Test> getBucketTests(String bucketKey) {
+        return getBucketTests(bucketKey, 0);
+    }
+
+    public List<Test> getBucketTests(String bucketKey, int count) {
         WebTarget target = builderFactory.getTarget("buckets/{bucketKey}/tests")
                 .resolveTemplate("bucketKey", bucketKey);
+
+        if(count > 0) {
+            target = target.queryParam(RunscopeConstants.CLIENT_COUNT, count);
+        }
 
         return builderFactory.getBuilder(target)
                 .get(BucketTestsResponse.class)

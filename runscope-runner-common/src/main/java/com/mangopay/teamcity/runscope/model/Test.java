@@ -3,6 +3,7 @@ package com.mangopay.teamcity.runscope.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.xml.bind.annotation.XmlElement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Test {
@@ -12,6 +13,11 @@ public class Test {
     private String triggerUrl;
     private List<Step> steps;
     private List<Environment> environments;
+
+    public Test() {
+        //in case it is not returned by the API, jackson does not fill a value
+        steps = new ArrayList<Step>();
+    }
 
     public String getId() {
         return id;

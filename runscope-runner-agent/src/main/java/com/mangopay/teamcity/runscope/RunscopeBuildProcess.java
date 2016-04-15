@@ -3,8 +3,7 @@ package com.mangopay.teamcity.runscope;
 import com.intellij.openapi.util.text.StringUtil;
 import jetbrains.buildServer.agent.BuildFinishedStatus;
 import jetbrains.buildServer.agent.BuildRunnerContext;
-import jetbrains.buildServer.messages.BuildMessage1;
-import jetbrains.buildServer.util.StringUtils;
+import jetbrains.buildServer.messages.DefaultMessagesInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -19,15 +18,15 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
         super(context);
 
         final Map<String, String> parameters = context.getRunnerParameters();
-        token = parameters.get(RunscopeConstants.SETTINGS_APIKEY);
-        bucket = parameters.get(RunscopeConstants.SETTINGS_BUCKET);
-        tests = parameters.get(RunscopeConstants.SETTINGS_TESTS);
+        token = parameters.get(RunscopeConstants.SETTINGS_APIKEY).trim();
+        bucket = parameters.get(RunscopeConstants.SETTINGS_BUCKET).trim();
         environment = parameters.get(RunscopeConstants.SETTINGS_ENVIRONMENT);
+        tests = parameters.get(RunscopeConstants.SETTINGS_TESTS);
     }
 
     @Override
     public BuildFinishedStatus call() throws Exception {
-        logStarted();
+        logParameters();
 
         final RunscopeTestSetRunner runner = new RunscopeTestSetRunner(token, bucket, tests, environment, logger);
         runner.call();
@@ -35,11 +34,10 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
         return BuildFinishedStatus.FINISHED_SUCCESS;
     }
 
-    private void logStarted() {
-        logger.message("Running Runscope tests");
+    private void logParameters() {
         logger.message("Bucket : " + bucket.trim());
         if(!StringUtil.isEmptyOrSpaces(environment)) logger.message("Environment : " + environment.trim());
-        if(!StringUtil.isEmptyOrSpaces(tests)) logger.message("Tests : " + tests.trim());
+        if(!StringUtil.isEmptyOrSpaces(tests)) logger.message("Tests : " + tests.trim().replaceAll(AgentConstants.TESTS_SPLIT, " "));
     }
 
 

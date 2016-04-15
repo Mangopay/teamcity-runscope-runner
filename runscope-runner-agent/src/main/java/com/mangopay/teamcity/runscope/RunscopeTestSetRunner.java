@@ -6,6 +6,8 @@ import com.mangopay.teamcity.runscope.model.Test;
 import com.mangopay.teamcity.runscope.model.TestResult;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.BuildProgressLogger;
+import jetbrains.buildServer.agentServer.Agent;
+import jetbrains.buildServer.messages.DefaultMessagesInfo;
 import jetbrains.buildServer.util.StringUtil;
 
 import javax.ws.rs.NotFoundException;
@@ -31,8 +33,10 @@ public class RunscopeTestSetRunner implements Callable {
 
     @Override
     public Object call() throws RunBuildException {
+        logger.activityStarted("Fetching data", DefaultMessagesInfo.BLOCK_TYPE_INDENTATION);
         final Bucket bucket = getBucket();
         final List<Test> tests = getTests();
+        logger.activityFinished("Fetching data", DefaultMessagesInfo.BLOCK_TYPE_INDENTATION);
 
         logger.logSuiteStarted(bucket.getName());
 
@@ -65,28 +69,62 @@ public class RunscopeTestSetRunner implements Callable {
 
     private Bucket getBucket() throws RunBuildException {
         try {
-            return client.getBucket(bucketId);
+            Bucket bucket = client.getBucket(bucketId);
+            logBucket(bucket);
+
+            return bucket;
         }
         catch(NotFoundException ex) {
-            throw new RunBuildException("Cannot found bucket " + bucketId);
+            throw new RunBuildException("Cannot find bucket " + bucketId);
         }
     }
 
     private List<Test> getTests() throws RunBuildException {
-        if(StringUtil.isEmptyOrSpaces(testsId)) {
-            return client.getBucketTests(bucketId);
+        final String[] testsId;
+        final List<Test> tests = new ArrayList<Test>();
+
+        if(StringUtil.isEmptyOrSpaces(this.testsId)) {
+            logger.message("No test specified, finding bucket tests.");
+            List<Test> bucketTests = client.getBucketTests(bucketId, 1000);
+            testsId = new String[bucketTests.size()];
+
+            for(int i = 0; i < bucketTests.size(); i++) {
+                testsId[i] = bucketTests.get(i).getId();
+            }
+        }
+        else {
+            testsId = this.testsId.split(AgentConstants.TESTS_SPLIT);
         }
 
-        final List<Test> tests = new ArrayList<Test>();
-        for(String testId : testsId.split("[\n, ]")) {
+        logger.message(String.format("Fetching %d tests.", testsId.length));
+        for (String testId : testsId) {
             try {
                 Test test = client.getTest(bucketId, testId);
                 tests.add(test);
             } catch (NotFoundException ex) {
-                throw new RunBuildException("Cannot found test " + testId);
+                throw new RunBuildException("Cannot find test " + testId);
             }
         }
 
+        logTests(tests);
         return tests;
+    }
+
+    private void logBucket(Bucket bucket) {
+        logger.message(String.format("Fetched bucket %s : %s", bucketId, bucket.getName()));
+    }
+
+    private void logTests(List<Test> tests) {
+        logger.activityStarted("Tests", String.format("%d test(s) found", tests.size()), DefaultMessagesInfo.BLOCK_TYPE_INDENTATION);
+
+        for(Test test : tests) {
+            logger.activityStarted(test.getName(), DefaultMessagesInfo.BLOCK_TYPE_INDENTATION);
+            if(!StringUtil.isEmptyOrSpaces(test.getDescription())) logger.message(test.getDescription());
+            logger.message(String.format("Id : %s", test.getId()));
+            logger.message(String.format("Steps : %d", test.getSteps().size()));
+            logger.activityFinished(test.getName(), DefaultMessagesInfo.BLOCK_TYPE_INDENTATION);
+        }
+
+        logger.activityStarted("Tests toto", DefaultMessagesInfo.BLOCK_TYPE_INDENTATION);
     }
 }
