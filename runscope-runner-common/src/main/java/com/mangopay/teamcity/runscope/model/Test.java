@@ -14,11 +14,6 @@ public class Test {
     private List<Step> steps;
     private List<Environment> environments;
 
-    public Test() {
-        //in case it is not returned by the API, jackson does not fill a value
-        steps = new ArrayList<Step>();
-    }
-
     public String getId() {
         return id;
     }

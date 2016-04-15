@@ -30,6 +30,31 @@ class RunscopeRunWatcher implements Callable<TestResult> {
 
     }
 
+    @Override
+    public TestResult call() throws InterruptedException, RunBuildException {
+        initSteps();
+
+        logger.message(String.format(RunscopeConstants.LOG_SEE_FULL_LOG, run.getUrl()));
+        boolean done = false;
+        Integer errorsInARow = 0;
+        TestResult result = null;
+
+        do {
+            Thread.sleep(1000);
+            try {
+                done = update(result);
+                errorsInARow = 0;
+            } catch (NotFoundException ex) {
+                throwIfNeeded(errorsInARow, ex);
+            } catch (InternalServerErrorException ex) {
+                throwIfNeeded(errorsInARow, ex);
+            }
+        }
+        while (!done);
+
+        return result;
+    }
+
     private void initSteps() {
         List<Step> result = new ArrayList<Step>();
         List<Step> steps = client.getTestSteps(this.run.getBucketKey(), this.run.getTestId());
@@ -65,30 +90,6 @@ class RunscopeRunWatcher implements Callable<TestResult> {
     private void throwIfNeeded(Integer errorsInARow, final Exception ex) throws RunBuildException {
         errorsInARow++;
         if (errorsInARow > 10) throw new RunBuildException("Maximum retries exceeded", ex);
-    }
-
-    @Override
-    public TestResult call() throws InterruptedException, RunBuildException {
-        initSteps();
-
-        boolean done = false;
-        Integer errorsInARow = 0;
-        TestResult result = null;
-
-        do {
-            Thread.sleep(1000);
-            try {
-                done = update(result);
-                errorsInARow = 0;
-            } catch (NotFoundException ex) {
-                throwIfNeeded(errorsInARow, ex);
-            } catch (InternalServerErrorException ex) {
-                throwIfNeeded(errorsInARow, ex);
-            }
-        }
-        while (!done);
-
-        return result;
     }
 
     private boolean update(TestResult result) {

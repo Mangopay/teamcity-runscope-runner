@@ -96,7 +96,6 @@ public class RunscopeTestSetRunner implements Callable {
             testsId = this.testsId.split(AgentConstants.TESTS_SPLIT);
         }
 
-        logger.message(String.format("Fetching %d tests.", testsId.length));
         for (String testId : testsId) {
             try {
                 Test test = client.getTest(bucketId, testId);
