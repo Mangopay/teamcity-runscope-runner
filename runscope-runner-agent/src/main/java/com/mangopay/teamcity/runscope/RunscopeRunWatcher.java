@@ -11,7 +11,7 @@ import javax.ws.rs.NotFoundException;
 import java.util.*;
 import java.util.concurrent.Callable;
 
-class RunscopeRunWatcher implements Callable<TestResult> {
+class RunscopeRunWatcher implements Callable<WatchResult> {
 
     private final RunscopeClient client;
     private final Run run;
@@ -27,17 +27,16 @@ class RunscopeRunWatcher implements Callable<TestResult> {
         this.run = run;
         this.logger = logger;
         this.requestLogger = new RequestLogger(this.run, this.logger);
-
     }
 
     @Override
-    public TestResult call() throws InterruptedException, RunBuildException {
+    public WatchResult call() throws InterruptedException, RunBuildException {
+        WatchResult result = new WatchResult();
         initSteps();
 
         logger.message(String.format(RunscopeConstants.LOG_SEE_FULL_LOG, run.getUrl()));
         boolean done = false;
         Integer errorsInARow = 0;
-        TestResult result = null;
 
         do {
             Thread.sleep(1000);
@@ -92,13 +91,9 @@ class RunscopeRunWatcher implements Callable<TestResult> {
         if (errorsInARow > 10) throw new RunBuildException("Maximum retries exceeded", ex);
     }
 
-    private boolean update(TestResult result) {
-        result = client.getRunResult(run);
-        logProgress(result);
-        return result.getResult().isDone();
-    }
+    private boolean update(WatchResult result) {
+        TestResult testResult = client.getRunResult(run);
 
-    private void logProgress(TestResult testResult) {
         int finished = -1;
         int started = 0;
 
@@ -109,7 +104,7 @@ class RunscopeRunWatcher implements Callable<TestResult> {
             final RequestStatus requestResult = request.getResult();
 
             if (requestResult == null) continue;
-            replaceProperties(request, i);
+            replaceProperties(i, request);
 
             finished = i;
             started = i + 1;
@@ -118,15 +113,17 @@ class RunscopeRunWatcher implements Callable<TestResult> {
         int lower = Math.min(this.started + 1, this.finished + 1);
         int upper = Math.max(started + 1, finished + 1);
         for (int i = lower; i < upper; i++) {
-            if (i > this.started && i <= started) logStepStarted(i);
-            if (i > this.finished && i <= finished) logStepFinished(i, requests.get(i));
+            if (i > this.started && i <= started) stepStarted(i);
+            if (i > this.finished && i <= finished) stepFinished(i, requests.get(i), result);
         }
 
         this.finished = finished;
         this.started = started;
-    }
 
-    private void replaceProperties(final Request request, int stepIndex) {
+        result.setTestResult(testResult);
+        return testResult.getResult().isDone();
+    }
+    private void replaceProperties(int stepIndex, final Request request) {
         if (request.getAssertions() == null) return;
 
         Step step = steps.get(stepIndex);
@@ -144,25 +141,35 @@ class RunscopeRunWatcher implements Callable<TestResult> {
         }
     }
 
-    private void logStepStarted(final int stepIndex) {
+    private void stepStarted(final int stepIndex) {
         if (stepIndex > steps.size() - 1) return;
         logger.logTestStarted(getStepTestName(stepIndex));
     }
 
-    private void logStepFinished(final int stepIndex, final Request request) {
-        final RequestStatus result = request.getResult();
+    private void stepFinished(final int stepIndex, final Request request, final WatchResult result) {
+        final RequestStatus requestResult = request.getResult();
         final Step step = steps.get(stepIndex);
 
         final String testName = getStepTestName(stepIndex);
         final String output = requestLogger.log(step, request);
+        setBuildParameters(request, result);
 
-        if (result == RequestStatus.FAILED) {
+        if (requestResult == RequestStatus.FAILED) {
             logger.logTestFailed(testName, "Failed", output);
-        } else if (result == RequestStatus.CANCELED) {
+        } else if (requestResult == RequestStatus.CANCELED) {
             logger.logTestFailed(testName, "Canceled", output);
         }
 
         logger.logTestFinished(testName);
+    }
+
+    private void setBuildParameters(Request request, WatchResult result) {
+        List<RequestVariable> variables = request.getVariables();
+
+        for(RequestVariable variable : variables) {
+            if(variable.getResult() != BinaryStatus.PASSED) continue;
+            result.putVariable(variable.getName(), variable.getValue());
+        }
     }
 
     private String getStepTestName(final int stepIndex) {

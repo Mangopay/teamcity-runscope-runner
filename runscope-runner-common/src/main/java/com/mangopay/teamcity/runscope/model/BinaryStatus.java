@@ -1,12 +1,12 @@
 package com.mangopay.teamcity.runscope.model;
 
-public enum AssertionStatus {
+public enum BinaryStatus {
     FAILED("fail"),
     PASSED("pass");
 
     private final String status;
 
-    AssertionStatus(String status) {
+    BinaryStatus(String status) {
         this.status = status;
     }
 

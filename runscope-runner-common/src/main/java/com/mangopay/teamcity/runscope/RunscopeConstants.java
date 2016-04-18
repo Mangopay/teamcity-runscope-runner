@@ -5,6 +5,7 @@ public interface RunscopeConstants {
     String SETTINGS_BUCKET = "runscope.bucket";
     String SETTINGS_TESTS = "runscope.tests";
     String SETTINGS_ENVIRONMENT = "runscope.environment";
+    String SETTINGS_DEFINES_INITIAL_VARIABLES = "runscope.variables.defines";
 
     String RUNNER_DISPLAY_NAME = "Runscope";
     String RUNNER_DESCRIPTION = "Runscope tests runner";
@@ -18,4 +19,7 @@ public interface RunscopeConstants {
     String CLIENT_COUNT = "count";
 
     String PLUGIN_ID = "runscope";
+
+    String RUNSCOPE_VAR_PREFIX = "runscope.vars.";
+
 }

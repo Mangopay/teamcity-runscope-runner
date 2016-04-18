@@ -1,15 +1,14 @@
 package com.mangopay.teamcity.runscope;
 
 import com.mangopay.teamcity.runscope.client.RunscopeClient;
-import com.mangopay.teamcity.runscope.model.Run;
-import com.mangopay.teamcity.runscope.model.Test;
-import com.mangopay.teamcity.runscope.model.TestResult;
-import com.mangopay.teamcity.runscope.model.Trigger;
+import com.mangopay.teamcity.runscope.model.*;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.BuildProgressLogger;
+import jetbrains.buildServer.agent.BuildRunnerContext;
 import jetbrains.buildServer.util.StringUtil;
 
 import javax.ws.rs.NotFoundException;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 public class RunscopeTestRunner implements Callable<TestResult> {
@@ -17,40 +16,54 @@ public class RunscopeTestRunner implements Callable<TestResult> {
     private final RunscopeClient client;
     private final Test test;
     private final String environment;
-    private BuildProgressLogger logger;
+    private final BuildRunnerContext context;
+    private final BuildProgressLogger logger;
+    private final Map<String, String> initialVariables;
 
-    public RunscopeTestRunner(final RunscopeClient client, final Test test, final String environment, final BuildProgressLogger logger) {
+    public RunscopeTestRunner(final BuildRunnerContext context, final RunscopeClient client, final Test test, final String environment, final Map<String, String> initialVariables, final BuildProgressLogger logger) {
+        this.context = context;
         this.client = client;
         this.test = test;
         this.environment = environment;
         this.logger = logger;
+        this.initialVariables = initialVariables;
     }
 
     @Override
     public TestResult call() throws RunBuildException, InterruptedException {
-        TestResult result = null;
-
         final String testName = test.getName();
         logger.logSuiteStarted(testName);
 
-        final Trigger trigger = trigger(test, environment);
-        for(Run run : trigger.getRuns()) {
-            RunscopeRunWatcher watcher = new RunscopeRunWatcher(client, run, logger);
-            result = watcher.call();
-        }
+        final Trigger trigger = trigger();
+        if(trigger.getRunsTotal() != 1) throw new RunBuildException(String.format("Expected 1 run but found %d", trigger.getRunsTotal()));
+
+        final Run run = trigger.getRuns().get(0);
+        RunscopeRunWatcher watcher = new RunscopeRunWatcher(client, run, logger);
+        WatchResult result = watcher.call();
+        setBuildParameters(result);
 
         logger.logSuiteFinished(testName);
-        return result;
+        return result.getTestResult();
     }
 
-    public Trigger trigger(Test test, String environment) throws RunBuildException {
+    public Trigger trigger() throws RunBuildException {
         try {
-            return client.trigger(test, environment);
+            return client.trigger(test, environment, initialVariables);
         }
         catch(NotFoundException ex) {
             String message = "Cannot trigger test %s";
             if(!StringUtil.isEmptyOrSpaces(environment)) message += " on environment %s";
             throw new RunBuildException(String.format(message, test.getId(), environment));
         }
+    }
+
+    public void setBuildParameters(WatchResult result) {
+        for(Map.Entry<String, String> runscopeVariable : result.getVariables().entrySet()) {
+            context.getBuild().addSharedConfigParameter(getBuildParameterName(runscopeVariable), runscopeVariable.getValue());
+        }
+    }
+
+    private String getBuildParameterName(Map.Entry<String, String> variable) {
+        return RunscopeConstants.RUNSCOPE_VAR_PREFIX + variable.getKey();
     }
 }

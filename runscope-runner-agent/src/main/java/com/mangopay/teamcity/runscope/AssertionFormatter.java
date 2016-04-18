@@ -1,7 +1,7 @@
 package com.mangopay.teamcity.runscope;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.mangopay.teamcity.runscope.model.AssertionStatus;
+import com.mangopay.teamcity.runscope.model.BinaryStatus;
 import com.mangopay.teamcity.runscope.model.RequestAssertion;
 
 import java.util.HashMap;
@@ -69,7 +69,7 @@ class AssertionFormatter {
     }
 
     protected void formatStatus(final RequestAssertion assertion, final StringBuilder sb) {
-        if(assertion.getResult() == AssertionStatus.PASSED) {
+        if(assertion.getResult() == BinaryStatus.PASSED) {
             sb.append("OK : ");
         }
         else sb.append("KO : ");
@@ -101,7 +101,7 @@ class AssertionFormatter {
     protected void formatComparison(final RequestAssertion assertion, final StringBuilder sb) {
         final Map<String, String> map;
 
-        if(assertion.getResult() == AssertionStatus.PASSED) map = okMap;
+        if(assertion.getResult() == BinaryStatus.PASSED) map = okMap;
         else map = koMap;
 
         if(!map.containsKey(assertion.getComparison())) {

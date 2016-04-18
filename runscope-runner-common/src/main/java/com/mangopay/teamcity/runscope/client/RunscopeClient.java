@@ -3,7 +3,9 @@ import com.mangopay.teamcity.runscope.RunscopeConstants;
 import com.mangopay.teamcity.runscope.model.*;
 
 import javax.ws.rs.client.WebTarget;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RunscopeClient {
 
@@ -74,16 +76,30 @@ public class RunscopeClient {
         return trigger(test.getTriggerUrl());
     }
 
-    public Trigger trigger(Test test, String environment) { return trigger(test.getTriggerUrl(), environment); }
+    public Trigger trigger(Test test, String environment) {
+        return trigger(test.getTriggerUrl(), environment);
+    }
+
+    public Trigger trigger(Test test, String environment, Map<String, String> initialVariables) {
+        return trigger(test.getTriggerUrl(), environment, initialVariables);
+    }
 
     public Trigger trigger(String triggerUrl) {
-        return trigger(triggerUrl, null);
+        return trigger(triggerUrl, "");
     }
 
     public Trigger trigger(String triggerUrl, String environment) {
+        Map<String, String> initialVariables = new HashMap<String, String>();
+
+        return trigger(triggerUrl, environment, initialVariables);
+    }
+
+    public Trigger trigger(String triggerUrl, String environment, Map<String, String> initialVariables) {
         WebTarget target = builderFactory.getAbsoluteTarget(triggerUrl);
-        if(environment != null && !environment.isEmpty()) {
-            target = target.queryParam(RunscopeConstants.CLIENT_ENVIRONMENT, environment);
+        initialVariables.put(RunscopeConstants.CLIENT_ENVIRONMENT, environment);
+
+        for(Map.Entry<String, String> variable : initialVariables.entrySet()) {
+            target = target.queryParam(variable.getKey(), variable.getValue());
         }
 
         return builderFactory.getBuilder(target)

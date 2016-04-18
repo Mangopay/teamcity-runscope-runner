@@ -6,9 +6,10 @@ import com.mangopay.teamcity.runscope.model.Test;
 import com.mangopay.teamcity.runscope.model.TestResult;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.BuildProgressLogger;
-import jetbrains.buildServer.agentServer.Agent;
+import jetbrains.buildServer.agent.BuildRunnerContext;
 import jetbrains.buildServer.messages.DefaultMessagesInfo;
 import jetbrains.buildServer.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
 
 import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
@@ -18,17 +19,15 @@ import java.util.concurrent.*;
 public class RunscopeTestSetRunner implements Callable {
 
     private final RunscopeClient client;
-    private final String bucketId;
-    private final String testsId;
-    private final String environment;
     private final BuildProgressLogger logger;
+    private final RunscopeRunnerContext runscopeRunnerContext;
+    private final BuildRunnerContext buildRunnerContext;
 
-    public RunscopeTestSetRunner(final String token, final String bucketId, final String testsId, final String environment, final BuildProgressLogger logger) {
-        this.client = new RunscopeClient(token);
-        this.bucketId = bucketId;
-        this.testsId = testsId;
-        this.environment = environment;
-        this.logger = logger;
+    public RunscopeTestSetRunner(@NotNull final BuildRunnerContext buildRunnerContext, @NotNull final RunscopeRunnerContext runscopeRunnerContext) {
+        this.buildRunnerContext = buildRunnerContext;
+        this.runscopeRunnerContext = runscopeRunnerContext;
+        this.client = new RunscopeClient(this.runscopeRunnerContext.getToken());
+        this.logger = this.runscopeRunnerContext.getLogger();
     }
 
     @Override
@@ -44,7 +43,7 @@ public class RunscopeTestSetRunner implements Callable {
         final CompletionService<TestResult> completionService = new ExecutorCompletionService<TestResult>(threadPool);
 
         for(Test test : tests) {
-            final RunscopeTestRunner runner = new RunscopeTestRunner(client, test, environment, logger.getFlowLogger(test.getId()));
+            final RunscopeTestRunner runner = new RunscopeTestRunner(buildRunnerContext, client, test, runscopeRunnerContext.getEnvironmentId(), runscopeRunnerContext.getInitialVariables(), logger.getFlowLogger(test.getId()));
             completionService.submit(runner);
         }
 
@@ -69,36 +68,31 @@ public class RunscopeTestSetRunner implements Callable {
 
     private Bucket getBucket() throws RunBuildException {
         try {
-            Bucket bucket = client.getBucket(bucketId);
+            Bucket bucket = client.getBucket(runscopeRunnerContext.getBucketId());
             logBucket(bucket);
 
             return bucket;
         }
         catch(NotFoundException ex) {
-            throw new RunBuildException("Cannot find bucket " + bucketId);
+            throw new RunBuildException("Cannot find bucket " + runscopeRunnerContext.getBucketId());
         }
     }
 
     private List<Test> getTests() throws RunBuildException {
-        final String[] testsId;
         final List<Test> tests = new ArrayList<Test>();
 
-        if(StringUtil.isEmptyOrSpaces(this.testsId)) {
+        if(runscopeRunnerContext.getTestsIds().size() == 0) {
             logger.message("No test specified, finding bucket tests.");
-            List<Test> bucketTests = client.getBucketTests(bucketId, 1000);
-            testsId = new String[bucketTests.size()];
+            List<Test> bucketTests = client.getBucketTests(runscopeRunnerContext.getBucketId(), 1000);
 
             for(int i = 0; i < bucketTests.size(); i++) {
-                testsId[i] = bucketTests.get(i).getId();
+                runscopeRunnerContext.getTestsIds().add(bucketTests.get(i).getId());
             }
         }
-        else {
-            testsId = this.testsId.split(AgentConstants.TESTS_SPLIT);
-        }
 
-        for (String testId : testsId) {
+        for (String testId : runscopeRunnerContext.getTestsIds()) {
             try {
-                Test test = client.getTest(bucketId, testId);
+                Test test = client.getTest(runscopeRunnerContext.getBucketId(), testId);
                 tests.add(test);
             } catch (NotFoundException ex) {
                 throw new RunBuildException("Cannot find test " + testId);
@@ -110,7 +104,7 @@ public class RunscopeTestSetRunner implements Callable {
     }
 
     private void logBucket(Bucket bucket) {
-        logger.message(String.format("Fetched bucket %s : %s", bucketId, bucket.getName()));
+        logger.message(String.format("Fetched bucket %s : %s", runscopeRunnerContext.getBucketId(), bucket.getName()));
     }
 
     private void logTests(List<Test> tests) {
@@ -120,7 +114,7 @@ public class RunscopeTestSetRunner implements Callable {
             logger.activityStarted(test.getName(), DefaultMessagesInfo.BLOCK_TYPE_INDENTATION);
             if(!StringUtil.isEmptyOrSpaces(test.getDescription())) logger.message(test.getDescription());
             logger.message(String.format("Id : %s", test.getId()));
-            logger.message(String.format("Steps : %d", test.getSteps().size()));
+            logger.message(String.format("Nested tests : %d", test.getSteps().size()));
             logger.activityFinished(test.getName(), DefaultMessagesInfo.BLOCK_TYPE_INDENTATION);
         }
 

@@ -4,8 +4,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.mangopay.teamcity.runscope.model.*;
 import jetbrains.buildServer.agent.BuildProgressLogger;
 
-import java.util.Map;
-
 class RequestLogger {
 
     private final Run run;
@@ -27,7 +25,7 @@ class RequestLogger {
             final String assertionLog = assertionFormatter.format(assertion);
             logger.message(assertionLog);
 
-            if(assertion.getResult() != AssertionStatus.PASSED) {
+            if(assertion.getResult() != BinaryStatus.PASSED) {
                 failed = true;
                 sb.append(assertionLog);
                 sb.append("\n");

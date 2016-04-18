@@ -51,3 +51,15 @@
         </td>
     </tr>
 </l:settingsGroup>
+
+<l:settingsGroup title="Runscope variables">
+    <tr>
+        <th><label>Defines initial variables:</label></th>
+        <td><props:checkboxProperty name="${constants.definesInitialVariablesKey}" />
+            <span class="error" id="error_${constants.definesInitialVariablesKey}"></span>
+            <span class="smallNote">
+                Defines Runscope initial variables based on build parameters (${constants.runscopeVariablesPrefix}*).
+            </span>
+        </td>
+    </tr>
+</l:settingsGroup>

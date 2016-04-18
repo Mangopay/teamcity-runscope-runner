@@ -15,3 +15,7 @@
 <div class="parameter">
     Environment: <strong><props:displayValue name="${constants.environmentKey}" emptyValue="not specified"/></strong>
 </div>
+
+<div class="parameter">
+  Defines initial variables: <strong><props:displayCheckboxValue name="${constants.definesInitialVariablesKey}"/></strong>
+</div>
