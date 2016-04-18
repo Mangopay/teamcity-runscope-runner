@@ -17,5 +17,5 @@
 </div>
 
 <div class="parameter">
-  Defines initial variables: <strong><props:displayCheckboxValue name="${constants.definesInitialVariablesKey}"/></strong>
+  Initial variables: <strong><props:displayValue name="${constants.variablesKey}"/></strong>
 </div>

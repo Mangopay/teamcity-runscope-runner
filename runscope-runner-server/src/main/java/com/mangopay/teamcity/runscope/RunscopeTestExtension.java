@@ -34,13 +34,12 @@ public class RunscopeTestExtension extends SimplePageExtension {
         if(testRuns == null) return false;
 
         final List<? extends STestRun> runs = (List<? extends STestRun>)testRuns;
-        if(runs != null && runs.size() < 1) return false;
+        if(runs.size() < 1) return false;
 
         //finding test details
-        for(int i = 0; i < runs.size(); i++) {
-            final STestRun run = runs.get(i);
+        for (final STestRun run : runs) {
             final Matcher matcher = fullLogPattern.matcher(run.getFullText());
-            if(!matcher.find()) continue;
+            if (!matcher.find()) continue;
 
             request.setAttribute(RUNSCOPE_TEST_LINK_ATTRIBUTE, matcher.group("url"));
             return true;
@@ -50,7 +49,6 @@ public class RunscopeTestExtension extends SimplePageExtension {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void fillModel(@NotNull Map<String, Object> model, @NotNull HttpServletRequest request) {
         final Object url = request.getAttribute(RUNSCOPE_TEST_LINK_ATTRIBUTE);
         model.put("url", url);

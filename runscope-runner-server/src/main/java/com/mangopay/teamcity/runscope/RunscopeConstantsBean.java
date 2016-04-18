@@ -16,8 +16,9 @@ public class RunscopeConstantsBean {
     public String getEnvironmentKey() { return RunscopeConstants.SETTINGS_ENVIRONMENT; }
 
     @NotNull
-    public String getDefinesInitialVariablesKey() { return RunscopeConstants.SETTINGS_DEFINES_INITIAL_VARIABLES; }
+    public String getVariablesKey() { return RunscopeConstants.SETTINGS_VARIABLES; }
 
     @NotNull
     public String getRunscopeVariablesPrefix() { return RunscopeConstants.RUNSCOPE_VAR_PREFIX; }
+
 }

@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 class RunscopeBuildProcess extends FutureBasedBuildProcess {
     private final BuildRunnerContext buildRunnerContext;
@@ -24,34 +26,37 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
         final String bucket = parameters.get(RunscopeConstants.SETTINGS_BUCKET).trim();
         String environment = parameters.get(RunscopeConstants.SETTINGS_ENVIRONMENT);
         String testsIds = parameters.get(RunscopeConstants.SETTINGS_TESTS);
-        String definesInitialVariables = parameters.get(RunscopeConstants.SETTINGS_DEFINES_INITIAL_VARIABLES);
+        String initialVariables = parameters.get(RunscopeConstants.SETTINGS_VARIABLES);
 
         if(StringUtil.isEmptyOrSpaces(environment)) environment = "";
         if(StringUtil.isEmptyOrSpaces(testsIds)) testsIds = "";
-        final List<String> tests = Arrays.asList(testsIds.split(AgentConstants.TESTS_SPLIT));
+        final List<String> tests = Arrays.asList(testsIds.split(RunscopeConstants.MULTI_PARAMETER_SPLIT));
 
         this.buildRunnerContext = buildRunnerContext;
         this.runscopeRunnerContext = new RunscopeRunnerContext(token, bucket, environment, tests, logger);
 
-        if(Boolean.parseBoolean(definesInitialVariables)) setInitialVariables();
-        else this.runscopeRunnerContext.setInitialVariables(new HashMap<String, String>());
+        setInitialVariables(initialVariables);
     }
 
-    private void setInitialVariables() {
+    private void setInitialVariables(final String variablesParameter) {
         final Map<String,String> initialVariables = new HashMap<String, String>();
-        final int prefixLength = RunscopeConstants.RUNSCOPE_VAR_PREFIX.length();
 
-        Map<String, String> buildParameters = buildRunnerContext.getConfigParameters();
+        final Pattern variablesPattern = Pattern.compile(RunscopeConstants.SETTINGS_VARIABLES_PARSER, Pattern.MULTILINE);
+        final Matcher matcher = variablesPattern.matcher(variablesParameter);
+        final Map<String, String> buildParameters = buildRunnerContext.getConfigParameters();
 
-        for(Map.Entry<String, String> parameter : buildParameters.entrySet()) {
-            if(!parameter.getKey().startsWith(RunscopeConstants.RUNSCOPE_VAR_PREFIX)) continue;
+        while(matcher.find()) {
+            final String key = matcher.group("key");
+            final String buildParameterKey = RunscopeConstants.RUNSCOPE_VAR_PREFIX + key;
+            String value = matcher.group("value");
 
-            initialVariables.put(parameter.getKey().substring(prefixLength), parameter.getValue());
+            if(StringUtil.isEmpty(value) && buildParameters.containsKey(buildParameterKey)) value = buildParameters.get(buildParameterKey);
+
+            initialVariables.put(key, value);
         }
 
         this.runscopeRunnerContext.setInitialVariables(initialVariables);
     }
-
     @Override
     public BuildFinishedStatus call() throws Exception {
         logParameters();

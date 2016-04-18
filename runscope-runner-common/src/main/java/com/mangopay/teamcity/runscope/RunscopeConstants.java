@@ -5,7 +5,7 @@ public interface RunscopeConstants {
     String SETTINGS_BUCKET = "runscope.bucket";
     String SETTINGS_TESTS = "runscope.tests";
     String SETTINGS_ENVIRONMENT = "runscope.environment";
-    String SETTINGS_DEFINES_INITIAL_VARIABLES = "runscope.variables.defines";
+    String SETTINGS_VARIABLES = "runscope.variables";
 
     String RUNNER_DISPLAY_NAME = "Runscope";
     String RUNNER_DESCRIPTION = "Runscope tests runner";
@@ -22,4 +22,6 @@ public interface RunscopeConstants {
 
     String RUNSCOPE_VAR_PREFIX = "runscope.vars.";
 
+    String SETTINGS_VARIABLES_PARSER = "^(?<key>[^=]+)(=(?<value>.+))?$";
+    String MULTI_PARAMETER_SPLIT = "[\n, ]";
 }

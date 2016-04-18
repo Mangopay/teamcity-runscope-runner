@@ -50,15 +50,17 @@
             </span>
         </td>
     </tr>
-</l:settingsGroup>
 
-<l:settingsGroup title="Runscope variables">
     <tr>
-        <th><label>Defines initial variables:</label></th>
-        <td><props:checkboxProperty name="${constants.definesInitialVariablesKey}" />
-            <span class="error" id="error_${constants.definesInitialVariablesKey}"></span>
+        <th><label>Initial variables:</label></th>
+        <td><props:multilineProperty name="${constants.variablesKey}" linkTitle="Edit initial variables" cols="49" rows="5" className="longField" />
+            <span class="error" id="error_${constants.variablesKey}"></span>
             <span class="smallNote">
-                Defines Runscope initial variables based on build parameters (${constants.runscopeVariablesPrefix}*).
+                Enter Runscope initial variables. One variable per line.<br/>
+                Example: Message=Hello World !<br/>
+                Variables without values will be taken from its corresponding build parameter (${constants.runscopeVariablesPrefix}*).<br/>
+                Example: Message<br/>
+                Will have the value of ${constants.runscopeVariablesPrefix}Message<br/>
             </span>
         </td>
     </tr>
