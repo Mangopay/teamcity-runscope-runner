@@ -8,9 +8,9 @@
     <download-url>https://github.com/Mangopay/teamcity-runscope-runner/releases</download-url>
     <email>runscope@mangopay.com</email>
     <vendor>
-      <name>Mangopay</name>
-      <url>https://www.mangopay.com</url>
-      <logo>Plugin vendor logo URL</logo>
+      <name>@VendorName@</name>
+      <url>@VendorURL@</url>
+      <logo>https://www.mangopay.com/wp-content/themes/underscores/img/mangopay.png</logo>
     </vendor>
   </info>
   <deployment use-separate-classloader="true" />
