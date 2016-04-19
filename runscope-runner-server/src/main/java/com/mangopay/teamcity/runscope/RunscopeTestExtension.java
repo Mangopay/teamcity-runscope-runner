@@ -8,37 +8,38 @@ import jetbrains.buildServer.web.openapi.SimplePageExtension;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RunscopeTestExtension extends SimplePageExtension {
-    private final static String RUNSCOPE_TEST_LINK_ATTRIBUTE = "runscopeTestLink";
-
-    private final static Pattern fullLogPattern;
+    private static final String RUNSCOPE_TEST_LINK_ATTRIBUTE = "runscopeTestLink";
+    private static final Pattern FULL_LOG_PATTERN;
 
     static{
         final String pattern = RunscopeConstants.LOG_SEE_FULL_LOG.replaceAll("%s", "(?<url>.*)");
-        fullLogPattern = Pattern.compile(pattern);
+        FULL_LOG_PATTERN = Pattern.compile(pattern);
     }
-    public RunscopeTestExtension(@NotNull PagePlaces pagePlaces, @NotNull PluginDescriptor pluginDescriptor){
+
+    public RunscopeTestExtension(@NotNull final PagePlaces pagePlaces, @NotNull final PluginDescriptor pluginDescriptor){
         super(pagePlaces, PlaceId.TEST_DETAILS_BLOCK, RunscopeConstants.PLUGIN_ID, pluginDescriptor.getPluginResourcesPath("runscopeTestDetail.jsp"));
         register();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean isAvailable(@NotNull HttpServletRequest request) {
+    public boolean isAvailable(@NotNull final HttpServletRequest request) {
         final Object testRuns = request.getAttribute("testRuns");
         if(testRuns == null) return false;
 
-        final List<? extends STestRun> runs = (List<? extends STestRun>)testRuns;
-        if(runs.size() < 1) return false;
+        final Collection<? extends STestRun> runs = (Collection<? extends STestRun>) testRuns;
+        if(runs.isEmpty()) return false;
 
         //finding test details
         for (final STestRun run : runs) {
-            final Matcher matcher = fullLogPattern.matcher(run.getFullText());
+            final Matcher matcher = FULL_LOG_PATTERN.matcher(run.getFullText());
             if (!matcher.find()) continue;
 
             request.setAttribute(RUNSCOPE_TEST_LINK_ATTRIBUTE, matcher.group("url"));
@@ -49,7 +50,7 @@ public class RunscopeTestExtension extends SimplePageExtension {
     }
 
     @Override
-    public void fillModel(@NotNull Map<String, Object> model, @NotNull HttpServletRequest request) {
+    public void fillModel(@NotNull final Map<String, Object> model, @NotNull final HttpServletRequest request) {
         final Object url = request.getAttribute(RUNSCOPE_TEST_LINK_ATTRIBUTE);
         model.put("url", url);
     }
