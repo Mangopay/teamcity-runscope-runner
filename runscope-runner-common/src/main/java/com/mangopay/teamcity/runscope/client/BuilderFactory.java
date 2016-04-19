@@ -8,7 +8,6 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
@@ -36,7 +35,7 @@ class BuilderFactory {
         return client.target(path);
     }
 
-    private String getProxy() {
+    private static String getProxy() {
         final String host = System.getProperty("http.proxyHost");
         final String port = System.getProperty("http.proxyPort");
         final StringBuilder sb = new StringBuilder("http://");
@@ -52,11 +51,7 @@ class BuilderFactory {
     }
 
     public WebTarget getTarget(final String path) {
-        return getTarget(RunscopeConstants.BASE_URL, path);
-    }
-
-    public WebTarget getTarget(final String baseUrl, final String path) {
-        return getAbsoluteTarget(baseUrl)
+        return getAbsoluteTarget(RunscopeConstants.BASE_URL)
                 .path(path);
     }
 

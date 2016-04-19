@@ -6,6 +6,7 @@ import javax.ws.rs.client.WebTarget;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class RunscopeClient {
 
@@ -98,7 +99,7 @@ public class RunscopeClient {
         WebTarget target = builderFactory.getAbsoluteTarget(triggerUrl);
         initialVariables.put(RunscopeConstants.CLIENT_ENVIRONMENT, environment);
 
-        for(final Map.Entry<String, String> variable : initialVariables.entrySet()) {
+        for(final Entry<String, String> variable : initialVariables.entrySet()) {
             target = target.queryParam(variable.getKey(), variable.getValue());
         }
 

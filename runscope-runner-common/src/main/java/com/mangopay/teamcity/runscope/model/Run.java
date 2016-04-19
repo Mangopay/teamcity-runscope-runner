@@ -2,8 +2,6 @@ package com.mangopay.teamcity.runscope.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.xml.bind.annotation.XmlElement;
-
 public class Run {
     private String bucketKey;
     private String environmentId;

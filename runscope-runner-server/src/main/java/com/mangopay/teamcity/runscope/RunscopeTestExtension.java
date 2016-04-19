@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,6 +38,7 @@ public class RunscopeTestExtension extends SimplePageExtension {
 
         //finding test details
         for (final STestRun run : runs) {
+            if(run == null) continue;
             final Matcher matcher = FULL_LOG_PATTERN.matcher(run.getFullText());
             if (!matcher.find()) continue;
 

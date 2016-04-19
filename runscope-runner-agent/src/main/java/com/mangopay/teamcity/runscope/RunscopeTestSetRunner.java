@@ -44,7 +44,7 @@ public class RunscopeTestSetRunner implements Callable<BuildFinishedStatus> {
         final CompletionService<TestResult> completionService = new ExecutorCompletionService<TestResult>(threadPool);
 
         for(final Test test : tests) {
-            final Callable runner = new RunscopeTestRunner(buildRunnerContext, client, test, runscopeRunnerContext.getEnvironmentId(), runscopeRunnerContext.getInitialVariables(), logger.getFlowLogger(test.getId()));
+            final Callable<TestResult> runner = new RunscopeTestRunner(buildRunnerContext, client, test, runscopeRunnerContext.getEnvironmentId(), runscopeRunnerContext.getInitialVariables(), logger.getFlowLogger(test.getId()));
             completionService.submit(runner);
         }
 

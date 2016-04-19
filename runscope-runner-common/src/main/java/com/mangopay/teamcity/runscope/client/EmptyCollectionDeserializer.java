@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class EmptyCollectionDeserializer extends CollectionDeserializer {
+    private static final long serialVersionUID = -1L;
+
     public EmptyCollectionDeserializer(final JavaType collectionType, final JsonDeserializer<Object> valueDeser, final TypeDeserializer valueTypeDeser, final ValueInstantiator valueInstantiator) {
         super(collectionType, valueDeser, valueTypeDeser, valueInstantiator);
     }
@@ -23,11 +25,6 @@ public class EmptyCollectionDeserializer extends CollectionDeserializer {
 
     protected EmptyCollectionDeserializer(final CollectionDeserializer src) {
         super(src);
-    }
-
-    @Override
-    public Collection<Object> deserialize(final JsonParser jsonParser, final DeserializationContext deserializationContext) throws IOException {
-        return super.deserialize(jsonParser, deserializationContext);
     }
 
     @Override

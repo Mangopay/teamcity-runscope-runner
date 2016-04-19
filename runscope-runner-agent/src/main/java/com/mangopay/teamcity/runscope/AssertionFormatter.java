@@ -65,14 +65,14 @@ class AssertionFormatter {
         return sb.toString();
     }
 
-    protected void formatStatus(final RequestAssertion assertion, final StringBuilder sb) {
+    private static void formatStatus(final RequestAssertion assertion, final StringBuilder sb) {
         if(assertion.getResult() == BinaryStatus.PASSED) {
             sb.append("OK : ");
         }
         else sb.append("KO : ");
     }
 
-    protected void formatSource(final RequestAssertion assertion, final StringBuilder sb) {
+    private static void formatSource(final RequestAssertion assertion, final StringBuilder sb) {
         final String source = assertion.getSource();
         if (SOURCE_MAP.containsKey(source)) {
             sb.append(SOURCE_MAP.get(source));
@@ -87,7 +87,7 @@ class AssertionFormatter {
         sb.append(" : ");
     }
 
-    protected void formatError(final RequestAssertion assertion, final StringBuilder sb)
+    private static void formatError(final RequestAssertion assertion, final StringBuilder sb)
     {
         if(!StringUtil.isEmptyOrSpaces(assertion.getError())) {
             sb.append(" - ");
@@ -95,11 +95,8 @@ class AssertionFormatter {
         }
     }
 
-    protected void formatComparison(final RequestAssertion assertion, final StringBuilder sb) {
-        final Map<String, String> map;
-
-        if(assertion.getResult() == BinaryStatus.PASSED) map = OK_MAP;
-        else map = KO_MAP;
+    private static void formatComparison(final RequestAssertion assertion, final StringBuilder sb) {
+        final Map<String, String> map = assertion.getResult() == BinaryStatus.PASSED ? OK_MAP : KO_MAP;
 
         final String comparison = assertion.getComparison();
         if (map.containsKey(comparison)) {

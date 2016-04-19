@@ -43,7 +43,7 @@ class RequestLogger {
         return sb.toString();
     }
 
-    public String getName(final Step step) {
+    public static String getName(final Step step) {
         final StringBuilder sb = new StringBuilder();
 
         if(StepType.PAUSE == step.getStepType()) {

@@ -39,7 +39,7 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
         Integer errorsInARow = 0;
 
         do {
-            Thread.sleep(1000);
+            Thread.sleep(1000L);
             try {
                 done = update(result);
                 errorsInARow = 0;
@@ -70,13 +70,13 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
         this.steps = result;
     }
 
-    private void addSteps(final Step step, final List<Step> list) {
+    private static void addSteps(final Step step, final List<Step> list) {
         list.add(step);
 
         if (step.getSteps() == null || step.getSteps().isEmpty()) return;
 
-        for (final Step s : step.getSteps()) {
-            addSteps(s, list);
+        for (final Step nestedStep : step.getSteps()) {
+            addSteps(nestedStep, list);
         }
 
         if (step.getStepType() == StepType.CONDITION) {
@@ -86,7 +86,7 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
         }
     }
 
-    private int throwIfNeeded(Integer errorsInARow, final Exception ex) throws RunBuildException {
+    private static int throwIfNeeded(Integer errorsInARow, final Exception ex) throws RunBuildException {
         if (errorsInARow > 10) throw new RunBuildException("Maximum retries exceeded", ex);
         return errorsInARow + 1;
     }
@@ -162,7 +162,7 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
         logger.logTestFinished(testName);
     }
 
-    private void setBuildParameters(Request request, WatchResult result) {
+    private static void setBuildParameters(Request request, WatchResult result) {
         List<RequestVariable> variables = request.getVariables();
 
         for(final RequestVariable variable : variables) {
@@ -175,6 +175,6 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
         final String format = "%d - %s";
         final Step step = steps.get(stepIndex);
 
-        return String.format(format, stepIndex, requestLogger.getName(step));
+        return String.format(format, stepIndex, RequestLogger.getName(step));
     }
 }

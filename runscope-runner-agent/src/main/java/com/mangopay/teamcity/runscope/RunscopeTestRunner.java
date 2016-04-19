@@ -68,7 +68,7 @@ public class RunscopeTestRunner implements Callable<TestResult> {
         }
     }
 
-    private String getBuildParameterName(final Entry<String, String> variable) {
+    private static String getBuildParameterName(final Entry<String, String> variable) {
         return RunscopeConstants.RUNSCOPE_VAR_PREFIX + variable.getKey();
     }
 }

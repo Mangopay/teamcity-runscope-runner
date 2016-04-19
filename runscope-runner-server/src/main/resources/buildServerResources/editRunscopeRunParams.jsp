@@ -36,7 +36,7 @@
         <td><props:multilineProperty name="${constants.testsKey}" linkTitle="Edit Runscope tests list" cols="49" rows="3" className="longField" />
             <span class="error" id="error_${constants.testsKey}"></span>
             <span class="smallNote">
-                Enter comma- or newline-separated Runscope Test keys. If left empty, all tests from the bucket will be runned.
+                Enter comma- or newline-separated Runscope Test keys. If left empty, all tests from the bucket will be ran.
             </span>
         </td>
     </tr>
