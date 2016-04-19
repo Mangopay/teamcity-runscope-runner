@@ -14,11 +14,11 @@ public class RunscopeRunnerContext {
 
     private Map<String, String> initialVariables;
 
-    public RunscopeRunnerContext(String token, String bucketId, String environmentId, List<String> testsId, BuildProgressLogger logger) {
+    public RunscopeRunnerContext(String token, String bucketId, String environmentId, List<String> testsIds, BuildProgressLogger logger) {
         this.bucketId = bucketId;
         this.environmentId = environmentId;
         this.token = token;
-        this.testsIds = testsId;
+        this.testsIds = testsIds;
         this.logger = logger;
     }
 

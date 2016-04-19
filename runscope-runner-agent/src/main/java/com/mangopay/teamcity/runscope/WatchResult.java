@@ -10,7 +10,7 @@ public class WatchResult {
     private Map<String, String> variables;
 
     public WatchResult() {
-        this.variables = new HashMap<String, String>();
+        variables = new HashMap<String, String>();
     }
 
     public TestResult getTestResult() {
@@ -25,7 +25,7 @@ public class WatchResult {
         return variables;
     }
 
-    public void putVariable(String name, String value) {
+    public void putVariable(final String name, final String value) {
         variables.put(name, value);
     }
 }

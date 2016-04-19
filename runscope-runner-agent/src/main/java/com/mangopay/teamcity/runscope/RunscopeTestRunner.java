@@ -3,12 +3,14 @@ package com.mangopay.teamcity.runscope;
 import com.mangopay.teamcity.runscope.client.RunscopeClient;
 import com.mangopay.teamcity.runscope.model.*;
 import jetbrains.buildServer.RunBuildException;
+import jetbrains.buildServer.agent.AgentRunningBuild;
 import jetbrains.buildServer.agent.BuildProgressLogger;
 import jetbrains.buildServer.agent.BuildRunnerContext;
 import jetbrains.buildServer.util.StringUtil;
 
 import javax.ws.rs.NotFoundException;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
 public class RunscopeTestRunner implements Callable<TestResult> {
@@ -38,8 +40,8 @@ public class RunscopeTestRunner implements Callable<TestResult> {
         if(trigger.getRunsTotal() != 1) throw new RunBuildException(String.format("Expected 1 run but found %d", trigger.getRunsTotal()));
 
         final Run run = trigger.getRuns().get(0);
-        RunscopeRunWatcher watcher = new RunscopeRunWatcher(client, run, logger);
-        WatchResult result = watcher.call();
+        final RunscopeRunWatcher watcher = new RunscopeRunWatcher(client, run, logger);
+        final WatchResult result = watcher.call();
         setBuildParameters(result);
 
         logger.logSuiteFinished(testName);
@@ -50,20 +52,23 @@ public class RunscopeTestRunner implements Callable<TestResult> {
         try {
             return client.trigger(test, environment, initialVariables);
         }
-        catch(NotFoundException ex) {
+        catch(final NotFoundException ex) {
             String message = "Cannot trigger test %s";
             if(!StringUtil.isEmptyOrSpaces(environment)) message += " on environment %s";
-            throw new RunBuildException(String.format(message, test.getId(), environment));
+            throw new RunBuildException(String.format(message, test.getId(), environment), ex);
         }
     }
 
-    public void setBuildParameters(WatchResult result) {
-        for(Map.Entry<String, String> runscopeVariable : result.getVariables().entrySet()) {
-            context.getBuild().addSharedConfigParameter(getBuildParameterName(runscopeVariable), runscopeVariable.getValue());
+    public void setBuildParameters(final WatchResult result) {
+        final Map<String, String> variables = result.getVariables();
+        final AgentRunningBuild build = context.getBuild();
+
+        for(final Entry<String, String> runscopeVariable : variables.entrySet()) {
+            build.addSharedConfigParameter(getBuildParameterName(runscopeVariable), runscopeVariable.getValue());
         }
     }
 
-    private String getBuildParameterName(Map.Entry<String, String> variable) {
+    private String getBuildParameterName(final Entry<String, String> variable) {
         return RunscopeConstants.RUNSCOPE_VAR_PREFIX + variable.getKey();
     }
 }

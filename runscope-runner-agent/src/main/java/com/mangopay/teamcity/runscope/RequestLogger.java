@@ -13,7 +13,7 @@ class RequestLogger {
     public RequestLogger(final Run run, final BuildProgressLogger logger) {
         this.run = run;
         this.logger = logger;
-        this.assertionFormatter = new AssertionFormatter();
+        assertionFormatter = new AssertionFormatter();
 
     }
 
@@ -21,14 +21,14 @@ class RequestLogger {
         final StringBuilder sb = new StringBuilder();
         boolean failed = false;
 
-        for(RequestAssertion assertion : request.getAssertions()) {
+        for(final RequestAssertion assertion : request.getAssertions()) {
             final String assertionLog = assertionFormatter.format(assertion);
             logger.message(assertionLog);
 
             if(assertion.getResult() != BinaryStatus.PASSED) {
                 failed = true;
                 sb.append(assertionLog);
-                sb.append("\n");
+                sb.append('\n');
             }
         }
 
@@ -46,12 +46,12 @@ class RequestLogger {
     public String getName(final Step step) {
         final StringBuilder sb = new StringBuilder();
 
-        if("pause".equals(step.getStepType())) {
+        if(StepType.PAUSE == step.getStepType()) {
             sb.append("Pause ");
             sb.append(step.getDuration());
             sb.append(" second(s)");
         }
-        else if("ghost-inspector".equals(step.getStepType())) {
+        else if(StepType.GHOST_INSPECTOR == step.getStepType()) {
             sb.append("[Ghost Inspector] ");
             sb.append(step.getTestName());
         }

@@ -1,8 +1,8 @@
 package com.mangopay.teamcity.runscope;
 
 import com.intellij.openapi.util.text.StringUtil;
+import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.BuildFinishedStatus;
-import jetbrains.buildServer.agent.BuildParametersMap;
 import jetbrains.buildServer.agent.BuildRunnerContext;
 import jetbrains.buildServer.messages.DefaultMessagesInfo;
 import org.jetbrains.annotations.NotNull;
@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,14 +27,14 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
         final String bucket = parameters.get(RunscopeConstants.SETTINGS_BUCKET).trim();
         String environment = parameters.get(RunscopeConstants.SETTINGS_ENVIRONMENT);
         String testsIds = parameters.get(RunscopeConstants.SETTINGS_TESTS);
-        String initialVariables = parameters.get(RunscopeConstants.SETTINGS_VARIABLES);
+        final String initialVariables = parameters.get(RunscopeConstants.SETTINGS_VARIABLES);
 
         if(StringUtil.isEmptyOrSpaces(environment)) environment = "";
         if(StringUtil.isEmptyOrSpaces(testsIds)) testsIds = "";
         final List<String> tests = Arrays.asList(testsIds.split(RunscopeConstants.MULTI_PARAMETER_SPLIT));
 
         this.buildRunnerContext = buildRunnerContext;
-        this.runscopeRunnerContext = new RunscopeRunnerContext(token, bucket, environment, tests, logger);
+        runscopeRunnerContext = new RunscopeRunnerContext(token, bucket, environment, tests, logger);
 
         setInitialVariables(initialVariables);
     }
@@ -55,31 +56,29 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
             initialVariables.put(key, value);
         }
 
-        this.runscopeRunnerContext.setInitialVariables(initialVariables);
+        runscopeRunnerContext.setInitialVariables(initialVariables);
     }
     @Override
-    public BuildFinishedStatus call() throws Exception {
+    public BuildFinishedStatus call() throws RunBuildException {
         logParameters();
 
         final RunscopeTestSetRunner runner = new RunscopeTestSetRunner(buildRunnerContext, runscopeRunnerContext);
-        runner.call();
-
-        return BuildFinishedStatus.FINISHED_SUCCESS;
+        return runner.call();
     }
 
     private void logParameters() {
         logger.message("Bucket : " + runscopeRunnerContext.getBucketId().trim());
         if(!StringUtil.isEmptyOrSpaces(runscopeRunnerContext.getEnvironmentId())) logger.message("Environment : " + runscopeRunnerContext.getEnvironmentId().trim());
-        if(runscopeRunnerContext.getTestsIds().size() > 0) logger.message("Tests : " + runscopeRunnerContext.getTestsIds().toString());
+        if(!runscopeRunnerContext.getTestsIds().isEmpty()) logger.message("Tests : " + runscopeRunnerContext.getTestsIds());
         logInitialVariables();
     }
 
     private void logInitialVariables() {
-        Map<String, String> initialVariables = runscopeRunnerContext.getInitialVariables();
-        if(initialVariables.size() == 0) return;
+        final Map<String, String> initialVariables = runscopeRunnerContext.getInitialVariables();
+        if(initialVariables.isEmpty()) return;
 
         logger.activityStarted("Initial variables", String.format("%d defined", initialVariables.size()), DefaultMessagesInfo.BLOCK_TYPE_INDENTATION);
-        for(Map.Entry<String, String> variable : initialVariables.entrySet()) {
+        for(final Entry<String, String> variable : initialVariables.entrySet()) {
             logger.message(String.format("%s : %s", variable.getKey(), variable.getValue()));
         }
         logger.activityFinished("Initial variables", DefaultMessagesInfo.BLOCK_TYPE_INDENTATION);

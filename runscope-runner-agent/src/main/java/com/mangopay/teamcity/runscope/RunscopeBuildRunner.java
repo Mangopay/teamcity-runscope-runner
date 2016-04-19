@@ -7,8 +7,8 @@ import org.jetbrains.annotations.NotNull;
 public class RunscopeBuildRunner implements AgentBuildRunner, AgentBuildRunnerInfo {
     @NotNull
     @Override
-    public BuildProcess createBuildProcess(@NotNull final AgentRunningBuild agentRunningBuild, @NotNull final BuildRunnerContext buildRunnerContext) throws RunBuildException {
-        return new RunscopeBuildProcess(buildRunnerContext);
+    public BuildProcess createBuildProcess(@NotNull final AgentRunningBuild runningBuild, @NotNull final BuildRunnerContext context) throws RunBuildException {
+        return new RunscopeBuildProcess(context);
     }
 
     @NotNull
@@ -24,7 +24,7 @@ public class RunscopeBuildRunner implements AgentBuildRunner, AgentBuildRunnerIn
     }
 
     @Override
-    public boolean canRun(@NotNull BuildAgentConfiguration buildAgentConfiguration) {
+    public boolean canRun(@NotNull final BuildAgentConfiguration agentConfiguration) {
         return true;
     }
 }

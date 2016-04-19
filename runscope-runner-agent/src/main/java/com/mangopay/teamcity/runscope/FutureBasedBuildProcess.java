@@ -15,10 +15,11 @@ abstract class FutureBasedBuildProcess implements BuildProcess, Callable<BuildFi
     protected final BuildProgressLogger logger;
     private Future<BuildFinishedStatus> future;
 
-    public FutureBasedBuildProcess(@NotNull final BuildRunnerContext context) {
-        this.logger = context.getBuild().getBuildLogger();
+    protected FutureBasedBuildProcess(@NotNull final BuildRunnerContext context) {
+        logger = context.getBuild().getBuildLogger();
     }
 
+    @Override
     public void start() throws RunBuildException
     {
         try {
@@ -30,21 +31,25 @@ abstract class FutureBasedBuildProcess implements BuildProcess, Callable<BuildFi
         }
     }
 
+    @Override
     public boolean isInterrupted()
     {
         return future.isCancelled() && isFinished();
     }
 
+    @Override
     public boolean isFinished()
     {
         return future.isDone();
     }
 
+    @Override
     public void interrupt()  {
         logger.message("Attempt to interrupt build process");
         future.cancel(true);
     }
 
+    @Override
     @NotNull
     public BuildFinishedStatus waitFor() throws RunBuildException
     {
