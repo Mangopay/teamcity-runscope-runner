@@ -56,11 +56,9 @@
         <td><props:multilineProperty name="${constants.variablesKey}" linkTitle="Edit initial variables" cols="49" rows="5" className="longField" />
             <span class="error" id="error_${constants.variablesKey}"></span>
             <span class="smallNote">
-                Enter Runscope initial variables. One variable per line.<br/>
-                Example: Message=Hello World !<br/>
-                Variables without values will be taken from its corresponding build parameter (${constants.runscopeVariablesPrefix}*).<br/>
-                Example: Message<br/>
-                Will have the value of ${constants.runscopeVariablesPrefix}Message<br/>
+                Newline-separated Runscope variables.<br/>
+                Example: <kbd>variable=value</kbd><br/>
+                <kbd>=value</kbd> is optional. If omitted, the corresponding build parameter (${constants.runscopeVariablesPrefix}*) value will be used.<br/>
             </span>
         </td>
     </tr>
