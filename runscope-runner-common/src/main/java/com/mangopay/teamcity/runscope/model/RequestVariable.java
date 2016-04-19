@@ -12,7 +12,7 @@ public class RequestVariable {
         return error;
     }
 
-    public void setError(String error) {
+    public void setError(final String error) {
         this.error = error;
     }
 
@@ -20,7 +20,7 @@ public class RequestVariable {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -28,7 +28,7 @@ public class RequestVariable {
         return property;
     }
 
-    public void setProperty(String property) {
+    public void setProperty(final String property) {
         this.property = property;
     }
 
@@ -36,7 +36,7 @@ public class RequestVariable {
         return result;
     }
 
-    public void setResult(BinaryStatus result) {
+    public void setResult(final BinaryStatus result) {
         this.result = result;
     }
 
@@ -44,7 +44,7 @@ public class RequestVariable {
         return source;
     }
 
-    public void setSource(String source) {
+    public void setSource(final String source) {
         this.source = source;
     }
 
@@ -52,7 +52,7 @@ public class RequestVariable {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(final String value) {
         this.value = value;
     }
 }

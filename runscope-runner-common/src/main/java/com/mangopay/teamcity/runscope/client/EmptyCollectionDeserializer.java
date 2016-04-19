@@ -13,20 +13,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class EmptyCollectionDeserializer extends CollectionDeserializer {
-    public EmptyCollectionDeserializer(JavaType collectionType, JsonDeserializer<Object> valueDeser, TypeDeserializer valueTypeDeser, ValueInstantiator valueInstantiator) {
+    public EmptyCollectionDeserializer(final JavaType collectionType, final JsonDeserializer<Object> valueDeser, final TypeDeserializer valueTypeDeser, final ValueInstantiator valueInstantiator) {
         super(collectionType, valueDeser, valueTypeDeser, valueInstantiator);
     }
 
-    protected EmptyCollectionDeserializer(JavaType collectionType, JsonDeserializer<Object> valueDeser, TypeDeserializer valueTypeDeser, ValueInstantiator valueInstantiator, JsonDeserializer<Object> delegateDeser) {
+    protected EmptyCollectionDeserializer(final JavaType collectionType, final JsonDeserializer<Object> valueDeser, final TypeDeserializer valueTypeDeser, final ValueInstantiator valueInstantiator, final JsonDeserializer<Object> delegateDeser) {
         super(collectionType, valueDeser, valueTypeDeser, valueInstantiator, delegateDeser);
     }
 
-    protected EmptyCollectionDeserializer(CollectionDeserializer src) {
+    protected EmptyCollectionDeserializer(final CollectionDeserializer src) {
         super(src);
     }
 
     @Override
-    public Collection<Object> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+    public Collection<Object> deserialize(final JsonParser jsonParser, final DeserializationContext deserializationContext) throws IOException {
         return super.deserialize(jsonParser, deserializationContext);
     }
 
@@ -36,7 +36,7 @@ public class EmptyCollectionDeserializer extends CollectionDeserializer {
     }
 
     @Override
-    protected CollectionDeserializer withResolved(JsonDeserializer<?> dd, JsonDeserializer<?> vd, TypeDeserializer vtd) {
+    protected CollectionDeserializer withResolved(final JsonDeserializer<?> dd, final JsonDeserializer<?> vd, final TypeDeserializer vtd) {
         return new EmptyCollectionDeserializer(super.withResolved(dd, vd, vtd));
     }
 }

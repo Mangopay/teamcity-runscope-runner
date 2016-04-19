@@ -17,7 +17,7 @@ public class Step {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -25,7 +25,7 @@ public class Step {
         return note;
     }
 
-    public void setNote(String note) {
+    public void setNote(final String note) {
         this.note = note;
     }
 
@@ -34,7 +34,7 @@ public class Step {
     }
 
 	@JsonProperty("step_type")
-    public void setStepType(StepType stepType) {
+    public void setStepType(final StepType stepType) {
         this.stepType = stepType;
     }
 
@@ -42,7 +42,7 @@ public class Step {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(final int duration) {
         this.duration = duration;
     }
 
@@ -51,7 +51,7 @@ public class Step {
     }
 
 	@JsonProperty("test_name")
-    public void setTestName(String testName) {
+    public void setTestName(final String testName) {
         this.testName = testName;
     }
 
@@ -59,7 +59,7 @@ public class Step {
         return assertions;
     }
 
-    public void setAssertions(List<StepAssertion> assertions) {
+    public void setAssertions(final List<StepAssertion> assertions) {
         this.assertions = assertions;
     }
 
@@ -67,7 +67,7 @@ public class Step {
         return steps;
     }
 
-    public void setSteps(List<Step> steps) {
+    public void setSteps(final List<Step> steps) {
         this.steps = steps;
     }
 }

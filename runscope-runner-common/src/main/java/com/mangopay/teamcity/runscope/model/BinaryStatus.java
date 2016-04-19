@@ -6,7 +6,7 @@ public enum BinaryStatus {
 
     private final String status;
 
-    BinaryStatus(String status) {
+    BinaryStatus(final String status) {
         this.status = status;
     }
 

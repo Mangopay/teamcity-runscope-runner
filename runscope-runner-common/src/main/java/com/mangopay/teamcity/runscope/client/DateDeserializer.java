@@ -10,8 +10,8 @@ import java.util.Date;
 
 class DateDeserializer extends JsonDeserializer<Date> {
     @Override
-    public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-        double v = jsonParser.getDoubleValue();
-        return new Date((long)(v * 1000));
+    public Date deserialize(final JsonParser jsonParser, final DeserializationContext deserializationContext) throws IOException {
+        final double v = jsonParser.getDoubleValue();
+        return new Date(Math.round(v * 1000.0));
     }
 }

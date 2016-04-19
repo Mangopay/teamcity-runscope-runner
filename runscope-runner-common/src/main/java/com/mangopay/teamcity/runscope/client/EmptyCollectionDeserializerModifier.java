@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 public class EmptyCollectionDeserializerModifier extends BeanDeserializerModifier {
 
     @Override
-    public JsonDeserializer<?> modifyCollectionDeserializer(DeserializationConfig config, CollectionType type, BeanDescription beanDesc, JsonDeserializer<?> deserializer) {
+    public JsonDeserializer<?> modifyCollectionDeserializer(final DeserializationConfig config, final CollectionType type, final BeanDescription beanDesc, final JsonDeserializer<?> deserializer) {
         if(deserializer.getClass().isAssignableFrom(CollectionDeserializer.class)) {
             return new EmptyCollectionDeserializer((CollectionDeserializer)deserializer);
         }

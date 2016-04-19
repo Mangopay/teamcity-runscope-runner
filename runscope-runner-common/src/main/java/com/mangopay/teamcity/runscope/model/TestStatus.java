@@ -9,7 +9,7 @@ public enum TestStatus {
 
     private final String status;
 
-    TestStatus(String status) {
+    TestStatus(final String status) {
         this.status = status;
     }
 
@@ -19,6 +19,6 @@ public enum TestStatus {
 
     @Override
     public String toString() {
-        return this.status;
+        return status;
     }
 }

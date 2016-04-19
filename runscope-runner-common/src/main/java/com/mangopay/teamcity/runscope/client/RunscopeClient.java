@@ -11,12 +11,12 @@ public class RunscopeClient {
 
     private final BuilderFactory builderFactory;
 
-    public RunscopeClient(String token) {
-        this.builderFactory = new BuilderFactory(token);
+    public RunscopeClient(final String token) {
+        builderFactory = new BuilderFactory(token);
     }
 
-    public Bucket getBucket(String bucketKey) {
-        WebTarget target = builderFactory.getTarget("buckets/{bucketKey}")
+    public Bucket getBucket(final String bucketKey) {
+        final WebTarget target = builderFactory.getTarget("buckets/{bucketKey}")
                 .resolveTemplate("bucketKey", bucketKey);
 
         return builderFactory.getBuilder(target)
@@ -24,11 +24,11 @@ public class RunscopeClient {
                 .getData();
     }
 
-    public List<Test> getBucketTests(String bucketKey) {
+    public List<Test> getBucketTests(final String bucketKey) {
         return getBucketTests(bucketKey, 0);
     }
 
-    public List<Test> getBucketTests(String bucketKey, int count) {
+    public List<Test> getBucketTests(final String bucketKey, final int count) {
         WebTarget target = builderFactory.getTarget("buckets/{bucketKey}/tests")
                 .resolveTemplate("bucketKey", bucketKey);
 
@@ -41,8 +41,8 @@ public class RunscopeClient {
                 .getData();
     }
 
-    public Test getTest(String bucketKey, String testId) {
-        WebTarget target = builderFactory.getTarget("buckets/{bucketKey}/tests/{testId}")
+    public Test getTest(final String bucketKey, final String testId) {
+        final WebTarget target = builderFactory.getTarget("buckets/{bucketKey}/tests/{testId}")
                 .resolveTemplate("bucketKey", bucketKey)
                 .resolveTemplate("testId", testId);
 
@@ -51,8 +51,8 @@ public class RunscopeClient {
                 .getData();
     }
 
-    public List<Step> getTestSteps(String bucketKey, String testId) {
-        WebTarget target = builderFactory.getTarget("buckets/{bucketKey}/tests/{testId}/steps")
+    public List<Step> getTestSteps(final String bucketKey, final String testId) {
+        final WebTarget target = builderFactory.getTarget("buckets/{bucketKey}/tests/{testId}/steps")
                 .resolveTemplate("bucketKey", bucketKey)
                 .resolveTemplate("testId", testId);
 
@@ -61,8 +61,8 @@ public class RunscopeClient {
                 .getData();
     }
 
-    public TestResult getRunResult(Run run) {
-        WebTarget target = builderFactory.getTarget("buckets/{bucketKey}/tests/{testId}/results/{runId}")
+    public TestResult getRunResult(final Run run) {
+        final WebTarget target = builderFactory.getTarget("buckets/{bucketKey}/tests/{testId}/results/{runId}")
                 .resolveTemplate("bucketKey", run.getBucketKey())
                 .resolveTemplate("testId", run.getTestId())
                 .resolveTemplate("runId", run.getTestRunId());
@@ -72,33 +72,33 @@ public class RunscopeClient {
                 .getData();
     }
 
-    public Trigger trigger(Test test) {
+    public Trigger trigger(final Test test) {
         return trigger(test.getTriggerUrl());
     }
 
-    public Trigger trigger(Test test, String environment) {
+    public Trigger trigger(final Test test, final String environment) {
         return trigger(test.getTriggerUrl(), environment);
     }
 
-    public Trigger trigger(Test test, String environment, Map<String, String> initialVariables) {
+    public Trigger trigger(final Test test, final String environment, final Map<String, String> initialVariables) {
         return trigger(test.getTriggerUrl(), environment, initialVariables);
     }
 
-    public Trigger trigger(String triggerUrl) {
+    public Trigger trigger(final String triggerUrl) {
         return trigger(triggerUrl, "");
     }
 
-    public Trigger trigger(String triggerUrl, String environment) {
-        Map<String, String> initialVariables = new HashMap<String, String>();
+    public Trigger trigger(final String triggerUrl, final String environment) {
+        final Map<String, String> initialVariables = new HashMap<String, String>();
 
         return trigger(triggerUrl, environment, initialVariables);
     }
 
-    public Trigger trigger(String triggerUrl, String environment, Map<String, String> initialVariables) {
+    public Trigger trigger(final String triggerUrl, final String environment, final Map<String, String> initialVariables) {
         WebTarget target = builderFactory.getAbsoluteTarget(triggerUrl);
         initialVariables.put(RunscopeConstants.CLIENT_ENVIRONMENT, environment);
 
-        for(Map.Entry<String, String> variable : initialVariables.entrySet()) {
+        for(final Map.Entry<String, String> variable : initialVariables.entrySet()) {
             target = target.queryParam(variable.getKey(), variable.getValue());
         }
 

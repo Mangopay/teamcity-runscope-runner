@@ -15,7 +15,7 @@ public class Trigger {
         return runs;
     }
 
-    public void setRuns(List<Run> runs) {
+    public void setRuns(final List<Run> runs) {
         this.runs = runs;
     }
 
@@ -24,7 +24,7 @@ public class Trigger {
     }
 
 	@JsonProperty("runs_failed")
-    public void setRunsFailed(int runsFailed) {
+    public void setRunsFailed(final int runsFailed) {
         this.runsFailed = runsFailed;
     }
 
@@ -33,7 +33,7 @@ public class Trigger {
     }
 
 	@JsonProperty("runs_started")
-    public void setRunsStarted(int runsStarted) {
+    public void setRunsStarted(final int runsStarted) {
         this.runsStarted = runsStarted;
     }
 
@@ -42,7 +42,7 @@ public class Trigger {
     }
 
 	@JsonProperty("runs_total")
-    public void setRunsTotal(int runsTotal) {
+    public void setRunsTotal(final int runsTotal) {
         this.runsTotal = runsTotal;
     }
 }

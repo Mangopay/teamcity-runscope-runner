@@ -1,5 +1,7 @@
 package com.mangopay.teamcity.runscope;
 
+import java.util.regex.Pattern;
+
 public interface RunscopeConstants {
     String SETTINGS_APIKEY = "runscope.apikey";
     String SETTINGS_BUCKET = "runscope.bucket";
@@ -22,6 +24,6 @@ public interface RunscopeConstants {
 
     String RUNSCOPE_VAR_PREFIX = "runscope.vars.";
 
-    String SETTINGS_VARIABLES_PARSER = "^(?<key>[^=]+)(=(?<value>.+))?$";
-    String MULTI_PARAMETER_SPLIT = "[\n, ]";
+    Pattern SETTINGS_VARIABLES_PARSER = Pattern.compile("^(?<key>[^=]+)(=(?<value>.+))?$", Pattern.MULTILINE);
+    Pattern MULTI_PARAMETER_SPLIT = Pattern.compile("[\n, ]");
 }

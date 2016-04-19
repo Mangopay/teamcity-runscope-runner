@@ -9,7 +9,7 @@ public enum StepType {
 
     private final String type;
 
-    StepType(String type) {
+    StepType(final String type) {
         this.type = type;
     }
 

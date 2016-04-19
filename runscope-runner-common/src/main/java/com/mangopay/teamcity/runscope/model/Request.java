@@ -29,7 +29,7 @@ public class Request {
     }
 
 	@JsonProperty("assertions_defined")
-    public void setAssertionsDefined(Integer assertionsDefined) {
+    public void setAssertionsDefined(final Integer assertionsDefined) {
         this.assertionsDefined = assertionsDefined;
     }
 
@@ -38,7 +38,7 @@ public class Request {
     }
 
 	@JsonProperty("assertions_failed")
-    public void setAssertionsFailed(Integer assertionsFailed) {
+    public void setAssertionsFailed(final Integer assertionsFailed) {
         this.assertionsFailed = assertionsFailed;
     }
 
@@ -47,7 +47,7 @@ public class Request {
     }
 
 	@JsonProperty("assertions_passed")
-    public void setAssertionsPassed(Integer assertionsPassed) {
+    public void setAssertionsPassed(final Integer assertionsPassed) {
         this.assertionsPassed = assertionsPassed;
     }
 
@@ -55,7 +55,7 @@ public class Request {
         return result;
     }
 
-    public void setResult(RequestStatus result) {
+    public void setResult(final RequestStatus result) {
         this.result = result;
     }
 
@@ -64,7 +64,7 @@ public class Request {
     }
 
 	@JsonProperty("scripts_defined")
-    public void setScriptsDefined(Integer scriptsDefined) {
+    public void setScriptsDefined(final Integer scriptsDefined) {
         this.scriptsDefined = scriptsDefined;
     }
 
@@ -73,7 +73,7 @@ public class Request {
     }
 
 	@JsonProperty("scripts_failed")
-    public void setScriptsFailed(Integer scriptsFailed) {
+    public void setScriptsFailed(final Integer scriptsFailed) {
         this.scriptsFailed = scriptsFailed;
     }
 
@@ -82,7 +82,7 @@ public class Request {
     }
 
 	@JsonProperty("scripts_passed")
-    public void setScriptsPassed(Integer scriptsPassed) {
+    public void setScriptsPassed(final Integer scriptsPassed) {
         this.scriptsPassed = scriptsPassed;
     }
 
@@ -90,7 +90,7 @@ public class Request {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(final String url) {
         this.url = url;
     }
 
@@ -99,7 +99,7 @@ public class Request {
     }
 
 	@JsonProperty("variables_defined")
-    public void setVariablesDefined(Integer variablesDefined) {
+    public void setVariablesDefined(final Integer variablesDefined) {
         this.variablesDefined = variablesDefined;
     }
 
@@ -108,7 +108,7 @@ public class Request {
     }
 
 	@JsonProperty("variables_failed")
-    public void setVariablesFailed(Integer variablesFailed) {
+    public void setVariablesFailed(final Integer variablesFailed) {
         this.variablesFailed = variablesFailed;
     }
 
@@ -117,7 +117,7 @@ public class Request {
     }
 
 	@JsonProperty("variables_passed")
-    public void setVariablesPassed(Integer variablesPassed) {
+    public void setVariablesPassed(final Integer variablesPassed) {
         this.variablesPassed = variablesPassed;
     }
 
@@ -125,7 +125,7 @@ public class Request {
         return assertions;
     }
 
-    public void setAssertions(List<RequestAssertion> assertions) {
+    public void setAssertions(final List<RequestAssertion> assertions) {
         this.assertions = assertions;
     }
 
@@ -133,7 +133,7 @@ public class Request {
         return variables;
     }
 
-    public void setVariables(List<RequestVariable> variables) {
+    public void setVariables(final List<RequestVariable> variables) {
         this.variables = variables;
     }
 }

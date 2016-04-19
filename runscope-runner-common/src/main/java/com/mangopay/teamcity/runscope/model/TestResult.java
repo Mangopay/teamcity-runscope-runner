@@ -19,7 +19,7 @@ public class TestResult {
     }
 
 	@JsonProperty("assertions_defined")
-    public void setAssertionsDefined(Integer assertionsDefined) {
+    public void setAssertionsDefined(final Integer assertionsDefined) {
         this.assertionsDefined = assertionsDefined;
     }
 
@@ -28,7 +28,7 @@ public class TestResult {
     }
 
 	@JsonProperty("assertions_failed")
-    public void setAssertionsFailed(Integer assertionsFailed) {
+    public void setAssertionsFailed(final Integer assertionsFailed) {
         this.assertionsFailed = assertionsFailed;
     }
 
@@ -37,7 +37,7 @@ public class TestResult {
     }
 
 	@JsonProperty("assertions_passed")
-    public void setAssertionsPassed(Integer assertionsPassed) {
+    public void setAssertionsPassed(final Integer assertionsPassed) {
         this.assertionsPassed = assertionsPassed;
     }
 
@@ -45,7 +45,7 @@ public class TestResult {
         return result;
     }
 
-    public void setResult(TestStatus result) {
+    public void setResult(final TestStatus result) {
         this.result = result;
     }
 
@@ -54,7 +54,7 @@ public class TestResult {
     }
 
 	@JsonProperty("finished_at")
-    public void setFinishedAt(Date finishedAt) {
+    public void setFinishedAt(final Date finishedAt) {
         this.finishedAt = finishedAt;
     }
 
@@ -62,7 +62,7 @@ public class TestResult {
         return requests;
     }
 
-    public void setRequests(List<Request> requests) {
+    public void setRequests(final List<Request> requests) {
         this.requests = requests;
     }
 }

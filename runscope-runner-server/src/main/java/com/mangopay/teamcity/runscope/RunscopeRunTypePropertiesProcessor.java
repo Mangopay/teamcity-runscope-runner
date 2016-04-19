@@ -30,8 +30,7 @@ class RunscopeRunTypePropertiesProcessor implements PropertiesProcessor {
         }
 
         if(!PropertiesUtil.isEmptyOrNull(variables)) {
-            final Pattern variablesPattern = Pattern.compile(RunscopeConstants.SETTINGS_VARIABLES_PARSER, Pattern.MULTILINE);
-            final Matcher matcher = variablesPattern.matcher(variables);
+            final Matcher matcher = RunscopeConstants.SETTINGS_VARIABLES_PARSER.matcher(variables);
             if(!matcher.matches()) result.add(new InvalidProperty(RunscopeConstants.SETTINGS_VARIABLES, "Specified value is not valid"));
         }
 

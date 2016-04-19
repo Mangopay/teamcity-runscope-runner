@@ -18,7 +18,7 @@ public class Test {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -26,7 +26,7 @@ public class Test {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -34,7 +34,7 @@ public class Test {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -42,7 +42,7 @@ public class Test {
         return steps;
     }
 
-    public void setSteps(List<Step> steps) {
+    public void setSteps(final List<Step> steps) {
         this.steps = steps;
     }
 
@@ -50,7 +50,7 @@ public class Test {
         return environments;
     }
 
-    public void setEnvironments(List<Environment> environments) {
+    public void setEnvironments(final List<Environment> environments) {
         this.environments = environments;
     }
 
@@ -60,7 +60,7 @@ public class Test {
     }
 
 	@JsonProperty("trigger_url")
-    public void setTriggerUrl(String triggerUrl) {
+    public void setTriggerUrl(final String triggerUrl) {
         this.triggerUrl = triggerUrl;
     }
 

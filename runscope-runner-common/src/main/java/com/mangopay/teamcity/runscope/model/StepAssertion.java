@@ -7,7 +7,7 @@ public class StepAssertion {
         return property;
     }
 
-    public void setProperty(String property) {
+    public void setProperty(final String property) {
         this.property = property;
     }
 }

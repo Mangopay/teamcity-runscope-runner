@@ -21,7 +21,7 @@ public class Run {
     }
 
 	@JsonProperty("bucket_key")
-    public void setBucketKey(String bucketKey) {
+    public void setBucketKey(final String bucketKey) {
         this.bucketKey = bucketKey;
     }
 
@@ -30,7 +30,7 @@ public class Run {
     }
 
 	@JsonProperty("environment_id")
-    public void setEnvironmentId(String environmentId) {
+    public void setEnvironmentId(final String environmentId) {
         this.environmentId = environmentId;
     }
 
@@ -39,7 +39,7 @@ public class Run {
     }
 
 	@JsonProperty("environment_name")
-    public void setEnvironmentName(String environmentName) {
+    public void setEnvironmentName(final String environmentName) {
         this.environmentName = environmentName;
     }
 
@@ -47,7 +47,7 @@ public class Run {
         return region;
     }
 
-    public void setRegion(String region) {
+    public void setRegion(final String region) {
         this.region = region;
     }
 
@@ -56,7 +56,7 @@ public class Run {
     }
 
 	@JsonProperty("test_id")
-    public void setTestId(String testId) {
+    public void setTestId(final String testId) {
         this.testId = testId;
     }
 
@@ -65,7 +65,7 @@ public class Run {
     }
 
 	@JsonProperty("test_name")
-    public void setTestName(String testName) {
+    public void setTestName(final String testName) {
         this.testName = testName;
     }
 
@@ -74,7 +74,7 @@ public class Run {
     }
 
 	@JsonProperty("test_run_id")
-    public void setTestRunId(String testRunId) {
+    public void setTestRunId(final String testRunId) {
         this.testRunId = testRunId;
     }
 
@@ -83,7 +83,7 @@ public class Run {
     }
 
 	@JsonProperty("test_run_url")
-    public void setTestRunUrl(String testRunUrl) {
+    public void setTestRunUrl(final String testRunUrl) {
         this.testRunUrl = testRunUrl;
     }
 
@@ -92,7 +92,7 @@ public class Run {
     }
 
 	@JsonProperty("test_url")
-    public void setTestUrl(String testUrl) {
+    public void setTestUrl(final String testUrl) {
         this.testUrl = testUrl;
     }
 
@@ -100,7 +100,7 @@ public class Run {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(final String url) {
         this.url = url;
     }
 }

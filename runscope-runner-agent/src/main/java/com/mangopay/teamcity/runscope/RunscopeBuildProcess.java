@@ -27,11 +27,13 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
         final String bucket = parameters.get(RunscopeConstants.SETTINGS_BUCKET).trim();
         String environment = parameters.get(RunscopeConstants.SETTINGS_ENVIRONMENT);
         String testsIds = parameters.get(RunscopeConstants.SETTINGS_TESTS);
-        final String initialVariables = parameters.get(RunscopeConstants.SETTINGS_VARIABLES);
+        String initialVariables = parameters.get(RunscopeConstants.SETTINGS_VARIABLES);
 
         if(StringUtil.isEmptyOrSpaces(environment)) environment = "";
         if(StringUtil.isEmptyOrSpaces(testsIds)) testsIds = "";
-        final List<String> tests = Arrays.asList(testsIds.split(RunscopeConstants.MULTI_PARAMETER_SPLIT));
+        if(StringUtil.isEmptyOrSpaces(initialVariables)) initialVariables = "";
+
+        final List<String> tests = Arrays.asList(RunscopeConstants.MULTI_PARAMETER_SPLIT.split(testsIds));
 
         this.buildRunnerContext = buildRunnerContext;
         runscopeRunnerContext = new RunscopeRunnerContext(token, bucket, environment, tests, logger);
@@ -42,8 +44,7 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
     private void setInitialVariables(final String variablesParameter) {
         final Map<String,String> initialVariables = new HashMap<String, String>();
 
-        final Pattern variablesPattern = Pattern.compile(RunscopeConstants.SETTINGS_VARIABLES_PARSER, Pattern.MULTILINE);
-        final Matcher matcher = variablesPattern.matcher(variablesParameter);
+        final Matcher matcher = RunscopeConstants.SETTINGS_VARIABLES_PARSER.matcher(variablesParameter);
         final Map<String, String> buildParameters = buildRunnerContext.getConfigParameters();
 
         while(matcher.find()) {

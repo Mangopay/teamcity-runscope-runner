@@ -15,7 +15,7 @@ public class RequestAssertion {
         return source;
     }
 
-    public void setSource(String source) {
+    public void setSource(final String source) {
         this.source = source;
     }
 
@@ -23,7 +23,7 @@ public class RequestAssertion {
         return comparison;
     }
 
-    public void setComparison(String comparison) {
+    public void setComparison(final String comparison) {
         this.comparison = comparison;
     }
 
@@ -32,7 +32,7 @@ public class RequestAssertion {
     }
 
 	@JsonProperty("actual_value")
-    public void setActualValue(String actualValue) {
+    public void setActualValue(final String actualValue) {
         this.actualValue = actualValue;
     }
 
@@ -41,7 +41,7 @@ public class RequestAssertion {
     }
 
 	@JsonProperty("target_value")
-    public void setTargetValue(String targetValue) {
+    public void setTargetValue(final String targetValue) {
         this.targetValue = targetValue;
     }
 
@@ -49,7 +49,7 @@ public class RequestAssertion {
         return error;
     }
 
-    public void setError(String error) {
+    public void setError(final String error) {
         this.error = error;
     }
 
@@ -57,7 +57,7 @@ public class RequestAssertion {
         return property;
     }
 
-    public void setProperty(String property) {
+    public void setProperty(final String property) {
         this.property = property;
     }
 
@@ -65,7 +65,7 @@ public class RequestAssertion {
         return result;
     }
 
-    public void setResult(BinaryStatus result) {
+    public void setResult(final BinaryStatus result) {
         this.result = result;
     }
 }

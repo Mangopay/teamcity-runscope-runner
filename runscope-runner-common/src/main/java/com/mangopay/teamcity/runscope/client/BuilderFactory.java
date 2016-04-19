@@ -1,6 +1,5 @@
 package com.mangopay.teamcity.runscope.client;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.mangopay.teamcity.runscope.RunscopeConstants;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
@@ -10,6 +9,7 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -20,10 +20,10 @@ class BuilderFactory {
 
     public BuilderFactory(final String token) {
         this.token = token;
-        this.config = CreateConfig();
+        config = createConfig();
     }
 
-    private ClientConfig CreateConfig() {
+    private ClientConfig createConfig() {
         return new ClientConfig()
                 .connectorProvider(new ApacheConnectorProvider())
                 .register(ObjectMapperProvider.class)
@@ -60,7 +60,7 @@ class BuilderFactory {
                 .path(path);
     }
 
-    public Invocation.Builder getBuilder(final WebTarget target) {
+    public Builder getBuilder(final WebTarget target) {
         return target
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)

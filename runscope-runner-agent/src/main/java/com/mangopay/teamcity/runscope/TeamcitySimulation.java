@@ -69,13 +69,11 @@ class FakeContext implements BuildRunnerContext {
         return null;
     }
 
-    @NotNull
     @Override
     public String getRunType() {
         return null;
     }
 
-    @NotNull
     @Override
     public String getName() {
         return null;
@@ -87,7 +85,6 @@ class FakeContext implements BuildRunnerContext {
         return null;
     }
 
-    @NotNull
     @Override
     public Map<String, String> getConfigParameters() {
         return null;
@@ -145,7 +142,6 @@ class FakeBuild implements AgentRunningBuild {
         logger = new SystemOutLogger();
     }
 
-    @NotNull
     @Override
     public BuildParametersMap getMandatoryBuildParameters() {
         return null;
@@ -157,7 +153,6 @@ class FakeBuild implements AgentRunningBuild {
         return null;
     }
 
-    @NotNull
     @Override
     public File getWorkingDirectory() {
         return null;
@@ -174,25 +169,21 @@ class FakeBuild implements AgentRunningBuild {
         return false;
     }
 
-    @NotNull
     @Override
     public ResolvedParameters getResolvedParameters() {
         return null;
     }
 
-    @NotNull
     @Override
     public String getRunType() {
         return null;
     }
 
-    @NotNull
     @Override
     public UnresolvedParameters getUnresolvedParameters() {
         return null;
     }
 
-    @NotNull
     @Override
     public BuildParametersMap getBuildParameters() {
         return null;
@@ -204,13 +195,11 @@ class FakeBuild implements AgentRunningBuild {
         return null;
     }
 
-    @NotNull
     @Override
     public String getBuildNumber() {
         return null;
     }
 
-    @NotNull
     @Override
     public Map<String, String> getSharedConfigParameters() {
         return null;
@@ -231,25 +220,21 @@ class FakeBuild implements AgentRunningBuild {
 
     }
 
-    @NotNull
     @Override
     public BuildParametersMap getSharedBuildParameters() {
         return null;
     }
 
-    @NotNull
     @Override
     public ValueResolver getSharedParametersResolver() {
         return null;
     }
 
-    @NotNull
     @Override
     public Collection<AgentBuildFeature> getBuildFeatures() {
         return null;
     }
 
-    @NotNull
     @Override
     public Collection<AgentBuildFeature> getBuildFeaturesOfType(@NotNull String type) {
         return null;
@@ -281,13 +266,11 @@ class FakeBuild implements AgentRunningBuild {
         return null;
     }
 
-    @NotNull
     @Override
     public String getBuildTypeId() {
         return null;
     }
 
-    @NotNull
     @Override
     public String getBuildTypeExternalId() {
         return null;
@@ -333,13 +316,11 @@ class FakeBuild implements AgentRunningBuild {
         return 0;
     }
 
-    @NotNull
     @Override
     public List<ArtifactDependencyInfo> getArtifactDependencies() {
         return null;
     }
 
-    @NotNull
     @Override
     public String getAccessUser() {
         return null;
@@ -351,7 +332,6 @@ class FakeBuild implements AgentRunningBuild {
         return null;
     }
 
-    @NotNull
     @Override
     public List<VcsRootEntry> getVcsRootEntries() {
         return null;
@@ -372,13 +352,11 @@ class FakeBuild implements AgentRunningBuild {
         return false;
     }
 
-    @NotNull
     @Override
     public List<VcsChangeInfo> getVcsChanges() {
         return null;
     }
 
-    @NotNull
     @Override
     public List<VcsChangeInfo> getPersonalVcsChanges() {
         return null;
@@ -390,19 +368,16 @@ class FakeBuild implements AgentRunningBuild {
         return null;
     }
 
-    @NotNull
     @Override
     public File getAgentTempDirectory() {
         return null;
     }
 
-    @NotNull
     @Override
     public BuildProgressLogger getBuildLogger() {
         return logger;
     }
 
-    @NotNull
     @Override
     public BuildAgentConfiguration getAgentConfiguration() {
         return null;
@@ -413,7 +388,6 @@ class FakeBuild implements AgentRunningBuild {
         return null;
     }
 
-    @NotNull
     @Override
     public File getDefaultCheckoutDirectory() {
         return null;
