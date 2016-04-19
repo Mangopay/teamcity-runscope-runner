@@ -29,7 +29,7 @@ public class EmptyCollectionDeserializer extends CollectionDeserializer {
 
     @Override
     public Collection<Object> getNullValue() {
-        return new ArrayList();
+        return new ArrayList<>();
     }
 
     @Override
