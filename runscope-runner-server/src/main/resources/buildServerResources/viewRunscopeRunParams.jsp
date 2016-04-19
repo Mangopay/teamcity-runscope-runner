@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <jsp:useBean id="propertiesBean" scope="request" type="jetbrains.buildServer.controllers.BasePropertiesBean"/>
-<jsp:useBean id="constants" class="com.mangopay.teamcity.runscope.RunscopeConstantsBean"/>
+<jsp:useBean id="constants" class="com.mangopay.teamcity.runscope.server.RunscopeConstantsBean"/>
 
 <div class="parameter">
     Bucket: <strong><props:displayValue name="${constants.bucketKey}" emptyValue="not specified"/></strong>

@@ -6,7 +6,7 @@
 <%@ taglib prefix="bs" tagdir="/WEB-INF/tags" %>
 
 <jsp:useBean id="propertiesBean" scope="request" type="jetbrains.buildServer.controllers.BasePropertiesBean"/>
-<jsp:useBean id="constants" class="com.mangopay.teamcity.runscope.RunscopeConstantsBean"/>
+<jsp:useBean id="constants" class="com.mangopay.teamcity.runscope.server.RunscopeConstantsBean"/>
 
 <l:settingsGroup title="Runscope authentication">
     <tr>

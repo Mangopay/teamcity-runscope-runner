@@ -4,6 +4,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
        default-autowire="constructor">
     
-    <bean id="RunscopeRunType" class="com.mangopay.teamcity.runscope.RunscopeRunType" />
-    <bean id="RunscopeTestDetail" class="com.mangopay.teamcity.runscope.RunscopeTestExtension" />
+    <bean id="RunscopeRunType" class="com.mangopay.teamcity.runscope.server.RunscopeRunType" />
+    <bean id="RunscopeTestDetail" class="com.mangopay.teamcity.runscope.server.RunscopeTestExtension" />
 </beans>
