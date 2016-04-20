@@ -31,7 +31,7 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
     }
 
     @Override
-    public WatchResult call() throws InterruptedException, RunBuildException {
+    public WatchResult call() throws RunBuildException {
         final WatchResult result = new WatchResult();
         initSteps();
 
@@ -40,16 +40,14 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
         Integer errorsInARow = 0;
 
         do {
-            Thread.sleep(1000L);
-            if(Thread.currentThread().isInterrupted()) {
-                break;
-            }
-
             try {
+                Thread.sleep(1000L);
                 done = update(result);
                 errorsInARow = 0;
             } catch (final NotFoundException | InternalServerErrorException ex) {
                 errorsInARow = throwIfNeeded(errorsInARow, ex);
+            } catch (InterruptedException ex) {
+                break;
             }
         }
         while (!done);
@@ -89,7 +87,7 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
         }
     }
 
-    private static int throwIfNeeded(Integer errorsInARow, final Exception ex) throws RunBuildException {
+    private static int throwIfNeeded(final Integer errorsInARow, final Exception ex) throws RunBuildException {
         if (errorsInARow > 10) throw new RunBuildException("Maximum retries exceeded", ex);
         return errorsInARow + 1;
     }

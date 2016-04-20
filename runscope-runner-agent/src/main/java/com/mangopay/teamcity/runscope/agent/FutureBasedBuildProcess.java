@@ -55,11 +55,9 @@ abstract class FutureBasedBuildProcess implements BuildProcess, Callable<BuildFi
     {
         try {
             return future.get();
-        }catch (final ExecutionException e) {
-            throw new RunBuildException(e);
-        } catch (final InterruptedException e) {
-            return BuildFinishedStatus.INTERRUPTED;
-        }  catch (final CancellationException e) {
+        }catch (final ExecutionException ex) {
+            throw new RunBuildException(ex);
+        } catch (final InterruptedException | CancellationException ex) {
             return BuildFinishedStatus.INTERRUPTED;
         }
     }

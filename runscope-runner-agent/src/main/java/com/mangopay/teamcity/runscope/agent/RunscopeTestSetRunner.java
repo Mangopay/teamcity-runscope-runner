@@ -58,9 +58,7 @@ public class RunscopeTestSetRunner implements Callable<BuildFinishedStatus> {
                 final Future<TestResult> result = completionService.take();
                 result.get();
             } catch (final InterruptedException ex) {
-                logger.exception(ex);
-                logger.buildFailureDescription(ex.getMessage());
-            } catch(final ExecutionException ex) {
+            } catch (final ExecutionException ex) {
                 final Throwable cause = ex.getCause();
                 logger.exception(ex);
                 logger.buildFailureDescription(cause.getMessage());
