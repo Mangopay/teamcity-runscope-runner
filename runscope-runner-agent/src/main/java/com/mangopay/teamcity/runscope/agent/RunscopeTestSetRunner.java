@@ -78,6 +78,7 @@ public class RunscopeTestSetRunner implements Callable<BuildFinishedStatus> {
     }
 
     private List<Test> getTests() throws RunBuildException {
+        final List<String> excludedTests = runscopeRunnerContext.getExcludedTestsIds();
         final List<Test> tests = new ArrayList<Test>();
         final List<String> testsIds;
 
@@ -93,6 +94,7 @@ public class RunscopeTestSetRunner implements Callable<BuildFinishedStatus> {
         else testsIds = runscopeRunnerContext.getTestsIds();
 
         for (final String testId : testsIds) {
+            if(excludedTests.contains(testId)) continue;
             try {
                 final Test test = client.getTest(runscopeRunnerContext.getBucketId(), testId);
                 tests.add(test);

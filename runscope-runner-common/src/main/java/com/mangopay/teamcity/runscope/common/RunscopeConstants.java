@@ -5,7 +5,8 @@ import java.util.regex.Pattern;
 public interface RunscopeConstants {
     String SETTINGS_APIKEY = "runscope.apikey";
     String SETTINGS_BUCKET = "runscope.bucket";
-    String SETTINGS_TESTS = "runscope.tests";
+    String SETTINGS_TESTS = "runscope.tests.included";
+    String SETTINGS_EXCLUDED_TESTS = "runscope.tests.excluded";
     String SETTINGS_ENVIRONMENT = "runscope.environment";
     String SETTINGS_VARIABLES = "runscope.variables";
     String SETTINGS_PARALLEL = "runscope.parallel";

@@ -31,12 +31,22 @@
         </td>
     </tr>
 
-    <tr>
-        <th><label>Test:</label></th>
-        <td><props:multilineProperty name="${constants.testsKey}" linkTitle="Edit Runscope tests list" cols="49" rows="3" className="longField" />
+    <tr class="advancedSetting">
+        <th><label>Tests:</label></th>
+        <td><props:multilineProperty name="${constants.testsKey}" linkTitle="Edit tests include list" cols="49" rows="3" className="longField" />
             <span class="error" id="error_${constants.testsKey}"></span>
             <span class="smallNote">
-                Enter comma- or newline-separated Runscope Test keys. If left empty, all tests from the bucket will be ran.
+                Enter comma- or newline-separated Runscope test keys. If left empty, all tests from the bucket will be ran.
+            </span>
+        </td>
+    </tr>
+
+    <tr class="advancedSetting">
+        <th><label>Excluded tests:</label></th>
+        <td><props:multilineProperty name="${constants.excludedTestsKey}" linkTitle="Edit tests exclude list" cols="49" rows="3" className="longField" />
+            <span class="error" id="error_${constants.excludedTestsKey}"></span>
+            <span class="smallNote">
+                Enter comma- or newline-separated Runscope test keys.
             </span>
         </td>
     </tr>

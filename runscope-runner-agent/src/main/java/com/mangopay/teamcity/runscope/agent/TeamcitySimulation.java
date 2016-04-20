@@ -27,9 +27,10 @@ public class TeamcitySimulation {
         final String token = args[0];
         final String bucket = args[1];
         final String tests =  args.length > 2 ? args[2] : "";
+        final String excludedTests =  args.length > 4 ? args[4] : "";
         final String environment = args.length > 3 ? args[3] : "";
 
-        BuildRunnerContext context = new FakeContext(token, bucket, tests, environment);
+        BuildRunnerContext context = new FakeContext(token, bucket, tests, excludedTests, environment);
         RunscopeBuildRunner buildRunner = new RunscopeBuildRunner();
         final BuildProcess buildProcess = buildRunner.createBuildProcess(context.getBuild(), context);
 
@@ -57,12 +58,13 @@ class FakeContext implements BuildRunnerContext {
     private final Map<String, String> runnerParameters;
     private final AgentRunningBuild agentRunningBuild;
 
-    public FakeContext(final String token, final String bucket, final String tests, final String environment) {
+    public FakeContext(final String token, final String bucket, final String tests, final String excludedTests, final String environment) {
         runnerParameters = new HashMap<String, String>() {
             {
                 put(RunscopeConstants.SETTINGS_APIKEY, token);
                 put(RunscopeConstants.SETTINGS_BUCKET, bucket);
                 put(RunscopeConstants.SETTINGS_TESTS, tests);
+                put(RunscopeConstants.SETTINGS_EXCLUDED_TESTS, excludedTests);
                 put(RunscopeConstants.SETTINGS_ENVIRONMENT, environment);
             }
         };

@@ -9,7 +9,11 @@
 </div>
 
 <div class="parameter">
-    Test: <strong><props:displayValue name="${constants.testsKey}" emptyValue="not specified"/></strong>
+    Tests: <strong><props:displayValue name="${constants.testsKey}" emptyValue="not specified"/></strong>
+</div>
+
+<div class="parameter">
+    Excluded tests: <strong><props:displayValue name="${constants.excludedTestsKey}" emptyValue="not specified"/></strong>
 </div>
 
 <div class="parameter">

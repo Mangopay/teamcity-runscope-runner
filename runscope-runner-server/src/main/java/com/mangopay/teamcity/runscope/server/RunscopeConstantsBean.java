@@ -14,6 +14,9 @@ public class RunscopeConstantsBean {
     public String getTestsKey() { return RunscopeConstants.SETTINGS_TESTS; }
 
     @NotNull
+    public String getExcludedTestsKey() { return RunscopeConstants.SETTINGS_EXCLUDED_TESTS; }
+
+    @NotNull
     public String getEnvironmentKey() { return RunscopeConstants.SETTINGS_ENVIRONMENT; }
 
     @NotNull

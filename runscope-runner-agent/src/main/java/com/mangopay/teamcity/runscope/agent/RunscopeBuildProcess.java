@@ -31,17 +31,20 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
         final String token = parameters.get(RunscopeConstants.SETTINGS_APIKEY).trim();
         final String bucket = parameters.get(RunscopeConstants.SETTINGS_BUCKET).trim();
         String testsIds = parameters.get(RunscopeConstants.SETTINGS_TESTS);
+        String excludedTestsIds = parameters.get(RunscopeConstants.SETTINGS_EXCLUDED_TESTS);
         String environment = parameters.get(RunscopeConstants.SETTINGS_ENVIRONMENT);
         String initialVariables = parameters.get(RunscopeConstants.SETTINGS_VARIABLES);
         final boolean concurrentRunner = Boolean.parseBoolean(parameters.get(RunscopeConstants.SETTINGS_PARALLEL));
 
         if(StringUtil.isEmptyOrSpaces(environment)) environment = "";
         if(StringUtil.isEmptyOrSpaces(testsIds)) testsIds = ",";
+        if(StringUtil.isEmptyOrSpaces(testsIds)) excludedTestsIds = ",";
         if(StringUtil.isEmptyOrSpaces(initialVariables)) initialVariables = "";
 
         final List<String> tests = Arrays.asList(RunscopeConstants.MULTI_PARAMETER_SPLIT.split(testsIds));
+        final List<String> excludedTests = Arrays.asList(RunscopeConstants.MULTI_PARAMETER_SPLIT.split(excludedTestsIds));
 
-        runscopeRunnerContext = new RunscopeRunnerContext(token, bucket, environment, tests, logger);
+        runscopeRunnerContext = new RunscopeRunnerContext(token, bucket, environment, tests, excludedTests, logger);
         threadPool = Executors.newFixedThreadPool(concurrentRunner ? 5 : 1);
 
         setInitialVariables(initialVariables);
@@ -87,6 +90,7 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
         logger.message("Bucket : " + runscopeRunnerContext.getBucketId().trim());
         if(!StringUtil.isEmptyOrSpaces(runscopeRunnerContext.getEnvironmentId())) logger.message("Environment : " + runscopeRunnerContext.getEnvironmentId().trim());
         if(!runscopeRunnerContext.getTestsIds().isEmpty()) logger.message("Tests : " + runscopeRunnerContext.getTestsIds());
+        if(!runscopeRunnerContext.getExcludedTestsIds().isEmpty()) logger.message("Excluded tests : " + runscopeRunnerContext.getExcludedTestsIds());
         logInitialVariables();
     }
 
