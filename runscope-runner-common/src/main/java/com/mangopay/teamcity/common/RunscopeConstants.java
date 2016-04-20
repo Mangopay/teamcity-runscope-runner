@@ -8,6 +8,7 @@ public interface RunscopeConstants {
     String SETTINGS_TESTS = "runscope.tests";
     String SETTINGS_ENVIRONMENT = "runscope.environment";
     String SETTINGS_VARIABLES = "runscope.variables";
+    String SETTINGS_PARALLEL = "runscope.parallel";
 
     String RUNNER_DISPLAY_NAME = "Runscope";
     String RUNNER_DESCRIPTION = "Runscope tests runner";

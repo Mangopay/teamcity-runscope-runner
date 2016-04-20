@@ -5,7 +5,7 @@
     <display-name>Runscope support</display-name>
     <version>@Version@</version>
     <description>Support for Runscope tests</description>
-    <download-url>https://github.com/Mangopay/teamcity-runscope-runner/releases</download-url>
+    <download-url>https://github.com/Mangopay/teamcity-runscope-runner/releases/latest</download-url>
     <email>runscope@mangopay.com</email>
     <vendor>
       <name>@VendorName@</name>

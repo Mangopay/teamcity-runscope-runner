@@ -2,7 +2,9 @@ package com.mangopay.teamcity.agent;
 
 
 import com.mangopay.teamcity.common.RunscopeConstants;
+import jersey.repackaged.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import jetbrains.buildServer.BuildProblemData;
+import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.*;
 import jetbrains.buildServer.artifacts.ArtifactDependencyInfo;
 import jetbrains.buildServer.messages.BuildMessage1;
@@ -14,8 +16,13 @@ import jetbrains.buildServer.vcs.VcsRootEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
+import java.util.List;
+import java.util.concurrent.*;
 
 public class TeamcitySimulation {
 
@@ -28,10 +35,23 @@ public class TeamcitySimulation {
 
         BuildRunnerContext context = new FakeContext(token, bucket, tests, environment);
         RunscopeBuildRunner buildRunner = new RunscopeBuildRunner();
-        BuildProcess buildProcess = buildRunner.createBuildProcess(context.getBuild(), context);
+        final BuildProcess buildProcess = buildRunner.createBuildProcess(context.getBuild(), context);
+
+        final ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (System.in.read() != 0) buildProcess.interrupt();
+                }
+                catch(IOException e){}
+            }
+        });
 
         buildProcess.start();
-        BuildFinishedStatus status = buildProcess.waitFor();
+        buildProcess.waitFor();
+
+        executor.shutdown();
     }
 }
 

@@ -42,6 +42,13 @@
     </tr>
 
     <tr>
+        <th><label>Run tests in parallel:</label></th>
+        <td><props:checkboxProperty name="${constants.parallelKey}"/>
+            <span class="error" id="error_${constants.parallelKey}"></span>
+        </td>
+    </tr>
+
+    <tr>
         <th><label>Environment:</label></th>
         <td><props:textProperty name="${constants.environmentKey}" className="longField" />
             <span class="error" id="error_${constants.environmentKey}"></span>

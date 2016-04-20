@@ -15,20 +15,26 @@ import org.jetbrains.annotations.NotNull;
 import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.*;
 
 public class RunscopeTestSetRunner implements Callable<BuildFinishedStatus> {
 
+    private final ExecutorService threadPool;
     private final RunscopeClient client;
     private final BuildProgressLogger logger;
     private final RunscopeRunnerContext runscopeRunnerContext;
     private final BuildRunnerContext buildRunnerContext;
+    private final List<Future<TestResult>> futures;
 
-    public RunscopeTestSetRunner(@NotNull final BuildRunnerContext buildRunnerContext, @NotNull final RunscopeRunnerContext runscopeRunnerContext) {
+    public RunscopeTestSetRunner(@NotNull final ExecutorService threadPool, @NotNull final BuildRunnerContext buildRunnerContext, @NotNull final RunscopeRunnerContext runscopeRunnerContext) {
+        this.threadPool = threadPool;
         this.buildRunnerContext = buildRunnerContext;
         this.runscopeRunnerContext = runscopeRunnerContext;
         client = new RunscopeClient(this.runscopeRunnerContext.getToken());
         logger = this.runscopeRunnerContext.getLogger();
+
+        futures = new Vector<Future<TestResult>>();
     }
 
     @Override
@@ -40,15 +46,14 @@ public class RunscopeTestSetRunner implements Callable<BuildFinishedStatus> {
 
         logger.logSuiteStarted(bucket.getName());
 
-        final ExecutorService threadPool = Executors.newFixedThreadPool(1);
         final CompletionService<TestResult> completionService = new ExecutorCompletionService<TestResult>(threadPool);
 
         for(final Test test : tests) {
             final Callable<TestResult> runner = new RunscopeTestRunner(buildRunnerContext, client, test, runscopeRunnerContext.getEnvironmentId(), runscopeRunnerContext.getInitialVariables(), logger.getFlowLogger(test.getId()));
-            completionService.submit(runner);
+            futures.add(completionService.submit(runner));
         }
 
-       for(int i = 0; i < tests.size(); i++) {
+        for(int i = 0; i < tests.size(); i++) {
             try {
                 final Future<TestResult> result = completionService.take();
                 result.get();
@@ -62,9 +67,12 @@ public class RunscopeTestSetRunner implements Callable<BuildFinishedStatus> {
             }
         }
 
-        threadPool.shutdown();
         logger.logSuiteFinished(bucket.getName());
         return BuildFinishedStatus.FINISHED_SUCCESS;
+    }
+
+    public void interrupt() {
+        threadPool.shutdownNow();
     }
 
     private Bucket getBucket() throws RunBuildException {

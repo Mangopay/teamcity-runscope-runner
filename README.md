@@ -22,6 +22,9 @@ When defining build configuration, you can pass Runscope variable from one build
 * On a second Runscope runner step, you set ```Initial variables``` parameter to ```userId```.
 * All tests triggered from that build step will include an initial variable ```userId``` having the value ```451```.
 
+## Parallel tests running
+The plugin allows you to run tests in parallel. Doing so, the build log tree will be all messed-up due a knwown [TeamCity bug](https://youtrack.jetbrains.com/issue/TW-8249).
+Only the build log is messed up, not tests reports. If you do not care about the build log, you should definitly enable parallel tests running to reduce your build time.
 
 # Building
 To build the plugin :

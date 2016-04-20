@@ -20,6 +20,9 @@ public class RunscopeConstantsBean {
     public String getVariablesKey() { return RunscopeConstants.SETTINGS_VARIABLES; }
 
     @NotNull
+    public String getParallelKey() { return RunscopeConstants.SETTINGS_PARALLEL; }
+
+    @NotNull
     public String getRunscopeVariablesPrefix() { return RunscopeConstants.RUNSCOPE_VAR_PREFIX; }
 
 }

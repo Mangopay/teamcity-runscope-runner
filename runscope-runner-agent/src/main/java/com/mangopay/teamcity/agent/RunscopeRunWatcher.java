@@ -41,12 +41,14 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
 
         do {
             Thread.sleep(1000L);
+            if(Thread.currentThread().isInterrupted()) {
+                break;
+            }
+
             try {
                 done = update(result);
                 errorsInARow = 0;
-            } catch (final NotFoundException ex) {
-                errorsInARow = throwIfNeeded(errorsInARow, ex);
-            } catch (final InternalServerErrorException ex) {
+            } catch (final NotFoundException | InternalServerErrorException ex) {
                 errorsInARow = throwIfNeeded(errorsInARow, ex);
             }
         }

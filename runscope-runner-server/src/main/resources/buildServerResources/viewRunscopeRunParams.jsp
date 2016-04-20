@@ -13,9 +13,13 @@
 </div>
 
 <div class="parameter">
+  Run tests in parallel: <strong><props:displayCheckboxValue name="${constants.parallelKey}"/></strong>
+</div>
+
+<div class="parameter">
     Environment: <strong><props:displayValue name="${constants.environmentKey}" emptyValue="not specified"/></strong>
 </div>
 
 <div class="parameter">
-  Initial variables: <strong><props:displayValue name="${constants.variablesKey}"/></strong>
+  Initial variables: <strong><props:displayValue name="${constants.variablesKey}" emptyValue="not specified"/></strong>
 </div>

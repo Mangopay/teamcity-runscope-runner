@@ -13,21 +13,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 
 class RunscopeBuildProcess extends FutureBasedBuildProcess {
     private final BuildRunnerContext buildRunnerContext;
     private final RunscopeRunnerContext runscopeRunnerContext;
+    private final ExecutorService threadPool;
+    private final RunscopeTestSetRunner runner;
 
     RunscopeBuildProcess(@NotNull final BuildRunnerContext buildRunnerContext) {
         super(buildRunnerContext);
 
-        final Map<String, String> parameters = buildRunnerContext.getRunnerParameters();
+        this.buildRunnerContext = buildRunnerContext;
+        final Map<String, String> parameters = this.buildRunnerContext.getRunnerParameters();
         final String token = parameters.get(RunscopeConstants.SETTINGS_APIKEY).trim();
         final String bucket = parameters.get(RunscopeConstants.SETTINGS_BUCKET).trim();
-        String environment = parameters.get(RunscopeConstants.SETTINGS_ENVIRONMENT);
         String testsIds = parameters.get(RunscopeConstants.SETTINGS_TESTS);
+        String environment = parameters.get(RunscopeConstants.SETTINGS_ENVIRONMENT);
         String initialVariables = parameters.get(RunscopeConstants.SETTINGS_VARIABLES);
+        final boolean concurrentRunner = Boolean.parseBoolean(parameters.get(RunscopeConstants.SETTINGS_PARALLEL));
 
         if(StringUtil.isEmptyOrSpaces(environment)) environment = "";
         if(StringUtil.isEmptyOrSpaces(testsIds)) testsIds = "";
@@ -35,10 +41,12 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
 
         final List<String> tests = Arrays.asList(RunscopeConstants.MULTI_PARAMETER_SPLIT.split(testsIds));
 
-        this.buildRunnerContext = buildRunnerContext;
         runscopeRunnerContext = new RunscopeRunnerContext(token, bucket, environment, tests, logger);
+        threadPool = Executors.newFixedThreadPool(concurrentRunner ? 5 : 1);
 
         setInitialVariables(initialVariables);
+
+        runner = new RunscopeTestSetRunner(threadPool, buildRunnerContext, runscopeRunnerContext);
     }
 
     private void setInitialVariables(final String variablesParameter) {
@@ -62,9 +70,13 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
     @Override
     public BuildFinishedStatus call() throws RunBuildException {
         logParameters();
-
-        final RunscopeTestSetRunner runner = new RunscopeTestSetRunner(buildRunnerContext, runscopeRunnerContext);
         return runner.call();
+    }
+
+    @Override
+    public void interrupt() {
+        runner.interrupt();
+        super.interrupt();
     }
 
     private void logParameters() {
