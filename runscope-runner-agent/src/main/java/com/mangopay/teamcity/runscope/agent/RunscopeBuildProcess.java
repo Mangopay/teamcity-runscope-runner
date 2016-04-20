@@ -36,7 +36,7 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
         final boolean concurrentRunner = Boolean.parseBoolean(parameters.get(RunscopeConstants.SETTINGS_PARALLEL));
 
         if(StringUtil.isEmptyOrSpaces(environment)) environment = "";
-        if(StringUtil.isEmptyOrSpaces(testsIds)) testsIds = "";
+        if(StringUtil.isEmptyOrSpaces(testsIds)) testsIds = ",";
         if(StringUtil.isEmptyOrSpaces(initialVariables)) initialVariables = "";
 
         final List<String> tests = Arrays.asList(RunscopeConstants.MULTI_PARAMETER_SPLIT.split(testsIds));

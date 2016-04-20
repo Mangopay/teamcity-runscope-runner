@@ -79,9 +79,10 @@ public class RunscopeTestSetRunner implements Callable<BuildFinishedStatus> {
 
     private List<Test> getTests() throws RunBuildException {
         final List<Test> tests = new ArrayList<Test>();
-        final List<String> testsIds = runscopeRunnerContext.getTestsIds();
+        final List<String> testsIds;
 
-        if(testsIds.isEmpty()) {
+        if(runscopeRunnerContext.getTestsIds().isEmpty()) {
+            testsIds = new ArrayList<>();
             logger.message("No test specified, finding bucket tests.");
             final List<Test> bucketTests = client.getBucketTests(runscopeRunnerContext.getBucketId(), 1000);
 
@@ -89,6 +90,7 @@ public class RunscopeTestSetRunner implements Callable<BuildFinishedStatus> {
                 testsIds.add(bucketTest.getId());
             }
         }
+        else testsIds = runscopeRunnerContext.getTestsIds();
 
         for (final String testId : testsIds) {
             try {
