@@ -69,13 +69,17 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
     }
     @Override
     public BuildFinishedStatus call() throws RunBuildException {
-        logParameters();
-        return runner.call();
+        try {
+            logParameters();
+            return runner.call();
+        }finally {
+            threadPool.shutdown();
+        }
     }
 
     @Override
     public void interrupt() {
-        runner.interrupt();
+        threadPool.shutdownNow();
         super.interrupt();
     }
 

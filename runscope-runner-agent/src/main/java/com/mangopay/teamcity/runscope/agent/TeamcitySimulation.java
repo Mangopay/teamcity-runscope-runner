@@ -33,8 +33,8 @@ public class TeamcitySimulation {
         RunscopeBuildRunner buildRunner = new RunscopeBuildRunner();
         final BuildProcess buildProcess = buildRunner.createBuildProcess(context.getBuild(), context);
 
-        final ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(new Runnable() {
+        /*final ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<?> future = executor.submit(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -42,12 +42,13 @@ public class TeamcitySimulation {
                 }
                 catch(IOException e){}
             }
-        });
+        });*/
 
         buildProcess.start();
         buildProcess.waitFor();
 
-        executor.shutdown();
+        /*future.cancel(true);
+        executor.shutdownNow();*/
     }
 }
 
