@@ -82,8 +82,7 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
 
         if (step.getStepType() == StepType.CONDITION) {
             //condition step adds another request at the end. Adding a fake step to match it.
-            Step fakeStep = new Step();
-            list.add(fakeStep);
+            list.add(new Step());
         }
     }
 
@@ -163,7 +162,7 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
         logger.logTestFinished(testName);
     }
 
-    private static void setBuildParameters(Request request, WatchResult result) {
+    private static void setBuildParameters(final Request request, final WatchResult result) {
         List<RequestVariable> variables = request.getVariables();
 
         for(final RequestVariable variable : variables) {
