@@ -56,6 +56,9 @@ class RequestLogger {
             sb.append("[Ghost Inspector] ");
             sb.append(step.getTestName());
         }
+        else if(StepType.INCOMING == step.getStepType()) {
+            sb.append("Incoming request");
+        }
         else {
             sb.append(step.getNote());
         }
