@@ -1,6 +1,6 @@
 package com.mangopay.teamcity.runscope.server;
 
-import com.mangopay.teamcity.common.RunscopeConstants;
+import com.mangopay.teamcity.runscope.common.RunscopeConstants;
 import jetbrains.buildServer.serverSide.STestRun;
 import jetbrains.buildServer.web.openapi.PagePlaces;
 import jetbrains.buildServer.web.openapi.PlaceId;
