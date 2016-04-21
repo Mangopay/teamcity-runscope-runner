@@ -9,15 +9,15 @@
 </div>
 
 <div class="parameter">
+    Environment: <strong><props:displayValue name="${constants.environmentKey}" emptyValue="not specified"/></strong>
+</div>
+
+<div class="parameter">
     Tests: <strong><props:displayValue name="${constants.testsKey}" emptyValue="not specified"/></strong>
 </div>
 
 <div class="parameter">
     Excluded tests: <strong><props:displayValue name="${constants.excludedTestsKey}" emptyValue="not specified"/></strong>
-</div>
-
-<div class="parameter">
-    Environment: <strong><props:displayValue name="${constants.environmentKey}" emptyValue="not specified"/></strong>
 </div>
 
 <div class="parameter">
