@@ -15,10 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.*;
 
 public class TeamcitySimulation {
 
@@ -61,7 +59,7 @@ class FakeContext implements BuildRunnerContext {
     public FakeContext(final String token, final String bucket, final String tests, final String excludedTests, final String environment) {
         runnerParameters = new HashMap<String, String>() {
             {
-                put(RunscopeConstants.SETTINGS_APIKEY, token);
+                put(RunscopeConstants.SETTINGS_TOKEN, token);
                 put(RunscopeConstants.SETTINGS_BUCKET, bucket);
                 put(RunscopeConstants.SETTINGS_TESTS, tests);
                 put(RunscopeConstants.SETTINGS_EXCLUDED_TESTS, excludedTests);

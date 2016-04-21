@@ -17,13 +17,22 @@
 </div>
 
 <div class="parameter">
-  Run tests in parallel: <strong><props:displayCheckboxValue name="${constants.parallelKey}"/></strong>
-</div>
-
-<div class="parameter">
     Environment: <strong><props:displayValue name="${constants.environmentKey}" emptyValue="not specified"/></strong>
 </div>
 
 <div class="parameter">
   Initial variables: <strong><props:displayValue name="${constants.variablesKey}" emptyValue="not specified"/></strong>
 </div>
+
+<c:if test='${!propertiesBean.properties[constants.parallelKey]}'>
+    <div class="parameter">
+        Run tests in parallel: <strong><props:displayCheckboxValue name="${constants.parallelKey}"/></strong>
+    </div>
+</c:if>
+
+<c:if test='${propertiesBean.properties[constants.parallelKey]}'>
+    <div class="parameter">
+        Run tests in parallel: <strong><props:displayValue name="${constants.parallelCountKey}"/></strong>
+    </div>
+</c:if>
+

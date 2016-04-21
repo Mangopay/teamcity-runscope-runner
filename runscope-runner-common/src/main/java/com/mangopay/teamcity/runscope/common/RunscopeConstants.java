@@ -3,13 +3,14 @@ package com.mangopay.teamcity.runscope.common;
 import java.util.regex.Pattern;
 
 public interface RunscopeConstants {
-    String SETTINGS_APIKEY = "runscope.apikey";
+    String SETTINGS_TOKEN = "runscope.token";
     String SETTINGS_BUCKET = "runscope.bucket";
     String SETTINGS_TESTS = "runscope.tests.included";
     String SETTINGS_EXCLUDED_TESTS = "runscope.tests.excluded";
     String SETTINGS_ENVIRONMENT = "runscope.environment";
     String SETTINGS_VARIABLES = "runscope.variables";
-    String SETTINGS_PARALLEL = "runscope.parallel";
+    String SETTINGS_PARALLEL = "runscope.parallel.enabled";
+    String SETTINGS_PARALLEL_COUNT = "runscope.parallel.count";
 
     String RUNNER_DISPLAY_NAME = "Runscope";
     String RUNNER_DESCRIPTION = "Runscope tests runner";

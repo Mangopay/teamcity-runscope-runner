@@ -8,6 +8,7 @@ import jetbrains.buildServer.agent.BuildRunnerContext;
 import jetbrains.buildServer.messages.DefaultMessagesInfo;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -23,18 +24,28 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
     private final ExecutorService threadPool;
     private final RunscopeTestSetRunner runner;
 
-    RunscopeBuildProcess(@NotNull final BuildRunnerContext buildRunnerContext) {
+    RunscopeBuildProcess(@NotNull final BuildRunnerContext buildRunnerContext) throws RunBuildException {
         super(buildRunnerContext);
 
         this.buildRunnerContext = buildRunnerContext;
         final Map<String, String> parameters = this.buildRunnerContext.getRunnerParameters();
-        final String token = parameters.get(RunscopeConstants.SETTINGS_APIKEY).trim();
+        final String token = parameters.get(RunscopeConstants.SETTINGS_TOKEN).trim();
         final String bucket = parameters.get(RunscopeConstants.SETTINGS_BUCKET).trim();
         String testsIds = parameters.get(RunscopeConstants.SETTINGS_TESTS);
         String excludedTestsIds = parameters.get(RunscopeConstants.SETTINGS_EXCLUDED_TESTS);
         String environment = parameters.get(RunscopeConstants.SETTINGS_ENVIRONMENT);
         String initialVariables = parameters.get(RunscopeConstants.SETTINGS_VARIABLES);
-        final boolean concurrentRunner = Boolean.parseBoolean(parameters.get(RunscopeConstants.SETTINGS_PARALLEL));
+        final boolean concurrentRunner = Boolean.parseBoolean(RunscopeConstants.SETTINGS_PARALLEL);
+
+        final int threadPoolSize;
+        if(concurrentRunner) {
+            try {
+                threadPoolSize = Integer.parseInt(parameters.get(RunscopeConstants.SETTINGS_PARALLEL_COUNT));
+            } catch (NumberFormatException ex) {
+                throw new RunBuildException("Number of tests to run simultaneously is not a number", ex);
+            }
+        }
+        else threadPoolSize = 1;
 
         if(StringUtil.isEmptyOrSpaces(environment)) environment = "";
         if(StringUtil.isEmptyOrSpaces(testsIds)) testsIds = ",";
@@ -45,7 +56,7 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
         final List<String> excludedTests = Arrays.asList(RunscopeConstants.MULTI_PARAMETER_SPLIT.split(excludedTestsIds));
 
         runscopeRunnerContext = new RunscopeRunnerContext(token, bucket, environment, tests, excludedTests, logger);
-        threadPool = Executors.newFixedThreadPool(concurrentRunner ? 5 : 1);
+        threadPool = Executors.newFixedThreadPool(threadPoolSize);
 
         setInitialVariables(initialVariables);
 
