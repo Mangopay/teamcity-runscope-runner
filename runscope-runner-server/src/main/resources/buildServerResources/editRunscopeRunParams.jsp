@@ -14,7 +14,7 @@
         <td><props:passwordProperty name="${constants.tokenKey}" className="longField" />
             <span class="error" id="error_${constants.tokenKey}"></span>
             <span class="smallNote">
-                Specify Runscope Authorization token. You can get this from your user page in the Runscope web portal.
+                Specify Runscope authorization token. You can get this from your user page in the Runscope web portal.
             </span>
         </td>
     </tr>
@@ -31,6 +31,16 @@
         </td>
     </tr>
 
+    <tr>
+        <th><label for="${constants.environmentKey}">Environment:</label></th>
+        <td><props:textProperty name="${constants.environmentKey}" className="longField" />
+            <span class="error" id="error_${constants.environmentKey}"></span>
+            <span class="smallNote">
+                Specify Runscope Environment. If left empty, default environment will be used.
+            </span>
+        </td>
+    </tr>
+
     <tr class="advancedSetting">
         <th><label for="${constants.testsKey}">Tests:</label></th>
         <td><props:multilineProperty name="${constants.testsKey}" linkTitle="Edit tests include list" cols="49" rows="3" className="longField" />
@@ -41,15 +51,6 @@
         </td>
     </tr>
 
-    <tr>
-        <th><label for="${constants.environmentKey}">Environment:</label></th>
-        <td><props:textProperty name="${constants.environmentKey}" className="longField" />
-            <span class="error" id="error_${constants.environmentKey}"></span>
-            <span class="smallNote">
-                Specify Runscope Environment. If left empty, default environment will be used.
-            </span>
-        </td>
-    </tr>
 
     <tr class="advancedSetting">
         <th><label for="${constants.excludedTestsKey}">Excluded tests:</label></th>
