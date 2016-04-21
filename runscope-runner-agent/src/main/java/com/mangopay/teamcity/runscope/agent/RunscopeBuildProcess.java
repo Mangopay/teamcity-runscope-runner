@@ -35,7 +35,7 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
         String excludedTestsIds = parameters.get(RunscopeConstants.SETTINGS_EXCLUDED_TESTS);
         String environment = parameters.get(RunscopeConstants.SETTINGS_ENVIRONMENT);
         String initialVariables = parameters.get(RunscopeConstants.SETTINGS_VARIABLES);
-        final boolean concurrentRunner = Boolean.parseBoolean(RunscopeConstants.SETTINGS_PARALLEL);
+        final boolean concurrentRunner = Boolean.parseBoolean(parameters.get(RunscopeConstants.SETTINGS_PARALLEL));
 
         final int threadPoolSize;
         if(concurrentRunner) {
@@ -49,7 +49,7 @@ class RunscopeBuildProcess extends FutureBasedBuildProcess {
 
         if(StringUtil.isEmptyOrSpaces(environment)) environment = "";
         if(StringUtil.isEmptyOrSpaces(testsIds)) testsIds = ",";
-        if(StringUtil.isEmptyOrSpaces(testsIds)) excludedTestsIds = ",";
+        if(StringUtil.isEmptyOrSpaces(excludedTestsIds)) excludedTestsIds = ",";
         if(StringUtil.isEmptyOrSpaces(initialVariables)) initialVariables = "";
 
         final List<String> tests = Arrays.asList(RunscopeConstants.MULTI_PARAMETER_SPLIT.split(testsIds));
