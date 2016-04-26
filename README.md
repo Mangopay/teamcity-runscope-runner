@@ -32,11 +32,11 @@ Only the build log is messed up, not tests reports. If you do not care about the
 Runscope does not provide an API endpoint to cancel a running test. Thus if your TeamCity build is interrupted (shutdown, cancel, etc), your tests are **still running** on Runscope side !
 
 # Building
-To build the plugin :
-1. Install the java SDK. Version 8u77 was used to develop this plugin.
-2. Install Maven.
-3. Set ```JAVA_HOME``` and ```M2_HOME``` variables.
-4. Add ```bin``` folder of each installation to your ```PATH```.
-5. Go to the plugin root directory and run ```mvn package```.
+To build the plugin :  
+1. Install the java SDK. Version 8u77 was used to develop this plugin.  
+2. Install Maven.  
+3. Set ```JAVA_HOME``` and ```M2_HOME``` variables.  
+4. Add ```bin``` folder of each installation to your ```PATH```.  
+5. Go to the plugin root directory and run ```mvn package```.  
 
 The plugin will be packaged to the ```target``` folder.
