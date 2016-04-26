@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<teamcity-plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:schemas-jetbrains-com:teamcity-plugin-v1-xml">
+  <info>
+    <name>runscope-runner</name>
+    <display-name>Runscope support</display-name>
+    <version>@Version@</version>
+    <description>Support for Runscope tests</description>
+    <download-url>https://github.com/Mangopay/teamcity-runscope-runner/releases/latest</download-url>
+    <email>runscope@mangopay.com</email>
+    <vendor>
+      <name>@VendorName@</name>
+      <url>@VendorURL@</url>
+      <logo>https://www.mangopay.com/wp-content/themes/underscores/img/mangopay.png</logo>
+    </vendor>
+  </info>
+  <deployment use-separate-classloader="true" />
+</teamcity-plugin>

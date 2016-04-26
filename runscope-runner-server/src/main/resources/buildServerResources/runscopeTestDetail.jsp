@@ -1,0 +1,1 @@
+You can see the full log at <a href="${url}" target="_blank">Runscope</a>
