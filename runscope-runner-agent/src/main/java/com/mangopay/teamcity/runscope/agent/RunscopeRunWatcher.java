@@ -172,7 +172,7 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
     }
 
     private String getStepTestName(final int stepIndex) {
-        final String format = "%d - %s";
+        final String format = "%03d - %s";
         final Step step = steps.get(stepIndex);
 
         return String.format(format, stepIndex, RequestLogger.getName(step));
