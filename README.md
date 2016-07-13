@@ -29,7 +29,8 @@ The plugin allows you to run tests in parallel. Doing so, the build log tree wil
 Only the build log is messed up, not tests reports. If you do not care about the build log, you should definitly enable parallel tests running to reduce your build time.
 
 ## Known issues
-Runscope does not provide an API endpoint to cancel a running test. Thus if your TeamCity build is interrupted (shutdown, cancel, etc), your tests are **still running** on Runscope side !
+* Runscope does not provide an API endpoint to cancel a running test. Thus if your TeamCity build is interrupted (shutdown, cancel, etc), your tests are **still running** on Runscope side !
+* At this time, the plugin is not capable of handling mutliple location. Please enable only one Location at a time.
 
 # Building
 To build the plugin :  
