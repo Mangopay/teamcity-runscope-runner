@@ -40,3 +40,9 @@ To build the plugin :
 5. Go to the plugin root directory and run ```mvn package```.  
 
 The plugin will be packaged to the ```target``` folder.
+
+# Debugging
+To debug the plugin :
+1. Enable debugging : ```JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8007"```
+2. Manually start the agent on which you will attach your debugger : ```agent start```
+3. Attach your debugger. For IDEs, you generally needs to configure a remote configuration with the following command line arguments : ```-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8007```
