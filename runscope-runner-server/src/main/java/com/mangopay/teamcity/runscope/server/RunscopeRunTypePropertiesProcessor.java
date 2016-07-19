@@ -16,12 +16,13 @@ class RunscopeRunTypePropertiesProcessor implements PropertiesProcessor {
     public Collection<InvalidProperty> process(final Map<String, String> map) {
         final Collection<InvalidProperty> result = new ArrayList<InvalidProperty>();
 
-        final String apiKey = map.get(RunscopeConstants.SETTINGS_APIKEY);
+        final String apiKey = map.get(RunscopeConstants.SETTINGS_TOKEN);
         final String bucket = map.get(RunscopeConstants.SETTINGS_BUCKET);
         final String variables = map.get(RunscopeConstants.SETTINGS_VARIABLES);
+        final boolean parallelRunner = Boolean.parseBoolean(map.get(RunscopeConstants.SETTINGS_PARALLEL));
 
         if(PropertiesUtil.isEmptyOrNull(apiKey)) {
-            result.add(new InvalidProperty(RunscopeConstants.SETTINGS_APIKEY, "Api key must be specified"));
+            result.add(new InvalidProperty(RunscopeConstants.SETTINGS_TOKEN, "Authentication token must be specified"));
         }
 
         if(PropertiesUtil.isEmptyOrNull(bucket)) {
@@ -31,6 +32,10 @@ class RunscopeRunTypePropertiesProcessor implements PropertiesProcessor {
         if(!PropertiesUtil.isEmptyOrNull(variables)) {
             final Matcher matcher = RunscopeConstants.SETTINGS_VARIABLES_PARSER.matcher(variables);
             if(!matcher.matches()) result.add(new InvalidProperty(RunscopeConstants.SETTINGS_VARIABLES, "Specified value is not valid"));
+        }
+
+        if(!parallelRunner && PropertiesUtil.isEmptyOrNull(bucket)) {
+            result.add(new InvalidProperty(RunscopeConstants.SETTINGS_PARALLEL_COUNT, "Number of tests to run simultaneously must be specified"));
         }
 
         return result;

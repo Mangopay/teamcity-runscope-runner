@@ -9,16 +9,18 @@ public class RunscopeRunnerContext {
     private String token;
     private String bucketId;
     private List<String> testsIds;
+    private List<String> excludedTestsIds;
     private String environmentId;
     private BuildProgressLogger logger;
 
     private Map<String, String> initialVariables;
 
-    public RunscopeRunnerContext(String token, String bucketId, String environmentId, List<String> testsIds, BuildProgressLogger logger) {
+    public RunscopeRunnerContext(String token, String bucketId, String environmentId, List<String> testsIds, List<String> excludedTestsIds, BuildProgressLogger logger) {
         this.bucketId = bucketId;
         this.environmentId = environmentId;
         this.token = token;
         this.testsIds = testsIds;
+        this.excludedTestsIds = excludedTestsIds;
         this.logger = logger;
     }
 
@@ -44,6 +46,14 @@ public class RunscopeRunnerContext {
 
     public void setTestsIds(List<String> testsIds) {
         this.testsIds = testsIds;
+    }
+
+    public List<String> getExcludedTestsIds() {
+        return excludedTestsIds;
+    }
+
+    public void setExcludedTestsIds(List<String> excludedTestsIds) {
+        this.excludedTestsIds = excludedTestsIds;
     }
 
     public String getEnvironmentId() {
