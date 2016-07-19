@@ -63,7 +63,7 @@ class RequestLogger {
             sb.append(step.getNote());
         }
 
-        return sb.toString();
+        return sb.toString().replaceAll("\\s?:\\s?", " ");
     }
 }
 
