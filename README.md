@@ -29,14 +29,21 @@ The plugin allows you to run tests in parallel. Doing so, the build log tree wil
 Only the build log is messed up, not tests reports. If you do not care about the build log, you should definitly enable parallel tests running to reduce your build time.
 
 ## Known issues
-Runscope does not provide an API endpoint to cancel a running test. Thus if your TeamCity build is interrupted (shutdown, cancel, etc), your tests are **still running** on Runscope side !
+* Runscope does not provide an API endpoint to cancel a running test. Thus if your TeamCity build is interrupted (shutdown, cancel, etc), your tests are **still running** on Runscope side !
+* At this time, the plugin is not capable of handling mutliple location. Please enable only one Location at a time.
 
 # Building
-To build the plugin :
-1. Install the java SDK. Version 8u77 was used to develop this plugin.
-2. Install Maven.
-3. Set ```JAVA_HOME``` and ```M2_HOME``` variables.
-4. Add ```bin``` folder of each installation to your ```PATH```.
-5. Go to the plugin root directory and run ```mvn package```.
+To build the plugin :  
+1. Install the java SDK. Version 8u77 was used to develop this plugin.  
+2. Install Maven.  
+3. Set ```JAVA_HOME``` and ```M2_HOME``` variables.  
+4. Add ```bin``` folder of each installation to your ```PATH```.  
+5. Go to the plugin root directory and run ```mvn package```.  
 
 The plugin will be packaged to the ```target``` folder.
+
+# Debugging
+To debug the plugin :
+1. Enable debugging : ```JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8007"```
+2. Manually start the agent on which you will attach your debugger : ```agent start```
+3. Attach your debugger. For IDEs, you generally needs to configure a remote configuration with the following command line arguments : ```-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8007```
