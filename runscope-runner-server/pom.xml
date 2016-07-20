@@ -4,7 +4,7 @@
   <parent>
     <artifactId>runscope-runner</artifactId>
     <groupId>com.mangopay.teamcity.runscope</groupId>
-    <version>1.0-beta-2</version>
+    <version>1.0-SNAPSHOT</version>
   </parent>
   <artifactId>runscope-runner-server</artifactId>
   <packaging>jar</packaging>
@@ -13,7 +13,7 @@
     <dependency>
       <groupId>com.mangopay.teamcity.runscope</groupId>
       <artifactId>runscope-runner-common</artifactId>
-      <version>1.0-beta-2</version>
+      <version>1.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
 
