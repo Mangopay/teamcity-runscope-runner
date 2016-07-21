@@ -49,7 +49,7 @@ The plugin will be packaged to the ```target``` folder.
 3. Attach your debugger. For IDEs, you generally needs to configure a remote configuration with the following command line   arguments : ```-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8007```  
 
 ## Debugging localy
-Start ```runscope-runner-agent``` using ```TeamcitySimulation``` as the main class. The arguments are :
+Start ```runscope-runner-debugq``` using ```TeamcitySimulation``` as the main class. This will badly mimic Teamcity context to enable quick debbuging. The arguments are :
 * runscope token : mandatory
 * runscope bucket id : mandatory
 * runscope tests id : optional. Execute only the specified tests from the bucket
