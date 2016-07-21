@@ -25,29 +25,15 @@ public class TeamcitySimulation {
         final String token = args[0];
         final String bucket = args[1];
         final String tests =  args.length > 2 ? args[2] : "";
-        final String excludedTests =  args.length > 4 ? args[4] : "";
         final String environment = args.length > 3 ? args[3] : "";
+        final String excludedTests =  args.length > 4 ? args[4] : "";
 
         BuildRunnerContext context = new FakeContext(token, bucket, tests, excludedTests, environment);
         RunscopeBuildRunner buildRunner = new RunscopeBuildRunner();
         final BuildProcess buildProcess = buildRunner.createBuildProcess(context.getBuild(), context);
 
-        /*final ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<?> future = executor.submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (System.in.read() != 0) buildProcess.interrupt();
-                }
-                catch(IOException e){}
-            }
-        });*/
-
         buildProcess.start();
         buildProcess.waitFor();
-
-        /*future.cancel(true);
-        executor.shutdownNow();*/
     }
 }
 
