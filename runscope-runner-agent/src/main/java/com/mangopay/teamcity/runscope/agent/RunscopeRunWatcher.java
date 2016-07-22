@@ -23,6 +23,8 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
     private int started = -1;
     private int finished = -1;
 
+    private Boolean stopOnFailure = false;
+
     public RunscopeRunWatcher(final RunscopeClient client, final Run run, final BuildProgressLogger logger) {
         this.client = client;
         this.run = run;
@@ -33,11 +35,12 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
     @Override
     public WatchResult call() throws RunBuildException {
         final WatchResult result = new WatchResult();
-        initSteps();
-
-        logger.message(String.format(RunscopeConstants.LOG_SEE_FULL_LOG, run.getUrl()));
         boolean done = false;
-        Integer errorsInARow = 0;
+        int errorsInARow = 0;
+
+        initSteps();
+        logger.message(String.format(RunscopeConstants.LOG_SEE_FULL_LOG, run.getUrl()));
+        stopOnFailure = getStopOnFailure(run);
 
         do {
             try {
@@ -55,6 +58,16 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
         return result;
     }
 
+    private boolean getStopOnFailure(Run run) {
+        try {
+            Environment environment = client.getEnvironment(run.getBucketKey(), run.getEnvironmentId());
+            return environment.getStopOnFailure();
+        }
+        catch(Exception ex) {
+            //stop on failure is not critical. In case of an error, we consider it to be the default value
+            return false;
+        }
+    }
     private void initSteps() {
         final List<Step> result = new ArrayList<Step>();
         final List<Step> steps = client.getTestSteps(run.getBucketKey(), run.getTestId());
@@ -86,7 +99,7 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
         }
     }
 
-    private static int throwIfNeeded(final Integer errorsInARow, final Exception ex) throws RunBuildException {
+    private static int throwIfNeeded(final int errorsInARow, final Exception ex) throws RunBuildException {
         if (errorsInARow > 10) throw new RunBuildException("Maximum retries exceeded", ex);
         return errorsInARow + 1;
     }
@@ -95,6 +108,8 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
         final TestResult testResult = client.getRunResult(run);
         final List<Request> requests = testResult.getRequests();
 
+        result.setTestResult(testResult);
+
         int finished = -1;
         int started = 0;
 
@@ -102,7 +117,11 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
             final Request request = requests.get(i);
             final RequestStatus requestResult = request.getResult();
 
-            if (requestResult == null) continue;
+            if (requestResult == null)
+            {
+                if(stopOnFailure && testResult.getResult() == TestStatus.FAILED) request.setResult(RequestStatus.CANCELED);
+                else continue;
+            }
             replaceProperties(i, request);
 
             finished = i;
@@ -119,9 +138,9 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
         this.finished = finished;
         this.started = started;
 
-        result.setTestResult(testResult);
         return testResult.getResult().isDone();
     }
+
     private void replaceProperties(final int stepIndex, final Request request) {
         if (request.getAssertions() == null) return;
 
