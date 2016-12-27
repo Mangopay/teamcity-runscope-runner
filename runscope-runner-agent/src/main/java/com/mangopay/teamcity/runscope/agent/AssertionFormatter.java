@@ -1,8 +1,11 @@
 package com.mangopay.teamcity.runscope.agent;
 
 import com.intellij.openapi.util.text.StringUtil;
+import com.mangopay.teamcity.runscope.agent.model.AssertionBase;
 import com.mangopay.teamcity.runscope.agent.model.BinaryStatus;
 import com.mangopay.teamcity.runscope.agent.model.RequestAssertion;
+import com.mangopay.teamcity.runscope.agent.model.ScriptAssertion;
+import sun.plugin2.message.JavaScriptToStringMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,11 +68,27 @@ class AssertionFormatter {
         return sb.toString();
     }
 
+    public String format(final ScriptAssertion assertion) {
+        final StringBuilder sb = new StringBuilder();
+        formatOutput(assertion, sb);
+        formatStatus(assertion, sb);
+        formatError(assertion, sb);
+
+        return sb.toString();
+    }
+
     private static void formatStatus(final RequestAssertion assertion, final StringBuilder sb) {
         if(assertion.getResult() == BinaryStatus.PASSED) {
             sb.append("OK : ");
         }
         else sb.append("KO : ");
+    }
+
+    private static void formatStatus(final ScriptAssertion assertion, final StringBuilder sb) {
+        if(assertion.getResult() == BinaryStatus.PASSED) {
+            sb.append("Script  succeeded");
+        }
+        else sb.append("Script  failed");
     }
 
     private static void formatSource(final RequestAssertion assertion, final StringBuilder sb) {
@@ -87,8 +106,7 @@ class AssertionFormatter {
         sb.append(" : ");
     }
 
-    private static void formatError(final RequestAssertion assertion, final StringBuilder sb)
-    {
+    private static void formatError(final AssertionBase assertion, final StringBuilder sb) {
         if(!StringUtil.isEmptyOrSpaces(assertion.getError())) {
             sb.append(" - ");
             sb.append(assertion.getError());
@@ -108,6 +126,14 @@ class AssertionFormatter {
             sb.append(comparison);
             sb.append(' ');
             sb.append(assertion.getTargetValue());
+        }
+    }
+
+    private static void formatOutput(final ScriptAssertion assertion, final StringBuilder sb)
+    {
+        if(!StringUtil.isEmptyOrSpaces(assertion.getOutput())) {
+            sb.append(assertion.getOutput());
+            sb.append('\n');
         }
     }
 }
