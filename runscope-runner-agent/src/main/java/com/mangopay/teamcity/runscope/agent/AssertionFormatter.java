@@ -5,7 +5,6 @@ import com.mangopay.teamcity.runscope.agent.model.AssertionBase;
 import com.mangopay.teamcity.runscope.agent.model.BinaryStatus;
 import com.mangopay.teamcity.runscope.agent.model.RequestAssertion;
 import com.mangopay.teamcity.runscope.agent.model.ScriptAssertion;
-import sun.plugin2.message.JavaScriptToStringMessage;
 
 import java.util.HashMap;
 import java.util.Map;
