@@ -117,11 +117,9 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
             final Request request = requests.get(i);
             final RequestStatus requestResult = request.getResult();
 
-            if (requestResult == null)
-            {
-                if(stopOnFailure && testResult.getResult() == TestStatus.FAILED) request.setResult(RequestStatus.CANCELED);
-                else continue;
-            }
+            if(requestResult == null) continue;
+            if(requestResult == RequestStatus.SKIPPED &&  testResult.getResult() != TestStatus.FAILED) continue;
+
             replaceProperties(i, request);
 
             finished = i;
@@ -176,6 +174,8 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
             logger.logTestFailed(testName, "Failed", output);
         } else if (requestResult == RequestStatus.CANCELED) {
             logger.logTestFailed(testName, "Canceled", output);
+        } else if (requestResult == RequestStatus.SKIPPED) {
+            logger.logTestIgnored(testName, "Ignored");
         }
 
         logger.logTestFinished(testName);
