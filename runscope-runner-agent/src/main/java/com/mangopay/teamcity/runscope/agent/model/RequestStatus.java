@@ -3,6 +3,7 @@ package com.mangopay.teamcity.runscope.agent.model;
 public enum RequestStatus {
     FAILED("fail"),
     PASSED("pass"),
+    SKIPPED("skipped"),
     CANCELED("canceled");
 
     private final String status;

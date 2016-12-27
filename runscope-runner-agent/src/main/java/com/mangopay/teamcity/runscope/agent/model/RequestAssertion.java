@@ -2,14 +2,12 @@ package com.mangopay.teamcity.runscope.agent.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class RequestAssertion {
+public class RequestAssertion extends AssertionBase {
     private String source;
     private String comparison;
     private String actualValue;
     private String targetValue;
-    private String error;
     private String property;
-    private BinaryStatus result;
 
     public String getSource() {
         return source;
@@ -45,27 +43,11 @@ public class RequestAssertion {
         this.targetValue = targetValue;
     }
 
-    public String getError() {
-        return error;
-    }
-
-    public void setError(final String error) {
-        this.error = error;
-    }
-
     public String getProperty() {
         return property;
     }
 
     public void setProperty(final String property) {
         this.property = property;
-    }
-
-    public BinaryStatus getResult() {
-        return result;
-    }
-
-    public void setResult(final BinaryStatus result) {
-        this.result = result;
     }
 }

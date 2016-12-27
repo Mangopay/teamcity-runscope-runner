@@ -43,7 +43,24 @@ To build the plugin :
 The plugin will be packaged to the ```target``` folder.
 
 # Debugging
-To debug the plugin :
-1. Enable debugging : ```JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8007"```
-2. Manually start the agent on which you will attach your debugger : ```agent start```
-3. Attach your debugger. For IDEs, you generally needs to configure a remote configuration with the following command line arguments : ```-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8007```
+## Debugging with TeamCity agent
+1. Enable debugging : ```JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8007"```  
+2. Manually start the agent on which you will attach your debugger : ```agent start```  
+3. Attach your debugger. For IDEs, you generally needs to configure a remote configuration with the following command line   arguments : ```-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8007```  
+
+## Debugging localy
+Start ```runscope-runner-debugq``` using ```TeamcitySimulation``` as the main class. This will badly mimic Teamcity context to enable quick debbuging. The arguments are :
+* runscope token : mandatory
+* runscope bucket id : mandatory
+* runscope tests id : optional. Execute only the specified tests from the bucket
+* runscope environment id : optional.
+* runscope excluded tests id : optional. Do not run specified tests
+
+Tests ids are comma or space separated.
+
+## Using a proxy
+To made debugging easier, it is strongly recommended to use a proxy : ```-Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=8888```.  
+Runscope forces the use of HTTPS. To enable HTTPS content decryption :
+* export your proxy SSL certificate
+* create a new keystore with it : ```<jdk_home>/bin/keytool -import -file <path/to/cert> -keystore <keystore name> -alias <alias>```
+* overwrite JVM default keystore : ``-Djavax.net.ssl.trustStore=<path/to/keystore>  -Djavax.net.ssl.trustStorePassword=<keystore password>```

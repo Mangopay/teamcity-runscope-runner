@@ -56,7 +56,7 @@ public class RunscopeTestRunner implements Callable<TestResult> {
         try {
             return client.trigger(test, environment, initialVariables);
         }
-        catch(final NotFoundException ex) {
+        catch(final Exception ex) {
             String message = "Cannot trigger test %s";
             if(!StringUtil.isEmptyOrSpaces(environment)) message += " on environment %s";
             throw new RunBuildException(String.format(message, test.getId(), environment), ex);

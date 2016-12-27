@@ -42,6 +42,16 @@ public class RunscopeClient {
                 .getData();
     }
 
+    public Environment getEnvironment(final String bucketKey, final String environmentId) {
+        final WebTarget target = builderFactory.getTarget("buckets/{bucketKey}/environments/{environmentId}")
+                .resolveTemplate("bucketKey", bucketKey)
+                .resolveTemplate("environmentId", environmentId);
+
+        return builderFactory.getBuilder(target)
+                .get(EnvironmentResponse.class)
+                .getData();
+    }
+
     public Test getTest(final String bucketKey, final String testId) {
         final WebTarget target = builderFactory.getTarget("buckets/{bucketKey}/tests/{testId}")
                 .resolveTemplate("bucketKey", bucketKey)
