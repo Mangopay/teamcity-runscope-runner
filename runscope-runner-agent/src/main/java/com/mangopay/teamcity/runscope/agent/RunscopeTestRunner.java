@@ -41,7 +41,7 @@ public class RunscopeTestRunner implements Callable<TestResult> {
         logger.logSuiteStarted(testName);
 
         final Trigger trigger = trigger();
-        if(trigger.getRunsTotal() != 1) throw new RunBuildException(String.format("Expected 1 run but found %d", trigger.getRunsTotal()));
+        if(trigger.getRunsTotal() != 1) throw new RunBuildException(String.format("Expected 1 run but found %d. Please enable only one location on the specified environment", trigger.getRunsTotal()));
 
         final Run run = trigger.getRuns().get(0);
         final RunscopeRunWatcher watcher = new RunscopeRunWatcher(client, run, logger);
@@ -56,7 +56,7 @@ public class RunscopeTestRunner implements Callable<TestResult> {
         try {
             return client.trigger(test, environment, initialVariables);
         }
-        catch(final NotFoundException ex) {
+        catch(final Exception ex) {
             String message = "Cannot trigger test %s";
             if(!StringUtil.isEmptyOrSpaces(environment)) message += " on environment %s";
             throw new RunBuildException(String.format(message, test.getId(), environment), ex);

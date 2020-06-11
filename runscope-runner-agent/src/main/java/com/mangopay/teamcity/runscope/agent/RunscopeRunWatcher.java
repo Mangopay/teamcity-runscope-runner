@@ -7,8 +7,6 @@ import com.mangopay.teamcity.runscope.agent.model.*;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.BuildProgressLogger;
 
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.NotFoundException;
 import java.util.*;
 import java.util.concurrent.Callable;
 
@@ -20,6 +18,8 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
     private final RequestLogger requestLogger;
     private List<Step> steps;
 
+    private final RunscopeRunWatcherProperties properties;
+
     private int started = -1;
     private int finished = -1;
 
@@ -28,26 +28,27 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
         this.run = run;
         this.logger = logger;
         requestLogger = new RequestLogger(this.run, this.logger);
+        properties = new RunscopeRunWatcherProperties(new PropertiesLoader("config.properties", logger).load(), logger);
     }
 
     @Override
     public WatchResult call() throws RunBuildException {
         final WatchResult result = new WatchResult();
-        initSteps();
-
-        logger.message(String.format(RunscopeConstants.LOG_SEE_FULL_LOG, run.getUrl()));
         boolean done = false;
-        Integer errorsInARow = 0;
+        int errorsInARow = 0;
+
+        initSteps();
+        logger.message(String.format(RunscopeConstants.LOG_SEE_FULL_LOG, run.getUrl()));
 
         do {
             try {
-                Thread.sleep(1000L);
+                Thread.sleep(properties.getRetryInterval());
                 done = update(result);
                 errorsInARow = 0;
-            } catch (final NotFoundException | InternalServerErrorException ex) {
-                errorsInARow = throwIfNeeded(errorsInARow, ex);
             } catch (InterruptedException ex) {
                 break;
+            } catch (final Exception ex) {
+                errorsInARow = throwIfNeeded(errorsInARow, ex);
             }
         }
         while (!done);
@@ -82,19 +83,20 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
 
         if (step.getStepType() == StepType.CONDITION) {
             //condition step adds another request at the end. Adding a fake step to match it.
-            Step fakeStep = new Step();
-            list.add(fakeStep);
+            list.add(new Step());
         }
     }
 
-    private static int throwIfNeeded(final Integer errorsInARow, final Exception ex) throws RunBuildException {
-        if (errorsInARow > 10) throw new RunBuildException("Maximum retries exceeded", ex);
+    private int throwIfNeeded(final int errorsInARow, final Exception ex) throws RunBuildException {
+        if (errorsInARow > properties.getMaxRetries()) throw new RunBuildException("Maximum retries exceeded", ex);
         return errorsInARow + 1;
     }
 
     private boolean update(WatchResult result) {
         final TestResult testResult = client.getRunResult(run);
         final List<Request> requests = testResult.getRequests();
+
+        result.setTestResult(testResult);
 
         int finished = -1;
         int started = 0;
@@ -103,7 +105,9 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
             final Request request = requests.get(i);
             final RequestStatus requestResult = request.getResult();
 
-            if (requestResult == null) continue;
+            if(requestResult == null) continue;
+            if(requestResult == RequestStatus.SKIPPED &&  testResult.getResult() != TestStatus.FAILED) continue;
+
             replaceProperties(i, request);
 
             finished = i;
@@ -120,9 +124,9 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
         this.finished = finished;
         this.started = started;
 
-        result.setTestResult(testResult);
         return testResult.getResult().isDone();
     }
+
     private void replaceProperties(final int stepIndex, final Request request) {
         if (request.getAssertions() == null) return;
 
@@ -158,12 +162,14 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
             logger.logTestFailed(testName, "Failed", output);
         } else if (requestResult == RequestStatus.CANCELED) {
             logger.logTestFailed(testName, "Canceled", output);
+        } else if (requestResult == RequestStatus.SKIPPED) {
+            logger.logTestIgnored(testName, "Ignored");
         }
 
         logger.logTestFinished(testName);
     }
 
-    private static void setBuildParameters(Request request, WatchResult result) {
+    private static void setBuildParameters(final Request request, final WatchResult result) {
         List<RequestVariable> variables = request.getVariables();
 
         for(final RequestVariable variable : variables) {
@@ -173,7 +179,7 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
     }
 
     private String getStepTestName(final int stepIndex) {
-        final String format = "%d - %s";
+        final String format = "%03d - %s";
         final Step step = steps.get(stepIndex);
 
         return String.format(format, stepIndex, RequestLogger.getName(step));

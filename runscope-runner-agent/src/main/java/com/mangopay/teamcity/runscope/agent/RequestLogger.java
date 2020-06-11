@@ -20,20 +20,23 @@ class RequestLogger {
 
     public String log(final Step step, final Request request) {
         final StringBuilder sb = new StringBuilder();
-        boolean failed = false;
+        boolean failed = false; //request result can sometimes be wrong
 
         for(final RequestAssertion assertion : request.getAssertions()) {
-            final String assertionLog = assertionFormatter.format(assertion);
-            logger.message(assertionLog);
+            final String assertionMessage = assertionFormatter.format(assertion);
+            final BinaryStatus result = assertion.getResult();
 
-            if(assertion.getResult() != BinaryStatus.PASSED) {
-                failed = true;
-                sb.append(assertionLog);
-                sb.append('\n');
-            }
+            failed |= logAssertion(assertionMessage, result, sb);
         }
 
-        if(failed) {
+        for(final ScriptAssertion assertion : request.getScripts()) {
+            final String assertionMessage = assertionFormatter.format(assertion);
+            final BinaryStatus result = assertion.getResult();
+
+            failed |= logAssertion(assertionMessage, result, sb);
+        }
+
+        if(failed || request.getResult() == RequestStatus.FAILED) {
             sb.append(String.format(RunscopeConstants.LOG_SEE_FULL_LOG, run.getUrl()));
             if (!StringUtil.isEmptyOrSpaces(step.getId())) {
                 sb.append('#');
@@ -42,6 +45,19 @@ class RequestLogger {
         }
 
         return sb.toString();
+    }
+
+    private boolean logAssertion(final String assertionMessage, BinaryStatus result, StringBuilder sb) {
+        boolean failed = false;
+        logger.message(assertionMessage);
+
+        if(result != BinaryStatus.PASSED) {
+            failed = true;
+            sb.append(assertionMessage);
+            sb.append('\n');
+        }
+
+        return failed;
     }
 
     public static String getName(final Step step) {
@@ -56,11 +72,14 @@ class RequestLogger {
             sb.append("[Ghost Inspector] ");
             sb.append(step.getTestName());
         }
+        else if(StepType.INCOMING == step.getStepType()) {
+            sb.append("Incoming request");
+        }
         else {
             sb.append(step.getNote());
         }
 
-        return sb.toString();
+        return sb.toString().replaceAll("\\s?:\\s?", " ");
     }
 }
 

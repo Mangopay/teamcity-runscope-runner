@@ -20,21 +20,18 @@ import java.util.concurrent.*;
 
 public class RunscopeTestSetRunner implements Callable<BuildFinishedStatus> {
 
-    private final ExecutorService threadPool;
+    private final CompletionService<TestResult> completionService;
     private final RunscopeClient client;
     private final BuildProgressLogger logger;
     private final RunscopeRunnerContext runscopeRunnerContext;
     private final BuildRunnerContext buildRunnerContext;
-    private final List<Future<TestResult>> futures;
 
     public RunscopeTestSetRunner(@NotNull final ExecutorService threadPool, @NotNull final BuildRunnerContext buildRunnerContext, @NotNull final RunscopeRunnerContext runscopeRunnerContext) {
-        this.threadPool = threadPool;
         this.buildRunnerContext = buildRunnerContext;
         this.runscopeRunnerContext = runscopeRunnerContext;
         client = new RunscopeClient(this.runscopeRunnerContext.getToken());
         logger = this.runscopeRunnerContext.getLogger();
-
-        futures = new Vector<Future<TestResult>>();
+        completionService = new ExecutorCompletionService<>(threadPool);
     }
 
     @Override
@@ -46,11 +43,10 @@ public class RunscopeTestSetRunner implements Callable<BuildFinishedStatus> {
 
         logger.logSuiteStarted(bucket.getName());
 
-        final CompletionService<TestResult> completionService = new ExecutorCompletionService<TestResult>(threadPool);
 
         for(final Test test : tests) {
             final Callable<TestResult> runner = new RunscopeTestRunner(buildRunnerContext, client, test, runscopeRunnerContext.getEnvironmentId(), runscopeRunnerContext.getInitialVariables(), logger.getFlowLogger(test.getId()));
-            futures.add(completionService.submit(runner));
+            completionService.submit(runner);
         }
 
         for(int i = 0; i < tests.size(); i++) {
@@ -69,10 +65,6 @@ public class RunscopeTestSetRunner implements Callable<BuildFinishedStatus> {
         return BuildFinishedStatus.FINISHED_SUCCESS;
     }
 
-    public void interrupt() {
-        threadPool.shutdownNow();
-    }
-
     private Bucket getBucket() throws RunBuildException {
         try {
             final Bucket bucket = client.getBucket(runscopeRunnerContext.getBucketId());
@@ -86,10 +78,12 @@ public class RunscopeTestSetRunner implements Callable<BuildFinishedStatus> {
     }
 
     private List<Test> getTests() throws RunBuildException {
+        final List<String> excludedTests = runscopeRunnerContext.getExcludedTestsIds();
         final List<Test> tests = new ArrayList<Test>();
-        final List<String> testsIds = runscopeRunnerContext.getTestsIds();
+        final List<String> testsIds;
 
-        if(testsIds.isEmpty()) {
+        if(runscopeRunnerContext.getTestsIds().isEmpty()) {
+            testsIds = new ArrayList<>();
             logger.message("No test specified, finding bucket tests.");
             final List<Test> bucketTests = client.getBucketTests(runscopeRunnerContext.getBucketId(), 1000);
 
@@ -97,8 +91,10 @@ public class RunscopeTestSetRunner implements Callable<BuildFinishedStatus> {
                 testsIds.add(bucketTest.getId());
             }
         }
+        else testsIds = runscopeRunnerContext.getTestsIds();
 
         for (final String testId : testsIds) {
+            if(excludedTests.contains(testId)) continue;
             try {
                 final Test test = client.getTest(runscopeRunnerContext.getBucketId(), testId);
                 tests.add(test);

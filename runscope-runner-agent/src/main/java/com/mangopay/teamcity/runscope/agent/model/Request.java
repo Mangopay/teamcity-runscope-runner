@@ -22,6 +22,7 @@ public class Request {
     private Integer variablesPassed;
 
     private List<RequestAssertion> assertions;
+    private List<ScriptAssertion> scripts;
     private List<RequestVariable> variables;
 
     public Integer getAssertionsDefined() {
@@ -128,6 +129,10 @@ public class Request {
     public void setAssertions(final List<RequestAssertion> assertions) {
         this.assertions = assertions;
     }
+
+    public List<ScriptAssertion> getScripts() { return scripts; }
+
+    public void setScripts(List<ScriptAssertion> scripts) { this.scripts = scripts; }
 
     public List<RequestVariable> getVariables() {
         return variables;

@@ -21,4 +21,10 @@ obj/
 _ReSharper*/
 
 target/
+*/target/
 .idea/
+
+.project
+.settings
+
+.classpath
