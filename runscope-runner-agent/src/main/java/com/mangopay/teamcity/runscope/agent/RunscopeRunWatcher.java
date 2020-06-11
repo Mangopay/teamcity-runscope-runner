@@ -7,8 +7,6 @@ import com.mangopay.teamcity.runscope.agent.model.*;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.BuildProgressLogger;
 
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.NotFoundException;
 import java.util.*;
 import java.util.concurrent.Callable;
 
@@ -20,16 +18,17 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
     private final RequestLogger requestLogger;
     private List<Step> steps;
 
+    private final RunscopeRunWatcherProperties properties;
+
     private int started = -1;
     private int finished = -1;
-
-    private Boolean stopOnFailure = false;
 
     public RunscopeRunWatcher(final RunscopeClient client, final Run run, final BuildProgressLogger logger) {
         this.client = client;
         this.run = run;
         this.logger = logger;
         requestLogger = new RequestLogger(this.run, this.logger);
+        properties = new RunscopeRunWatcherProperties(new PropertiesLoader("config.properties", logger).load(), logger);
     }
 
     @Override
@@ -40,11 +39,10 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
 
         initSteps();
         logger.message(String.format(RunscopeConstants.LOG_SEE_FULL_LOG, run.getUrl()));
-        stopOnFailure = getStopOnFailure(run);
 
         do {
             try {
-                Thread.sleep(1000L);
+                Thread.sleep(properties.getRetryInterval());
                 done = update(result);
                 errorsInARow = 0;
             } catch (InterruptedException ex) {
@@ -58,16 +56,6 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
         return result;
     }
 
-    private boolean getStopOnFailure(Run run) {
-        try {
-            Environment environment = client.getEnvironment(run.getBucketKey(), run.getEnvironmentId());
-            return environment.getStopOnFailure();
-        }
-        catch(Exception ex) {
-            //stop on failure is not critical. In case of an error, we consider it to be the default value
-            return false;
-        }
-    }
     private void initSteps() {
         final List<Step> result = new ArrayList<Step>();
         final List<Step> steps = client.getTestSteps(run.getBucketKey(), run.getTestId());
@@ -99,8 +87,8 @@ class RunscopeRunWatcher implements Callable<WatchResult> {
         }
     }
 
-    private static int throwIfNeeded(final int errorsInARow, final Exception ex) throws RunBuildException {
-        if (errorsInARow > 10) throw new RunBuildException("Maximum retries exceeded", ex);
+    private int throwIfNeeded(final int errorsInARow, final Exception ex) throws RunBuildException {
+        if (errorsInARow > properties.getMaxRetries()) throw new RunBuildException("Maximum retries exceeded", ex);
         return errorsInARow + 1;
     }
 
